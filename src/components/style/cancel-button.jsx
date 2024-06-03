@@ -1,9 +1,11 @@
 import React from 'react';
 import Button from './button';
+import { isMobile, isTablet } from 'react-device-detect';
 
 const STYLE = {
   borderColor: "#adadad",
-  backgroundColor: "#e6e6e6"
+  backgroundColor: "#e6e6e6",
+  fontSize: isMobile ? '20px' : isTablet ? '16px' : '16px'
 };
 
 const STYLE_HOVER = {

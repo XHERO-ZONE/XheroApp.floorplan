@@ -33,7 +33,6 @@ const sortButtonsCb = (a, b) => {
 const mapButtonsCb = (el, ind) => <If key={ind} condition={el.condition} style={{ position: 'relative' }}>{el.dom}</If>;
 
 export default function Sidebar({ state, width, height, sidebarComponents }) {
-
   let selectedLayer = state.getIn(['scene', 'selectedLayer']);
 
   //TODO change in multi-layer check

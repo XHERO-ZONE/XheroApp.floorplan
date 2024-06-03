@@ -1,7 +1,7 @@
 {
-  "name": "react-planner",
+  "name": "Xhero",
   "version": "2.0.6",
-  "description": "react-planner is a React Component for plans design. Draw a 2D floorplan and navigate it in 3D mode.",
+  "description": "This is a tool for app Xhero",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -74,6 +74,7 @@
     "immutablepatch": "0.5.0",
     "polylabel": "1.0.2",
     "prop-types": "15.7.2",
+    "react-device-detect": "^2.2.3",
     "react-icons": "3.5.0",
     "react-redux": "5.0.7",
     "react-svg-pan-zoom": "2.18.0",

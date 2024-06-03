@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
+import { isMobile } from 'react-device-detect';
 
 //http://www.cssportal.com/css-tooltip-generator/
 
@@ -13,7 +14,8 @@ const STYLE = {
   marginBottom: '5px',
   fontSize: '25px',
   position: 'relative',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  marginTop: isMobile ? "20px" : '0'
 };
 
 const STYLE_TOOLTIP = {

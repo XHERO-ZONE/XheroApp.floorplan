@@ -5,9 +5,10 @@ import * as SharedStyle from '../../shared-style';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FaPencil, FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
+import { isMobile } from 'react-device-detect';
 
 const tabStyle = { margin: '1em' };
-
+const tabListStyle = {display: 'flex', justifyContent: 'center', alignItems: 'center'}
 const iconStyle = {
   fontSize: '14px',
   margin: '2px',
@@ -16,7 +17,8 @@ const iconStyle = {
 
 const addGuideStyle = {
   cursor: 'pointer',
-  height: '2em'
+  height: '2em',
+  fontSize: isMobile ? "18px" : '20px'
 };
 
 const tableTabStyle = {
@@ -53,7 +55,7 @@ export default class PanelGuides extends Component {
     return (
       <Panel name={translator.t('Guides')}>
         <Tabs id='guidesTabs' style={tabStyle}>
-          <TabList>
+          <TabList style={tabListStyle} >
             <Tab>{translator.t('Horizontal')}</Tab>
             <Tab>{translator.t('Vertical')}</Tab>
             {/*<Tab>{translator.t('Circular')}</Tab>*/}

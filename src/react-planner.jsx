@@ -21,7 +21,7 @@ const {Sidebar} = SidebarComponents;
 const {FooterBar} = FooterBarComponents;
 
 const toolbarW = 50;
-const sidebarW = 300;
+const sidebarW = 400;
 const footerBarH= 20;
 
 const wrapperStyle = {
@@ -108,7 +108,7 @@ ReactPlanner.defaultProps = {
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,
-  softwareSignature: `React-Planner ${VERSION}`,
+  softwareSignature: `Xhero Tool`,
   toolbarButtons: [],
   sidebarComponents: [],
   footerbarComponents: [],

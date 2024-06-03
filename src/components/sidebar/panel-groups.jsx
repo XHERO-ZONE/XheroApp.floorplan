@@ -5,7 +5,7 @@ import * as SharedStyle from '../../shared-style';
 import {TiPlus, TiDelete} from 'react-icons/ti';
 import {FaTrash, FaEye, FaLink, FaUnlink} from 'react-icons/fa';
 import { Map } from 'immutable';
-
+import { isMobile } from 'react-device-detect';
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
   MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE,
@@ -40,7 +40,7 @@ const tablegroupStyle = {
 const iconColStyle = {width: '2em', textAlign: 'center'};
 const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
 const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
-const styleAddLabel = {fontSize: '10px', marginLeft: '5px'};
+const styleAddLabel = {fontSize: isMobile ? '18px': '18px', marginLeft: '5px'};
 const styleEyeVisible = {fontSize: '1.25em'};
 const styleEyeHidden = {...styleEyeVisible, color: '#a5a1a1'};
 const newLayerLableStyle = {fontSize: '1.3em', cursor: 'pointer', textAlign: 'center'};
@@ -176,6 +176,8 @@ export default class PanelGroups extends Component {
                 <TiPlus />
                 <b style={styleAddLabel}>{this.context.translator.t('New Empty Group')}</b>
               </td>
+              </tr>
+              <tr>
               <td
                 style={ !this.state.newSelectedHover ? newLayerLableStyle : newLayerLableHoverStyle }
                 onMouseOver={ () => this.setState({newSelectedHover: true}) }

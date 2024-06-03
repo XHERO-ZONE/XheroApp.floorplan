@@ -5,7 +5,7 @@ const STYLE_INPUT = {
   display: 'block',
   width: '100%',
   padding: '0 2px',
-  fontSize: '13px',
+  fontSize: '20px',
   lineHeight: '1.25',
   color: SharedStyle.PRIMARY_COLOR.input,
   backgroundColor: SharedStyle.COLORS.white,

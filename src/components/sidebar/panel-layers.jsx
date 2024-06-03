@@ -19,6 +19,7 @@ import {
   MODE_ROTATING_ITEM
 } from '../../constants';
 import * as SharedStyle from '../../shared-style';
+import { isMobile, isTablet } from 'react-device-detect';
 
 const VISIBILITY_MODE = {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN,
@@ -51,10 +52,10 @@ const tableLayerStyle = {
 const iconColStyle = {width: '2em'};
 const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
 const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
-const styleAddLabel = {fontSize: '10px', marginLeft: '5px'};
+const styleAddLabel = {fontSize: isMobile ? '14px': '18px', marginLeft: '5px'};
 const styleEyeVisible = {fontSize: '1.25em'};
 const styleEyeHidden = {...styleEyeVisible, color: '#a5a1a1'};
-const firstTdStyle = {width: '6em'};
+const firstTdStyle = {width: '4em', fontSize: isMobile ? "20px" : '20px'};
 const newLayerLableStyle = {margin: '0.5em 0', fontSize: '1.3em', cursor: 'pointer', textAlign: 'center'};
 const newLayerLableHoverStyle = {...newLayerLableStyle, ...styleHoverColor};
 const layerInputTableStyle = {width: '100%', borderSpacing: '2px 0', padding: '5px 15px'};
@@ -247,10 +248,11 @@ export default class PanelLayers extends Component {
                     <table style={inputTableButtonStyle}>
                       <tbody>
                         <tr>
-                          <td><CancelButton size="small" onClick={ e => {
+                          <td><CancelButton size= {isMobile ? 'normal' : isTablet ? "small" : 'small'} onClick={ e => {
+
                             this.resetLayerMod(e);
                           } }>{this.context.translator.t('Reset')}</CancelButton></td>
-                          <td><FormSubmitButton size="small" onClick={ e => {
+                          <td><FormSubmitButton size={isMobile ? 'normal' : isTablet ? "small" : 'small'} onClick={ e => {
                             this.updateLayer(e, this.state.editingLayer);
                           } }>{this.context.translator.t('Save')}</FormSubmitButton></td>
                         </tr>

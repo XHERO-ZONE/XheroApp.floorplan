@@ -1,11 +1,13 @@
 import React from 'react';
 import Button from './button';
 import * as SharedStyle from '../../shared-style';
+import { isMobile, isTablet } from 'react-device-detect';
 
 const STYLE = {
   borderColor: "#415375",
   backgroundColor: "#415375",
-  color: SharedStyle.COLORS.white
+  color: SharedStyle.COLORS.white,
+  fontSize: isMobile ? '20px' : isTablet ? '16px' : '16px'
 };
 
 const STYLE_HOVER = {
