@@ -15,18 +15,21 @@ import {
 } from './components/export';
 import {VERSION} from './version';
 import './styles/export';
+import { isMobile, isTablet } from 'react-device-detect';
+import { useDevice } from './components/responsive';
 
 const {Toolbar} = ToolbarComponents;
 const {Sidebar} = SidebarComponents;
 const {FooterBar} = FooterBarComponents;
 
 const toolbarW = 50;
-const sidebarW = 400;
-const footerBarH= 20;
+const sidebarW = 300;
+const footerBarH= 25;
 
 const wrapperStyle = {
   display: 'flex',
-  flexFlow: 'row nowrap'
+  flexFlow: 'row nowrap',
+  height: '100%'
 };
 
 class ReactPlanner extends Component {
@@ -56,8 +59,7 @@ class ReactPlanner extends Component {
   }
 
   render() {
-    let {width, height, state, stateExtractor, ...props} = this.props;
-
+    let {width, height, state, stateExtractor, device, ...props} = this.props;
     let contentW = width - toolbarW - sidebarW;
     let toolbarH = height - footerBarH;
     let contentH = height - footerBarH;
@@ -67,11 +69,15 @@ class ReactPlanner extends Component {
 
     return (
       <div style={{...wrapperStyle, height}}>
-        <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
-        <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
-        <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...props} />
-        <FooterBar width={width} height={footerBarH} state={extractedState} {...props} />
-      </div>
+      <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
+      <Content width={device.isMobile ?  width - toolbarW : contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
+      {
+        device.isMobile ? null : 
+      <Sidebar width={device.isTablet ? 300 :  sidebarW} height={sidebarH} state={extractedState} {...props} />
+      }
+      <FooterBar width={width} height={device.isMobile === true ? 50 : footerBarH} state={extractedState} {...props} />
+    </div>
+     
     );
   }
 }
@@ -115,6 +121,11 @@ ReactPlanner.defaultProps = {
   customContents: {},
 };
 
+const ReactPlannerWithDevice = (props) => {
+  const device = useDevice();
+  return <ReactPlanner {...props} device={device} />;
+};
+
 //redux connect
 function mapStateToProps(reduxState) {
   return {
@@ -126,4 +137,4 @@ function mapDispatchToProps(dispatch) {
   return objectsMap(actions, actionNamespace => bindActionCreators(actions[actionNamespace], dispatch));
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactPlanner);
+export default connect(mapStateToProps, mapDispatchToProps)(ReactPlannerWithDevice);

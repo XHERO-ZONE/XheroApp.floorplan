@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import {isMobile} from 'react-device-detect';
+import { useDevice } from '../responsive';
 const STYLE = {
   borderTop: '1px solid #222',
   borderBottom: '1px solid #48494E',
   userSelect: 'none',
   marginTop: '10px',
 };
+
 
 const STYLE_TITLE = {
   fontSize: isMobile ? "20px" : '18px',
@@ -32,9 +34,7 @@ const STYLE_CONTENT = {
 const STYLE_ARROW = {
   float: 'right'
 };
-
-export default class Panel extends Component {
-
+ class Panel extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -54,7 +54,7 @@ export default class Panel extends Component {
 
   render() {
 
-    let { name, headComponents, children } = this.props;
+    let { name, headComponents, device, children } = this.props;
     let { opened, hover } = this.state;
     return (
       <div style={STYLE}>
@@ -72,7 +72,6 @@ export default class Panel extends Component {
               <FaAngleDown style={STYLE_ARROW} />
           }
         </h3>
-
         <div style={{...STYLE_CONTENT, display: opened ? 'block' : 'none'}}>
           {children}
         </div>
@@ -81,7 +80,12 @@ export default class Panel extends Component {
     )
   }
 }
+const PanelWithDevice = (props) => {
+  const device = useDevice();
+  return <Panel {...props} device={device} />;
+};
 
+export default PanelWithDevice;
 Panel.propTypes = {
   name: PropTypes.string.isRequired,
   headComponents: PropTypes.array,

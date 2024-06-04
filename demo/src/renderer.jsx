@@ -16,6 +16,7 @@ import {
   ReactPlanner,
   Plugins as PlannerPlugins,
 } from 'react-planner'; //react-planner
+import { DeviceProvider } from '../../src/components/responsive';
 
 //define state
 let AppState = Map({
@@ -74,11 +75,11 @@ let plugins = [
 let toolbarButtons = [
   ToolbarScreenshotButton,
 ];
-
 //render
 ReactDOM.render(
   (
-    <Provider store={store}>
+    <DeviceProvider>
+    <Provider store={store}>  
       <ContainerDimensions>
         {({width, height}) =>
           <ReactPlanner
@@ -92,6 +93,7 @@ ReactDOM.render(
         }
       </ContainerDimensions>
     </Provider>
+    </DeviceProvider>
   ),
   document.getElementById('app')
 );

@@ -4,6 +4,7 @@ import * as SharedStyle from '../../shared-style';
 
 const toggleButtonStyle = {
   width: '5.5em',
+  height: '100%',
   color: '#CCC',
   textAlign: 'center',
   cursor: 'pointer',

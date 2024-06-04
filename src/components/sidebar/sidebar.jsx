@@ -9,6 +9,7 @@ import PanelGroups from './panel-groups';
 import PanelLayerElements from './panel-layer-elements';
 import * as SharedStyle from '../../shared-style';
 import If from '../../utils/react-if';
+import { useDevice } from '../responsive';
 
 const STYLE = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
@@ -34,7 +35,7 @@ const mapButtonsCb = (el, ind) => <If key={ind} condition={el.condition} style={
 
 export default function Sidebar({ state, width, height, sidebarComponents }) {
   let selectedLayer = state.getIn(['scene', 'selectedLayer']);
-
+  const device = useDevice();
   //TODO change in multi-layer check
   let selected = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
 

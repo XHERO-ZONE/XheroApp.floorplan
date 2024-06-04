@@ -6,6 +6,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FaPencil, FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
 import { isMobile } from 'react-device-detect';
+import PanelWithDevice from './panel';
 
 const tabStyle = { margin: '1em' };
 const tabListStyle = {display: 'flex', justifyContent: 'center', alignItems: 'center'}
@@ -53,7 +54,7 @@ export default class PanelGuides extends Component {
     let { guides } = state.scene;
 
     return (
-      <Panel name={translator.t('Guides')}>
+      <PanelWithDevice name={translator.t('Guides')}>
         <Tabs id='guidesTabs' style={tabStyle}>
           <TabList style={tabListStyle} >
             <Tab>{translator.t('Horizontal')}</Tab>
@@ -179,7 +180,7 @@ export default class PanelGuides extends Component {
             <b>TODO Circular Giudes</b>
           </TabPanel>*/}
         </Tabs>
-      </Panel>
+      </PanelWithDevice>
     );
   }
 }

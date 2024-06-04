@@ -52,7 +52,7 @@ const tableLayerStyle = {
 const iconColStyle = {width: '2em'};
 const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
 const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
-const styleAddLabel = {fontSize: isMobile ? '14px': '18px', marginLeft: '5px'};
+const styleAddLabel = {fontSize: isMobile ? '20px': isTablet ? '18px' : '18px', marginLeft: '5px'};
 const styleEyeVisible = {fontSize: '1.25em'};
 const styleEyeHidden = {...styleEyeVisible, color: '#a5a1a1'};
 const firstTdStyle = {width: '4em', fontSize: isMobile ? "20px" : '20px'};
@@ -199,6 +199,7 @@ export default class PanelLayers extends Component {
         >
           { !this.state.layerAddUIVisible ? <TiPlus /> : <TiDelete /> }
           <b style={styleAddLabel}>{this.context.translator.t('New layer')}</b>
+          <b style={styleAddLabel}>{isTablet ? 'mobile' : isMobile ? 'tablet': 'isDesktop'}</b>
         </p>
 
         {
