@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
+import Translator from '../../translator/translator';
 
+let translator = new Translator();
 const STYLE_LINE = {
   fill: "#0096fd",
   stroke: "#0096fd"
@@ -20,11 +22,9 @@ const STYLE_CIRCLE2 = {
 };
 
 export default function Item({layer, item, scene, catalog}) {
-
   let {x, y, rotation} = item;
-
-  let renderedItem = catalog.getElement(item.type).render2D(item, layer, scene);
-
+  let name = item.type
+  let renderedItem = catalog.getElement(item.type).render2D(translator.t(name), item, layer, scene);
   return (
     <g
       data-element-root

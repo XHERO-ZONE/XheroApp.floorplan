@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-
+import 'regenerator-runtime/runtime';
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
 import actions from './actions/export';
@@ -17,6 +17,9 @@ import {VERSION} from './version';
 import './styles/export';
 import { isMobile, isTablet } from 'react-device-detect';
 import { useDevice } from './components/responsive';
+import axios from 'axios';
+import Users from './components/users';
+// import { UserService } from './api';
 
 const {Toolbar} = ToolbarComponents;
 const {Sidebar} = SidebarComponents;
@@ -31,7 +34,7 @@ const wrapperStyle = {
   flexFlow: 'row nowrap',
   height: '100%'
 };
-
+// const userService = new UserService();
 class ReactPlanner extends Component {
 
   getChildContext() {
@@ -64,11 +67,10 @@ class ReactPlanner extends Component {
     let toolbarH = height - footerBarH;
     let contentH = height - footerBarH;
     let sidebarH = height - footerBarH;
-
     let extractedState = stateExtractor(state);
-
     return (
       <div style={{...wrapperStyle, height}}>
+        <Users />
       <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
       <Content width={device.isMobile ?  width - toolbarW : contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
       {

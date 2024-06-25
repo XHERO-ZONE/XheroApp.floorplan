@@ -7,7 +7,9 @@ import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
 import * as SharedStyle from '../../shared-style';
+import Translator from '../../translator/translator';
 
+let translator = new Translator();
 const containerStyle = {
   position: 'fixed',
   width:'calc( 100% - 51px)',
@@ -106,18 +108,28 @@ export default class CatalogList extends Component {
     return toRet;
   }
 
+  removeDiacritics(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
   matcharray( text ) {
-
     let array = this.state.elements.concat( this.flattenCategories( this.state.categories ) );
-
     let filtered = [];
 
     if( text != '' ) {
       let regexp = new RegExp( text, 'i');
       for (let i = 0; i < array.length; i++) {
-        if (regexp.test(array[i].info.title)) {
+        let title = translator.t(array[i].info.title);
+      let titleNoDiacritics = this.removeDiacritics(title);
+      if (regexp.test(titleNoDiacritics)) {
+        filtered.push(array[i]);
+      } else {
+        let titleLowerCase = title.toLowerCase();
+        let textLowerCase = text.toLowerCase();
+        if (titleLowerCase.includes(textLowerCase)) {
           filtered.push(array[i]);
         }
+      }
       }
     }
 

@@ -10,13 +10,13 @@ const STYLE_HOLE_SELECTED = { stroke: '#0096fd', strokeWidth: '3px', fill: '#009
 const EPSILON = 3;
 
 export default {
-  name: 'window-curtain',
+  name: 'curtain window',
   prototype: 'holes',
 
   info: {
-    tag: ['Finestre'],
-    title: 'Curtain window',
-    description: 'Curtain window',
+    tag: ['window'],
+    title: 'curtain window',
+    description: 'curtain window',
     image: require('./window-curtain.jpg')
   },
 
@@ -60,7 +60,7 @@ export default {
     },
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
     let holeWidth = element.properties.get('width').get('length');
     let holePath = `M${0} ${-EPSILON}  L${holeWidth} ${-EPSILON}  L${holeWidth} ${EPSILON}  L${0} ${EPSILON}  z`;
     let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;

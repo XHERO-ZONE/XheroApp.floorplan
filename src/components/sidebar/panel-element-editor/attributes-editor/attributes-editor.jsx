@@ -19,7 +19,7 @@ export default function AttributesEditor({element, onUpdate, onValid, attributeF
             />;
     case 'lines':
       return <LineAttributesEditor
-              element={element}
+      element={element}
               onUpdate={onUpdate}
               onValid={onValid}
               attributeFormData={attributeFormData}
@@ -28,7 +28,7 @@ export default function AttributesEditor({element, onUpdate, onValid, attributeF
             />;
     case 'holes':
       return <HoleAttributesEditor
-              element={element}
+      element={element}
               onUpdate={onUpdate}
               onValid={onValid}
               attributeFormData={attributeFormData}

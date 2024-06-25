@@ -1,17 +1,16 @@
-export function browserDownload(json) {
-  let fileOutputLink = document.createElement('a');
 
-  let filename = 'output' + Date.now() + '.json';
-  filename = window.prompt('Insert output filename', filename);
-  if (!filename) return;
+export function browserDownload(json, name) {
+  let fileOutputLink = document.createElement('a');
+  let fileName = name + '.json'
+  if (!name) return;
 
   let output = JSON.stringify(json);
   let data = new Blob([output], {type: 'text/plain'});
   let url = window.URL.createObjectURL(data);
-  fileOutputLink.setAttribute('download', filename);
+  fileOutputLink.setAttribute('download', fileName);
   fileOutputLink.href = url;
   fileOutputLink.style.display = 'none';
-  document.body.appendChild(fileOutputLink);
+  document.body.appendChild(fileOutputLink); 
   fileOutputLink.click();
   document.body.removeChild(fileOutputLink);
 }

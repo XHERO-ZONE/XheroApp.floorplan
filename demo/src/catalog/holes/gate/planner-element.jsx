@@ -9,7 +9,7 @@ export default {
   info: {
     tag: ['gate'],
     title: 'gate',
-    description: 'hole in the wall',
+    description: 'gate',
     image: require('./gate.jpg')
   },
 
@@ -44,7 +44,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
     const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '3px', fill: '#000'};
     const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '4px', fill: '#0096fd', cursor: 'move'};
     const STYLE_ARC_BASE = {stroke: '#000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};

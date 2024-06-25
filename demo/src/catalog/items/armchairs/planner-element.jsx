@@ -268,7 +268,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     let rect_style ={stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
     let text_style ={textAnchor: 'middle', fontSize: '11px', fill: '#FF0000'};
@@ -297,7 +297,7 @@ export default {
         <text x='0' y='0'
               transform={`translate(${WIDTH * seats/2}, ${DEPTH / 2 + eps * seats/2}) scale(${flip?1:-1},-1) rotate(${textRotation})`}
               style={text_style}>
-          {element.type}
+          {name}
         </text>
       </g>
     );

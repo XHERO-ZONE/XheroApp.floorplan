@@ -197,7 +197,7 @@ function makeObjectMinLOD(newWidth,newHeight,newDepth){
 
 
 export default {
-  name: "termosifone_alluminio",
+  name: "aluminum radiator",
   prototype: "items",
 
   info: {
@@ -234,7 +234,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     let WIDTH = element.properties.get('width').get('length');
     let angle = element.rotation + 90;
@@ -252,7 +252,7 @@ export default {
         <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH} style={rect_style}/>
         <text key="2" x="0" y="0" transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
-          {element.type}
+          {name}
         </text>
       </g>
     )

@@ -11,8 +11,8 @@ export default {
 
   info: {
     tag: ['furnishings'],
-    title: "Blackboard",
-    description: "Blackboard",
+    title: "blackboard",
+    description: "blackboard",
     image: require('./blackboard.png')
   },
 
@@ -27,7 +27,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     let angle = element.rotation + 90;
 
@@ -48,7 +48,7 @@ export default {
         <line key="4" x1={WIDTH/2} x2={.55*WIDTH} y1={1.8*DEPTH} y2={1.2*DEPTH} style={arrow_style} />
         <text key="5" x="0" y="0" transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
-          {element.type}
+          {name}
         </text>
       </g>
     )

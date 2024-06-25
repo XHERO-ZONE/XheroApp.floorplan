@@ -17,6 +17,7 @@ import {
   Plugins as PlannerPlugins,
 } from 'react-planner'; //react-planner
 import { DeviceProvider } from '../../src/components/responsive';
+import Users from '../../src/components/users';
 
 //define state
 let AppState = Map({
@@ -90,6 +91,7 @@ ReactDOM.render(
             toolbarButtons={toolbarButtons}
             stateExtractor={state => state.get('react-planner')}
           />
+          
         }
       </ContainerDimensions>
     </Provider>

@@ -11,8 +11,8 @@ export default {
 
   info: {
     tag: ['furnishings', 'optional'],
-    title: 'Coat hook',
-    description: 'Coat hook',
+    title: 'coat hook',
+    description: 'coat hook',
     image: require('./coat-hook.png')
   },
 
@@ -27,7 +27,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     let angle = element.rotation + 90;
 
@@ -49,7 +49,7 @@ export default {
         <text key='5' x='0' y='0'
               transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: 'middle', fontSize: '11px'}}>
-          {element.type}
+          {name}
         </text>
       </g>
     )

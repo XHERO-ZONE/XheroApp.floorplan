@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {MdNavigateNext} from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
+import Translator from '../../translator/translator';
 
+let translator = new Translator();
 const STYLE_BOX = {
   width: '14em',
   height: '14em',
@@ -85,12 +87,12 @@ export default class CatalogPageItem extends Component {
       >
         {hover ?
           <div style={CONTAINER_DIV}>
-            <b style={STYLE_TITLE_HOVERED}>{page.label}</b>
+            <b style={STYLE_TITLE_HOVERED}>{translator.t(page.label)}</b>
             <MdNavigateNext style={STYLE_NEXT_HOVER}/>
           </div>
           :
           <div style={CONTAINER_DIV}>
-            <b style={STYLE_TITLE}>{page.label}</b>
+            <b style={STYLE_TITLE}>{translator.t(page.label)}</b>
           </div>}
 
       </div>

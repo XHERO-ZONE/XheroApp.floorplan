@@ -141,7 +141,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '14px', fill: '#000'};
     const STYLE_HOLE_BASE2 = {stroke: '#000', strokeWidth: '16px', fill: '#000'};

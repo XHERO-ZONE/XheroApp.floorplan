@@ -2,8 +2,8 @@ import {ElementsFactories} from 'react-planner';
 
 const info = {
   title: 'wall',
-  tag: ['wall'],
-  description: 'Wall with bricks or painted',
+  tag: [ 'wall'],
+  description: 'Wall with bricks',
   image: require('./wall.png'),
   visibility: {
     catalog: true,
@@ -41,4 +41,3 @@ const textures = {
 };
 
 export default ElementsFactories.WallFactory('wall', info, textures);
-

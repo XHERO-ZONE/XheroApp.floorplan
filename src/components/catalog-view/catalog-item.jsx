@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {FaPlusCircle as IconAdd} from 'react-icons/fa';
 import * as SharedStyle from '../../shared-style';
+import Translator from '../../translator/translator';
+
+let translator = new Translator();
 
 const STYLE_BOX = {
   width: '14em',
@@ -140,16 +143,16 @@ export default class CatalogItem extends Component {
         onMouseEnter={e => this.setState({hover: true})}
         onMouseLeave={e => this.setState({hover: false})}
       >
-        <b style={ !hover ? STYLE_TITLE : STYLE_TITLE_HOVER }>{element.info.title}</b>
+        <b style={ !hover ? STYLE_TITLE : STYLE_TITLE_HOVER }>{translator.t(element.info.title)}</b>
         <div style={ STYLE_IMAGE_CONTAINER }>
           <div style={{...( !hover ? STYLE_IMAGE: STYLE_IMAGE_HOVER ), backgroundImage: 'url(' + element.info.image + ')'}}>
             { hover ? <IconAdd style={STYLE_PLUS_HOVER} /> : null }
           </div>
         </div>
         <ul style={STYLE_TAGS}>
-          {element.info.tag.map((tag, index) => <li style={STYLE_TAG} key={index}>{tag}</li>)}
+          {element.info.tag.map((tag, index) => <li style={STYLE_TAG} key={index}>{translator.t(tag)}</li>)}
         </ul>
-        <div style={STYLE_DESCRIPTION}>{element.info.description}</div>
+        <div style={STYLE_DESCRIPTION}>{translator.t(element.info.description)}</div>
       </div>
     );
   }

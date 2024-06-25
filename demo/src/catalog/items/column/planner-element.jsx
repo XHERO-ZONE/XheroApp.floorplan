@@ -102,7 +102,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
 
     let RADIUS = element.properties.get('radius').get('length');
@@ -121,7 +121,7 @@ export default {
         <text key='2' cx='0' cy='0'
               transform={`scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: 'middle', fontSize: '11px'}}>
-          {element.type}
+          {name}
         </text>
       </g>
     )

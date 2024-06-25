@@ -6,13 +6,13 @@ import path from 'path';
 let cached3DWindow = null;
 
 export default {
-  name: 'venetian-blind-window',
+  name: 'venetian blind window',
   prototype: 'holes',
 
   info: {
-    tag: ['Window'],
-    title: 'Venetian Blind Window',
-    description: 'Venetian Blind Window',
+    tag: ['window'],
+    title: 'venetian blind window',
+    description: 'venetian blind window',
     image: require('./venetian.jpg')
   },
 
@@ -52,7 +52,7 @@ export default {
     },
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '3px', fill: '#000'};
     const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '3px', fill: '#0096fd', cursor: 'move'};

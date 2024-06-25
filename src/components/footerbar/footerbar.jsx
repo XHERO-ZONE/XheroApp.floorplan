@@ -55,7 +55,6 @@ const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
 
   render() {
     let { state: globalState, width, height, device } = this.props;
-    console.log(device)
     let { translator, projectActions } = this.context;
     let { x, y } = globalState.get('mouse').toJS();
     let zoom = globalState.get('zoom');

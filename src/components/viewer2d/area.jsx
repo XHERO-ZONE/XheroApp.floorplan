@@ -20,8 +20,8 @@ const STYLE_TEXT = {
 
 
 export default function Area({layer, area, catalog}) {
-
-  let rendered = catalog.getElement(area.type).render2D(area, layer);
+const name = area.name
+  let rendered = catalog.getElement(area.type).render2D(name,area, layer);
 
   let renderedAreaSize = null;
 

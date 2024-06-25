@@ -62,7 +62,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
     let flip = element.properties.get('flip_orizzontal');
     let holeWidth = element.properties.get('width').get('length');
     let holePath = `M${0} ${ -EPSILON}  L${holeWidth} ${-EPSILON}  L${holeWidth} ${EPSILON}  L${0} ${EPSILON}  z`;

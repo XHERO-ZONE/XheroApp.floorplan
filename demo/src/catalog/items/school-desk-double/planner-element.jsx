@@ -14,12 +14,12 @@ const CHAIR_TRANSLATION = 30;
 const TOTAL_DEPTH = DEPTH + CHAIR_DEPTH/2 - (CHAIR_TRANSLATION - CHAIR_DEPTH/2);
 
 export default {
-  name: "school-desk-double",
+  name: "school desk double",
   prototype: "items",
 
   info: {
     tag: ['furnishings'],
-    title: "School desk double",
+    title: "school desk double",
     description: "school desk double",
     image: require('./school-desk-double.png')
   },
@@ -35,7 +35,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name,element, layer, scene) {
 
     let angle = element.rotation + 90;
 
@@ -59,7 +59,7 @@ export default {
         <text key="5" x="0" y="0"
               transform={`translate(${WIDTH / 2}, ${(TOTAL_DEPTH) / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
-          {element.type}
+          {name}
         </text>
       </g>
     )

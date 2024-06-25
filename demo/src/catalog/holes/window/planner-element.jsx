@@ -12,7 +12,7 @@ export default {
   info: {
     title: "window",
     tag: ['window'],
-    description: "Window",
+    description: "window",
     image: require('./window.png')
   },
 
@@ -47,7 +47,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
     const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
     const STYLE_HOLE_SELECTED = {stroke: "#0096fd", strokeWidth: "3px", fill: "#0096fd", cursor: "move"};
     //let line = layer.lines.get(hole.line);

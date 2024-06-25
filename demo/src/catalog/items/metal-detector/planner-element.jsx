@@ -191,7 +191,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     let angle = element.rotation + 90;
 
@@ -207,7 +207,7 @@ export default {
         <circle key="2" cx="0" cy="0" r="45" stroke="black" style={{stroke: "black", strokeWidth:"2px", fill:"white"}} transform={'translate(45,45)'}/>
         <text key="3" x="0" y="0" transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
-          {element.type}
+          {name}
         </text>
       </g>
     )

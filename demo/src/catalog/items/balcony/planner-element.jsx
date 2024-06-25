@@ -115,7 +115,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     let newWidth = element.properties.getIn(['width', 'length']);
     let newDepth = element.properties.getIn(['depth', 'length']);
@@ -134,7 +134,7 @@ export default {
         <text key='2' x='0' y='0'
           transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1) rotate(${textRotation})`}
           style={{ textAnchor: 'middle', fontSize: '11px' }}>
-          {element.name}
+          {name}
         </text>
       </g>
     )

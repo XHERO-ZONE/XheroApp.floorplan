@@ -4,7 +4,7 @@ import {GeometryUtils} from '../../utils/export';
 import Ruler from './ruler';
 
 export default function Line({line, layer, scene, catalog}) {
-
+const name = ""
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
@@ -24,7 +24,7 @@ export default function Line({line, layer, scene, catalog}) {
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
     let startAt = length * hole.offset;
-    let renderedHole = catalog.getElement(hole.type).render2D(hole, layer, scene);
+    let renderedHole = catalog.getElement(hole.type).render2D(name,hole, layer, scene);
 
     return (
       <g
@@ -44,7 +44,7 @@ export default function Line({line, layer, scene, catalog}) {
   let thickness = line.getIn(['properties', 'thickness', 'length']);
   let half_thickness = thickness / 2;
 
-  let renderedLine = catalog.getElement(line.type).render2D(line, layer);
+  let renderedLine = catalog.getElement(line.type).render2D(name,line, layer);
   let renderedRuler = line.selected ?
     <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/> : null;
 

@@ -49,7 +49,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     let width = element.properties.get('width').get('length');
     let depth = element.properties.get('depth').get('length');
@@ -68,7 +68,7 @@ export default {
         <rect key='1' x='0' y='0' width={width} height={depth} style={circleStyle}/>
         <text key='2' x='0' y='0' transform={`translate(${width / 2}, ${depth / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: 'middle', fontSize: '11px'}}>
-          {element.type}
+          {name}
         </text>
       </g>
     )

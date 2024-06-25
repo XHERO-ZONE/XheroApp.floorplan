@@ -11,8 +11,8 @@ export default {
 
   info: {
     tag: ['furnishings'],
-    title: "Trash",
-    description: "Trash",
+    title: "trash",
+    description: "trash",
     image: require('./trash.png')
   },
 
@@ -27,7 +27,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
 
     let angle = element.rotation + 90;
 
@@ -48,7 +48,7 @@ export default {
         <text key="5" cx="0" cy="0"
               transform={`scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
-          {element.type}
+          {name}
         </text>
       </g>
     )

@@ -1,6 +1,7 @@
 import EN from './en'
 import IT from './it'
 import RU from './ru'
+import VN from './vn'
 
 const DEFAULT_LOCALE = 'en'
 
@@ -12,6 +13,7 @@ export default class Translator {
     this.registerTranslation('en', EN)
     this.registerTranslation('it', IT)
     this.registerTranslation('ru', RU)
+    this.registerTranslation('vi', VN)
 
     let locale = null
     let languages = Translator.getBrowserLanguages()

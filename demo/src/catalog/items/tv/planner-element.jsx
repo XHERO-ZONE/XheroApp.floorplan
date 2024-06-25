@@ -12,7 +12,7 @@ export default {
 
   info: {
     title: "tv",
-    tag: ['furnishing', 'electronics'],
+    tag: ['furnishings', 'electronics'],
     description: "LCD TV",
     image: require('./tv.png')
   },
@@ -27,7 +27,7 @@ export default {
     }
   },
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
     let width = {length: 1.60, unit: 'ft'};
     let depth = {length: 0.59, unit: 'ft'};
 
@@ -52,7 +52,7 @@ export default {
         <line key="4" x1={newWidth / 2} x2={.65 * newWidth} y1={1.5 * newDepth} y2={1.2 * newDepth} style={arrow_style}/>
         <text key="5" x="0" y="0" transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
-          {element.type}
+          {name}
         </text>
       </g>
     );

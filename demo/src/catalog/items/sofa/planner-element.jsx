@@ -28,7 +28,7 @@ export default {
 
   properties: {},
 
-  render2D: function (element, layer, scene) {
+  render2D: function (name, element, layer, scene) {
     let angle = element.rotation + 90;
     let textRotation = Math.sin(angle * Math.PI / 180) < 0 ? 180 : 0;
 
@@ -60,7 +60,7 @@ export default {
           transform={`translate(${width.length / 2}, ${depth.length / 2}) scale(1,-1) rotate(${textRotation})`}
           style={{textAnchor: 'middle', fontSize: '11px'}}
         >
-          {element.type}
+          {name}
         </text>
       </g>
     );
