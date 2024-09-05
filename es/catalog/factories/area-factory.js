@@ -32,7 +32,7 @@ export default function AreaFactory(name, info, textures) {
         }
       }
     },
-    render2D: function render2D(element, layer, scene) {
+    render2D: function render2D(name, element, layer, scene) {
       var path = '';
 
       ///print area path

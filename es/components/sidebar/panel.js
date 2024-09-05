@@ -12,14 +12,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
-
+import { isMobile } from 'react-device-detect';
+import { useDevice } from '../responsive';
 var STYLE = {
   borderTop: '1px solid #222',
   borderBottom: '1px solid #48494E',
-  userSelect: 'none'
+  userSelect: 'none',
+  marginTop: '10px'
 };
+
 var STYLE_TITLE = {
-  fontSize: '11px',
+  fontSize: isMobile ? "20px" : '18px',
   color: SharedStyle.PRIMARY_COLOR.text_alt,
   padding: '5px 15px 8px 15px',
   backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
@@ -29,13 +32,14 @@ var STYLE_TITLE = {
   cursor: 'pointer'
 };
 var STYLE_CONTENT = {
-  fontSize: '11px',
+  fontSize: isMobile ? "20px" : '16px',
   color: SharedStyle.PRIMARY_COLOR.text_alt,
   border: '1px solid #222',
   padding: '0px',
   backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
   textShadow: '-1px -1px 2px rgba(0, 0, 0, 1)'
 };
+
 var STYLE_ARROW = {
   float: 'right'
 };
@@ -73,11 +77,11 @@ var Panel = function (_Component) {
       var _props = this.props,
           name = _props.name,
           headComponents = _props.headComponents,
+          device = _props.device,
           children = _props.children;
       var _state = this.state,
           opened = _state.opened,
           hover = _state.hover;
-
 
       return React.createElement(
         'div',
@@ -112,9 +116,12 @@ var Panel = function (_Component) {
   return Panel;
 }(Component);
 
-export default Panel;
+var PanelWithDevice = function PanelWithDevice(props) {
+  var device = useDevice();
+  return React.createElement(Panel, _extends({}, props, { device: device }));
+};
 
-
+export default PanelWithDevice;
 Panel.propTypes = {
   name: PropTypes.string.isRequired,
   headComponents: PropTypes.array,

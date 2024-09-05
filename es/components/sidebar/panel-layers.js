@@ -20,6 +20,7 @@ import { FormTextInput, FormNumberInput, FormSubmitButton, FormSlider, CancelBut
 
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
 import * as SharedStyle from '../../shared-style';
+import { isMobile, isTablet } from 'react-device-detect';
 
 var VISIBILITY_MODE = {
   MODE_IDLE: MODE_IDLE, MODE_2D_ZOOM_IN: MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT: MODE_2D_ZOOM_OUT, MODE_2D_PAN: MODE_2D_PAN,
@@ -52,10 +53,10 @@ var tableLayerStyle = {
 var iconColStyle = { width: '2em' };
 var styleHoverColor = { color: SharedStyle.SECONDARY_COLOR.main };
 var styleEditButtonHover = _extends({}, styleEditButton, styleHoverColor);
-var styleAddLabel = { fontSize: '10px', marginLeft: '5px' };
+var styleAddLabel = { fontSize: isMobile ? '20px' : isTablet ? '18px' : '18px', marginLeft: '5px' };
 var styleEyeVisible = { fontSize: '1.25em' };
 var styleEyeHidden = _extends({}, styleEyeVisible, { color: '#a5a1a1' });
-var firstTdStyle = { width: '6em' };
+var firstTdStyle = { width: '4em', fontSize: isMobile ? "20px" : '20px' };
 var newLayerLableStyle = { margin: '0.5em 0', fontSize: '1.3em', cursor: 'pointer', textAlign: 'center' };
 var newLayerLableHoverStyle = _extends({}, newLayerLableStyle, styleHoverColor);
 var layerInputTableStyle = { width: '100%', borderSpacing: '2px 0', padding: '5px 15px' };
@@ -251,6 +252,11 @@ var PanelLayers = function (_Component) {
             'b',
             { style: styleAddLabel },
             this.context.translator.t('New layer')
+          ),
+          React.createElement(
+            'b',
+            { style: styleAddLabel },
+            isTablet ? 'mobile' : isMobile ? 'tablet' : 'isDesktop'
           )
         ),
         this.state.layerAddUIVisible && this.state.editingLayer ? React.createElement(
@@ -361,7 +367,8 @@ var PanelLayers = function (_Component) {
                         null,
                         React.createElement(
                           CancelButton,
-                          { size: 'small', onClick: function onClick(e) {
+                          { size: isMobile ? 'normal' : isTablet ? "small" : 'small', onClick: function onClick(e) {
+
                               _this2.resetLayerMod(e);
                             } },
                           this.context.translator.t('Reset')
@@ -372,7 +379,7 @@ var PanelLayers = function (_Component) {
                         null,
                         React.createElement(
                           FormSubmitButton,
-                          { size: 'small', onClick: function onClick(e) {
+                          { size: isMobile ? 'normal' : isTablet ? "small" : 'small', onClick: function onClick(e) {
                               _this2.updateLayer(e, _this2.state.editingLayer);
                             } },
                           this.context.translator.t('Save')

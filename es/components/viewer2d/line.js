@@ -9,7 +9,7 @@ export default function Line(_ref) {
       scene = _ref.scene,
       catalog = _ref.catalog;
 
-
+  var name = "";
   var vertex0 = layer.vertices.get(line.vertices.get(0));
   var vertex1 = layer.vertices.get(line.vertices.get(1));
 
@@ -34,7 +34,7 @@ export default function Line(_ref) {
   var renderedHoles = line.holes.map(function (holeID) {
     var hole = layer.holes.get(holeID);
     var startAt = length * hole.offset;
-    var renderedHole = catalog.getElement(hole.type).render2D(hole, layer, scene);
+    var renderedHole = catalog.getElement(hole.type).render2D(name, hole, layer, scene);
 
     return React.createElement(
       'g',
@@ -54,7 +54,7 @@ export default function Line(_ref) {
   var thickness = line.getIn(['properties', 'thickness', 'length']);
   var half_thickness = thickness / 2;
 
-  var renderedLine = catalog.getElement(line.type).render2D(line, layer);
+  var renderedLine = catalog.getElement(line.type).render2D(name, line, layer);
   var renderedRuler = line.selected ? React.createElement(Ruler, { unit: scene.unit, length: length, transform: 'translate(0, ' + (half_thickness + 10) + ' )' }) : null;
 
   return React.createElement(

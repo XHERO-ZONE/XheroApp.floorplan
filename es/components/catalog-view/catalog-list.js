@@ -17,7 +17,9 @@ import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
 import * as SharedStyle from '../../shared-style';
+import Translator from '../../translator/translator';
 
+var translator = new Translator();
 var containerStyle = {
   position: 'fixed',
   width: 'calc( 100% - 51px)',
@@ -122,18 +124,29 @@ var CatalogList = function (_Component) {
       return toRet;
     }
   }, {
+    key: 'removeDiacritics',
+    value: function removeDiacritics(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+  }, {
     key: 'matcharray',
     value: function matcharray(text) {
-
       var array = this.state.elements.concat(this.flattenCategories(this.state.categories));
-
       var filtered = [];
 
       if (text != '') {
         var regexp = new RegExp(text, 'i');
         for (var i = 0; i < array.length; i++) {
-          if (regexp.test(array[i].info.title)) {
+          var title = translator.t(array[i].info.title);
+          var titleNoDiacritics = this.removeDiacritics(title);
+          if (regexp.test(titleNoDiacritics)) {
             filtered.push(array[i]);
+          } else {
+            var titleLowerCase = title.toLowerCase();
+            var textLowerCase = text.toLowerCase();
+            if (titleLowerCase.includes(textLowerCase)) {
+              filtered.push(array[i]);
+            }
           }
         }
       }
