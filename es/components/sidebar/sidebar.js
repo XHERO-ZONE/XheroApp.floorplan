@@ -11,6 +11,7 @@ import PanelGroups from './panel-groups';
 import PanelLayerElements from './panel-layer-elements';
 import * as SharedStyle from '../../shared-style';
 import If from '../../utils/react-if';
+import { useDevice } from '../responsive';
 
 var STYLE = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
@@ -46,9 +47,8 @@ export default function Sidebar(_ref) {
       height = _ref.height,
       sidebarComponents = _ref.sidebarComponents;
 
-
   var selectedLayer = state.getIn(['scene', 'selectedLayer']);
-
+  var device = useDevice();
   //TODO change in multi-layer check
   var selected = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
 

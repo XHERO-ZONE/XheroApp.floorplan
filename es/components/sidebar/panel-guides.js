@@ -15,9 +15,11 @@ import * as SharedStyle from '../../shared-style';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FaPencil, FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
+import { isMobile } from 'react-device-detect';
+import PanelWithDevice from './panel';
 
 var tabStyle = { margin: '1em' };
-
+var tabListStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center' };
 var iconStyle = {
   fontSize: '14px',
   margin: '2px',
@@ -26,7 +28,8 @@ var iconStyle = {
 
 var addGuideStyle = {
   cursor: 'pointer',
-  height: '2em'
+  height: '2em',
+  fontSize: isMobile ? "18px" : '20px'
 };
 
 var tableTabStyle = {
@@ -68,14 +71,14 @@ var PanelGuides = function (_Component) {
 
 
       return React.createElement(
-        Panel,
+        PanelWithDevice,
         { name: translator.t('Guides') },
         React.createElement(
           Tabs,
           { id: 'guidesTabs', style: tabStyle },
           React.createElement(
             TabList,
-            null,
+            { style: tabListStyle },
             React.createElement(
               Tab,
               null,

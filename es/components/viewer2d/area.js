@@ -23,8 +23,8 @@ export default function Area(_ref) {
       area = _ref.area,
       catalog = _ref.catalog;
 
-
-  var rendered = catalog.getElement(area.type).render2D(area, layer);
+  var name = area.name;
+  var rendered = catalog.getElement(area.type).render2D(name, area, layer);
 
   var renderedAreaSize = null;
 

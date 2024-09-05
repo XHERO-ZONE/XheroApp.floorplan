@@ -9,6 +9,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
+import { isDesktop, isMobile, isTablet } from 'react-device-detect';
 
 //http://www.cssportal.com/css-tooltip-generator/
 
@@ -21,7 +22,8 @@ var STYLE = {
   marginBottom: '5px',
   fontSize: '25px',
   position: 'relative',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  marginTop: isMobile ? '20px' : isDesktop ? '10px' : '0'
 };
 
 var STYLE_TOOLTIP = {

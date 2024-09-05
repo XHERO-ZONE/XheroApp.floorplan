@@ -18,12 +18,13 @@ import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import { MdAddCircle, MdWarning } from 'react-icons/md';
 import { VERSION } from '../../version';
+import { isDesktop, isMobile, isTablet } from 'react-device-detect';
+import { useDevice } from '../responsive';
 
 var footerBarStyle = {
   position: 'absolute',
   bottom: 0,
   lineHeight: '14px',
-  fontSize: '12px',
   color: SharedStyle.COLORS.white,
   backgroundColor: SharedStyle.SECONDARY_COLOR.alt,
   padding: '3px 1em',
@@ -31,28 +32,25 @@ var footerBarStyle = {
   boxSizing: 'border-box',
   cursor: 'default',
   userSelect: 'none',
-  zIndex: '9001'
+  zIndex: '9001',
+  display: 'flex'
 };
 
 export var leftTextStyle = {
   position: 'relative',
   borderRight: '1px solid #FFF',
   float: 'left',
-  padding: '0 1em',
   display: 'inline-block'
 };
 
 export var rightTextStyle = {
   position: 'relative',
-  borderLeft: '1px solid #FFF',
   float: 'right',
-  padding: '0 1em',
   display: 'inline-block'
 };
 
 var coordStyle = {
   display: 'inline-block',
-  width: '6em',
   margin: 0,
   padding: 0
 };
@@ -77,7 +75,8 @@ var FooterBar = function (_Component) {
       var _props = this.props,
           globalState = _props.state,
           width = _props.width,
-          height = _props.height;
+          height = _props.height,
+          device = _props.device;
       var _context = this.context,
           translator = _context.translator,
           projectActions = _context.projectActions;
@@ -123,36 +122,107 @@ var FooterBar = function (_Component) {
 
       return React.createElement(
         'div',
-        { style: _extends({}, footerBarStyle, { width: width, height: height }) },
+        { style: _extends({}, footerBarStyle, { width: width, height: height, padding: device.isMobile ? '0' : '0px' }) },
         React.createElement(
           If,
           { condition: MODE_SNAPPING.includes(mode) },
           React.createElement(
             'div',
-            { style: leftTextStyle },
+            { style: _extends({}, leftTextStyle, { display: device.isMobile ? 'flex' : 'block', flexDirection: 'column', height: '100%', justifyContent: 'center', alignItems: 'center', gap: '10px', padding: device.isMobile ? '0 10px' : '5px 1em' }) },
             React.createElement(
               'div',
-              { title: translator.t('Mouse X Coordinate'), style: coordStyle },
+              { title: translator.t('Mouse X Coordinate'), style: _extends({}, coordStyle, { fontSize: '12px', width: '6em' }) },
               'X : ',
               x.toFixed(3)
             ),
             React.createElement(
               'div',
-              { title: translator.t('Mouse Y Coordinate'), style: coordStyle },
+              { title: translator.t('Mouse Y Coordinate'), style: _extends({}, coordStyle, { fontSize: '12px', width: '6em' }) },
               'Y : ',
               y.toFixed(3)
             )
           ),
-          React.createElement(
+          device.isMobile || device.isTablet ? null : React.createElement(
             'div',
-            { style: leftTextStyle, title: translator.t('Scene Zoom Level') },
+            { style: _extends({}, leftTextStyle, { fontSize: device.isTablet == true ? '24px' : '14px', padding: device.isMobile ? '0 10px' : '5px 1em' }), title: translator.t('Scene Zoom Level') },
             'Zoom: ',
             zoom.toFixed(3),
             'X'
           ),
-          React.createElement(
+          device.isMobile ? React.createElement(
             'div',
-            { style: leftTextStyle },
+            { style: _extends({}, leftTextStyle, { fontSize: device.isTablet == true ? '24px' : '14px', padding: device.isMobile ? '5px 10px' : '0 1em', display: device.isMobile ? 'flex' : '' }) },
+            React.createElement(
+              'div',
+              { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+              React.createElement(FooterToggleButton, {
+                state: this.state,
+                toggleOn: function toggleOn() {
+                  updateSnapMask({ SNAP_POINT: true });
+                },
+                toggleOff: function toggleOff() {
+                  updateSnapMask({ SNAP_POINT: false });
+                },
+                text: 'Snap PT',
+                toggleState: globalState.snapMask.get(SNAP_POINT),
+                title: translator.t('Snap to Point')
+              }),
+              React.createElement(FooterToggleButton, {
+                state: this.state,
+                toggleOn: function toggleOn() {
+                  updateSnapMask({ SNAP_LINE: true });
+                },
+                toggleOff: function toggleOff() {
+                  updateSnapMask({ SNAP_LINE: false });
+                },
+                text: 'Snap LN',
+                toggleState: globalState.snapMask.get(SNAP_LINE),
+                title: translator.t('Snap to Line')
+              })
+            ),
+            React.createElement(
+              'div',
+              { style: { display: device.isMobile ? 'flex' : '', flexDirection: 'column', gap: '10px' } },
+              React.createElement(FooterToggleButton, {
+                state: this.state,
+                toggleOn: function toggleOn() {
+                  updateSnapMask({ SNAP_SEGMENT: true });
+                },
+                toggleOff: function toggleOff() {
+                  updateSnapMask({ SNAP_SEGMENT: false });
+                },
+                text: 'Snap SEG',
+                toggleState: globalState.snapMask.get(SNAP_SEGMENT),
+                title: translator.t('Snap to Segment')
+              }),
+              React.createElement(FooterToggleButton, {
+                state: this.state,
+                toggleOn: function toggleOn() {
+                  updateSnapMask({ SNAP_GRID: true });
+                },
+                toggleOff: function toggleOff() {
+                  updateSnapMask({ SNAP_GRID: false });
+                },
+                text: 'Snap GRD',
+                toggleState: globalState.snapMask.get(SNAP_GRID),
+                title: translator.t('Snap to Grid')
+              })
+            ),
+            React.createElement(FooterToggleButton, {
+              state: this.state,
+              toggleOn: function toggleOn() {
+                updateSnapMask({ SNAP_GUIDE: true });
+              },
+              toggleOff: function toggleOff() {
+                updateSnapMask({ SNAP_GUIDE: false });
+              },
+              text: 'Snap GDE',
+              toggleState: globalState.snapMask.get(SNAP_GUIDE),
+              title: translator.t('Snap to Guide')
+            })
+          ) : React.createElement(
+            'div',
+            { style: _extends({}, leftTextStyle, { padding: device.isMobile ? '10px 10px' : '5px 1em' }) },
             React.createElement(FooterToggleButton, {
               state: this.state,
               toggleOn: function toggleOn() {
@@ -215,40 +285,36 @@ var FooterBar = function (_Component) {
             })
           )
         ),
-        this.props.footerbarComponents.map(function (Component, index) {
-          return React.createElement(Component, { state: state, key: index });
-        }),
-        this.props.softwareSignature ? React.createElement(
+        device.isMobile || device.isTablet ? null : React.createElement(
           'div',
-          {
-            style: rightTextStyle,
-            title: this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ' using React-Planner ' + VERSION)
-          },
-          this.props.softwareSignature
-        ) : null,
-        React.createElement(
-          'div',
-          { style: rightTextStyle },
-          React.createElement(FooterContentButton, {
-            state: this.state,
-            icon: MdAddCircle,
-            iconStyle: errorIconStyle,
-            text: errors.length.toString(),
-            textStyle: errorLableStyle,
-            title: 'Errors [ ' + errors.length + ' ]',
-            titleStyle: errorLableStyle,
-            content: [errorsJsx]
+          { style: { padding: device.isMobile ? '10px 10px' : '5px 1em' } },
+          this.props.footerbarComponents.map(function (Component, index) {
+            return React.createElement(Component, { state: state, key: index });
           }),
-          React.createElement(FooterContentButton, {
-            state: this.state,
-            icon: MdWarning,
-            iconStyle: warningIconStyle,
-            text: warnings.length.toString(),
-            textStyle: warningLableStyle,
-            title: 'Warnings [ ' + warnings.length + ' ]',
-            titleStyle: warningLableStyle,
-            content: [warningsJsx]
-          })
+          React.createElement(
+            'div',
+            { style: _extends({}, rightTextStyle, { padding: device.isMobile ? '0 10px' : '0 1em' }) },
+            React.createElement(FooterContentButton, {
+              state: this.state,
+              icon: MdAddCircle,
+              iconStyle: errorIconStyle,
+              text: errors.length.toString(),
+              textStyle: errorLableStyle,
+              title: 'Errors [ ' + errors.length + ' ]',
+              titleStyle: errorLableStyle,
+              content: [errorsJsx]
+            }),
+            React.createElement(FooterContentButton, {
+              state: this.state,
+              icon: MdWarning,
+              iconStyle: warningIconStyle,
+              text: warnings.length.toString(),
+              textStyle: warningLableStyle,
+              title: 'Warnings [ ' + warnings.length + ' ]',
+              titleStyle: warningLableStyle,
+              content: [warningsJsx]
+            })
+          )
         )
       );
     }
@@ -257,8 +323,12 @@ var FooterBar = function (_Component) {
   return FooterBar;
 }(Component);
 
-export default FooterBar;
+var FooterBarWithDevice = function FooterBarWithDevice(props) {
+  var device = useDevice();
+  return React.createElement(FooterBar, _extends({}, props, { device: device }));
+};
 
+export default FooterBarWithDevice;
 
 FooterBar.propTypes = {
   state: PropTypes.object.isRequired,

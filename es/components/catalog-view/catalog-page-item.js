@@ -12,7 +12,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MdNavigateNext } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
+import Translator from '../../translator/translator';
 
+var translator = new Translator();
 var STYLE_BOX = {
   width: '14em',
   height: '14em',
@@ -114,7 +116,7 @@ var CatalogPageItem = function (_Component) {
           React.createElement(
             'b',
             { style: STYLE_TITLE_HOVERED },
-            page.label
+            translator.t(page.label)
           ),
           React.createElement(MdNavigateNext, { style: STYLE_NEXT_HOVER })
         ) : React.createElement(
@@ -123,7 +125,7 @@ var CatalogPageItem = function (_Component) {
           React.createElement(
             'b',
             { style: STYLE_TITLE },
-            page.label
+            translator.t(page.label)
           )
         )
       );

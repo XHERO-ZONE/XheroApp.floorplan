@@ -16,6 +16,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FaPlusCircle as IconAdd } from 'react-icons/fa';
 import * as SharedStyle from '../../shared-style';
+import Translator from '../../translator/translator';
+
+var translator = new Translator();
 
 var STYLE_BOX = {
   width: '14em',
@@ -161,7 +164,7 @@ var CatalogItem = function (_Component) {
         React.createElement(
           'b',
           { style: !hover ? STYLE_TITLE : STYLE_TITLE_HOVER },
-          element.info.title
+          translator.t(element.info.title)
         ),
         React.createElement(
           'div',
@@ -179,14 +182,14 @@ var CatalogItem = function (_Component) {
             return React.createElement(
               'li',
               { style: STYLE_TAG, key: index },
-              tag
+              translator.t(tag)
             );
           })
         ),
         React.createElement(
           'div',
           { style: STYLE_DESCRIPTION },
-          element.info.description
+          translator.t(element.info.description)
         )
       );
     }
