@@ -35,7 +35,8 @@ export const PRIMARY_COLOR = {
   border: '1px solid #555',
   text_main: COLORS.white,
   text_alt: '#EBEBEB',
-  input: '#55595C'
+  input: '#55595C',
+  whiteBackground: "#FFFFFF"
 };
 
 export const SECONDARY_COLOR = {
@@ -55,4 +56,9 @@ export const AREA_MESH_COLOR = {
 export const LINE_MESH_COLOR = {
   selected: MESH_SELECTED,
   unselected: '#8E9BA2'
+}
+
+export const TOOLBAR_COLOR = {
+  lieanerBorderActive: 'linear-gradient(346.44deg, #C3962E 19.57%, #4E2F05 22.07%, #996D1D 30.41%, #D09B2F 37.91%, #F2B73A 42.91%, #FFC23F 46.24%, #B07520 57.08%, #FFFFFF 64.58%, #BF9700 73.74%, #F0DFAC 87.08%, #E7D18B 87.91%, #D8BC5A 88.74%, #D4B549 89.58%, #D0B03D 90.41%, #CEAD36 91.24%, #CEAD35 94.58%, #FFC23F 102.91%)',
+  lieanerBorder: 'linear-gradient(90deg, #F0F0F0 0%, #D5D5D5 42%, #F2F2F2 100%)'
 }

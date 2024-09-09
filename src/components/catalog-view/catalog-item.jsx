@@ -116,7 +116,7 @@ export default class CatalogItem extends Component {
 
   select() {
     let element = this.props.element;
-
+    console.log(element)
     switch (element.prototype) {
       case 'lines':
         this.context.linesActions.selectToolDrawingLine(element.name);
@@ -135,7 +135,6 @@ export default class CatalogItem extends Component {
   render() {
     let element = this.props.element;
     let hover = this.state.hover;
-
     return (
       <div
         style={hover ? STYLE_BOX_HOVER : STYLE_BOX}

@@ -26,7 +26,7 @@ export default class Scene extends Component {
           }
         </g>
 
-        <Layer key={selectedLayer.id} layer={selectedLayer} scene={scene} catalog={catalog}/>
+        {/* <Layer key={selectedLayer.id} layer={selectedLayer} scene={scene} catalog={catalog}/> */}
       </g>
     );
   }

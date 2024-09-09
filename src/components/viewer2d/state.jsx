@@ -18,7 +18,6 @@ export default function State({state, catalog}) {
     <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
 // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
   snapElements = null; //only for debug purpose
-
   return (
     <g>
       <rect x="0" y="0" width={width} height={height} fill={SharedStyle.COLORS.white}/>
