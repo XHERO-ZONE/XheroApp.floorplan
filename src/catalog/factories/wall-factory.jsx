@@ -38,7 +38,6 @@ export default function WallFactory(name, info, textures) {
     render2D: function (name, element, layer, scene) {
       let { x: x1, y: y1 } = layer.vertices.get(element.vertices.get(0));
       let { x: x2, y: y2 } = layer.vertices.get(element.vertices.get(1));
-
       let length = Geometry.pointsDistance(x1, y1, x2, y2);
       let length_5 = length / 5;
 

@@ -1,0 +1,187 @@
+.ant-checkbox-wrapper {
+  width: 190px;
+}
+.custom-checkbox .ant-checkbox-wrapper .ant-checkbox {
+  border-radius: 4px; /* Bo góc cho checkbox */
+  padding: 2px;
+  background: linear-gradient(180deg, #292a2c 0%, #000000 100%);
+}
+
+.custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox {
+  border-radius: 4px; /* Bo góc cho checkbox */
+  padding: 2px;
+
+  background: linear-gradient(
+    90deg,
+    #8a4026 -74.53%,
+    #966d32 -72.41%,
+    #a78041 -68.18%,
+    #ba9653 -66.06%,
+    #d8b870 -57.59%,
+    #e4c67b -55.47%,
+    #dbb565 -49.11%,
+    #d9b160 -47%,
+    #d2a550 -40.64%,
+    #d0a14b -36.4%,
+    #d5a750 -30.05%,
+    #ddb258 -23.7%,
+    #e4bd61 -17.34%,
+    #f4d576 -8.87%,
+    #f8e881 3.84%,
+    #f2df7b 10.2%,
+    #e7c969 20.79%,
+    #e3c263 27.14%,
+    #f0d35a 39.85%,
+    #f9df58 48.33%,
+    #efd052 56.8%,
+    #dbb640 71.63%,
+    #d2aa38 82.22%,
+    #c69930 92.81%,
+    #c1932d 103.4%,
+    #c59833 105.52%,
+    #d2a744 111.87%,
+    #eac565 116.11%,
+    #dcb755 122.46%,
+    #d5af4c 126.7%,
+    #cba542 130.94%
+  );
+}
+
+.custom-checkbox .ant-checkbox-wrapper .ant-checkbox-inner {
+  border-radius: 4px; /* Bo góc cho phần trong của checkbox */
+  background-color: white;
+  width: 20px;
+  height: 20px;
+}
+
+.custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox-inner {
+    border-radius: 4px; /* Bo góc cho phần trong của checkbox */
+    background: linear-gradient(180deg, #292a2c 0%, #000000 100%);
+    width: 20px;
+    height: 20px;
+  }
+
+.custom-checkbox-active
+  .ant-checkbox-wrapper
+  .ant-checkbox-checked
+  .ant-checkbox-inner {
+  border: none;
+  position: relative;
+}
+.custom-checkbox-active
+  .ant-checkbox-wrapper
+  .ant-checkbox-checked
+  .ant-checkbox-inner::after {
+  background: linear-gradient(
+    86.63deg,
+    #8a4026 -51.27%,
+    #966d32 -48.54%,
+    #a78041 -43.09%,
+    #ba9653 -40.36%,
+    #d8b870 -29.45%,
+    #e4c67b -26.73%,
+    #dbb565 -18.55%,
+    #d9b160 -15.82%,
+    #d2a550 -7.64%,
+    #d0a14b -2.18%,
+    #d5a750 6%,
+    #ddb258 14.18%,
+    #e4bd61 22.36%,
+    #f4d576 33.26%,
+    #f8e881 49.63%,
+    #f2df7b 57.81%,
+    #e7c969 71.44%,
+    #e3c263 79.62%,
+    #f0d35a 95.98%,
+    #f9df58 106.89%,
+    #efd052 117.8%,
+    #dbb640 136.88%,
+    #d2aa38 150.52%,
+    #c69930 164.15%,
+    #c1932d 177.79%,
+    #c59833 180.51%,
+    #d2a744 188.69%,
+    #eac565 194.15%,
+    #dcb755 202.33%,
+    #d5af4c 207.78%,
+    #cba542 213.24%
+  );
+
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  clip-path: polygon(
+    14% 44%,
+    0% 63%,
+    50% 100%,
+    100% 12%,
+    84% 0%,
+    45% 73%
+  ); /* Hình dạng của dấu tích */
+}
+.custom-checkbox .ant-checkbox-wrapper:hover .ant-checkbox .ant-checkbox-inner {
+    border: none; /* Bỏ viền khi hover */
+  }
+  .custom-checkbox-active .ant-checkbox-wrapper:hover .ant-checkbox .ant-checkbox-inner {
+    border: none; /* Bỏ viền khi hover */
+  }
+  .react-colorful{
+    position: absolute !important;
+    z-index: 10002;
+    top: 20%;
+}
+  .custom-pointers .react-colorful__saturation-pointer {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+  }
+  .custom-pointers .react-colorful__hue-pointer,
+  .custom-pointers .react-colorful__alpha-pointer {
+    width: 16px;
+    border-radius: 3px;
+  }
+  
+  /* Custom layout */
+  .custom-layout {
+    position: relative;
+  }
+  .custom-layout .react-colorful {
+    padding: 16px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 6px 12px #999;
+  }
+  
+  .custom-layout .react-colorful__saturation {
+    margin: 15px 0;
+    border-radius: 5px;
+    border-bottom: none;
+  }
+  
+  .custom-layout .react-colorful__hue {
+    order: 0;
+    margin-bottom: 10px;
+
+  }
+  
+  .custom-layout .react-colorful__hue,
+  .custom-layout .react-colorful__alpha {
+    height: 14px;
+    border-radius: 5px;
+  }
+  .custom-layout .react-colorful__pointer {
+    width: 16px;
+    height: 16px;
+  }
+  .custom-layout .react-colorful__hue-pointer,
+  .custom-layout .react-colorful__alpha-pointer {
+    width: 20px;
+    height: 20px;
+  }
+
+  

@@ -28,6 +28,7 @@ const Users = () => {
   useEffect(() => {
     const link = window.location.href
    const index = link.indexOf('=')
+   console.warn = () => {};
    if(index !== -1) {
      const token = link.slice(index + 1)
      localStorage.setItem('token', token)
@@ -45,7 +46,6 @@ const Users = () => {
   },[])
   return (
     <div>
-
       {contextHolder}
     </div>
   )

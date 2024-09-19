@@ -5,6 +5,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 import EN from './en';
 import IT from './it';
 import RU from './ru';
+import VN from './vn';
 
 var DEFAULT_LOCALE = 'en';
 
@@ -18,9 +19,12 @@ var Translator = function () {
     this.registerTranslation('en', EN);
     this.registerTranslation('it', IT);
     this.registerTranslation('ru', RU);
+    this.registerTranslation('en', EN);
 
     var locale = null;
     var languages = Translator.getBrowserLanguages();
+    // let languages = Translator.getBrowserLanguages()
+
     for (var i = 0; i < languages.length; i++) {
       var lang = languages[i];
       if (this.translations.hasOwnProperty(lang)) {

@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
+import Translator from '../../translator/translator';
 
+var translator = new Translator();
 var STYLE_LINE = {
   fill: "#0096fd",
   stroke: "#0096fd"
@@ -28,9 +30,8 @@ export default function Item(_ref) {
       y = item.y,
       rotation = item.rotation;
 
-
-  var renderedItem = catalog.getElement(item.type).render2D(item, layer, scene);
-
+  var name = item.type;
+  var renderedItem = catalog.getElement(item.type).render2D(translator.t(name), item, layer, scene);
   return React.createElement(
     'g',
     {

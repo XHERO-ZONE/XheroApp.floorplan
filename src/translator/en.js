@@ -148,5 +148,12 @@ export default {
 "venetian blind window": "Venetian Blind Window",
 "curtain window": "Curtain Window",
 "Windows": "Windows",
-"Doors": "Doors"
+"Doors": "Doors",
+"Texture" : "Texture",
+"square-frame" : "square-frame",
+"L-frame" : "L-frame",
+"T-frame" : "T-frame",
+"U-frame" : "U-frame",
+"thap-frame" : "Thap-frame",
+
 };

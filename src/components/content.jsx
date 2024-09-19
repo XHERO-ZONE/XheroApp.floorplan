@@ -18,14 +18,16 @@ export default function Content({width, height, state, customContents}) {
     case constants.MODE_3D_FIRST_PERSON:
       return <Viewer3DFirstPerson state={state} width={width} height={height}/>;
 
+    // case constants.MODE_VIEWING_CATALOG:
+    //   return <CatalogList state={state} width={width} height={height}/>;
     case constants.MODE_VIEWING_CATALOG:
-      return <CatalogList state={state} width={width} height={height}/>;
 
     case constants.MODE_IDLE:
     case constants.MODE_2D_ZOOM_IN:
     case constants.MODE_2D_ZOOM_OUT:
     case constants.MODE_2D_PAN:
     case constants.MODE_WAITING_DRAWING_LINE:
+    case constants.MODE_WAITING_DRAWING_TEXTURE:
     case constants.MODE_DRAGGING_LINE:
     case constants.MODE_DRAGGING_VERTEX:
     case constants.MODE_DRAGGING_ITEM:

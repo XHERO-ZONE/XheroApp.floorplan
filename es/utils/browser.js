@@ -1,14 +1,13 @@
-export function browserDownload(json) {
-  var fileOutputLink = document.createElement('a');
 
-  var filename = 'output' + Date.now() + '.json';
-  filename = window.prompt('Insert output filename', filename);
-  if (!filename) return;
+export function browserDownload(json, name) {
+  var fileOutputLink = document.createElement('a');
+  var fileName = name + '.json';
+  if (!name) return;
 
   var output = JSON.stringify(json);
   var data = new Blob([output], { type: 'text/plain' });
   var url = window.URL.createObjectURL(data);
-  fileOutputLink.setAttribute('download', filename);
+  fileOutputLink.setAttribute('download', fileName);
   fileOutputLink.href = url;
   fileOutputLink.style.display = 'none';
   document.body.appendChild(fileOutputLink);

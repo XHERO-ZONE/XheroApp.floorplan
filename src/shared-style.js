@@ -1,7 +1,9 @@
 // COLORS
 export const COLORS = {
   white: '#FFF',
-  black: '#000'
+  black: '#000000',
+  titleToolBar: "linear-gradient(180deg, #5C3D2B 0%, #331F15 100%)",
+  borderToolBar: 'linear-gradient(346.44deg, #C3962E 19.57%, #4E2F05 22.07%, #996D1D 30.41%, #D09B2F 37.91%, #F2B73A 42.91%, #FFC23F 46.24%, #B07520 57.08%, #FFFFFF 64.58%, #BF9700 73.74%, #F0DFAC 87.08%, #E7D18B 87.91%, #D8BC5A 88.74%, #D4B549 89.58%, #D0B03D 90.41%, #CEAD36 91.24%, #CEAD35 94.58%, #FFC23F 102.91%)',
 };
 
 export const MATERIAL_COLORS = {

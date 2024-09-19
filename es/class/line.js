@@ -7,7 +7,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 import { Map, List, fromJS } from 'immutable';
 import { Group, Layer, Hole, Vertex } from './export';
 import { IDBroker, NameGenerator, GeometryUtils, SnapUtils, SnapSceneUtils } from '../utils/export';
-import { MODE_IDLE, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAGGING_LINE } from '../constants';
+import { MODE_IDLE, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAGGING_LINE, MODE_WAITING_DRAWING_TEXTURE } from '../constants';
 
 var Line = function () {
   function Line() {
@@ -17,7 +17,7 @@ var Line = function () {
   _createClass(Line, null, [{
     key: 'create',
     value: function create(state, layerID, type, x0, y0, x1, y1, properties) {
-
+      console.log(state, layerID, type, x0, y0, x1, y1, properties);
       var lineID = IDBroker.acquireID();
 
       var _Vertex$add = Vertex.add(state, layerID, x0, y0, 'lines', lineID),
@@ -299,7 +299,17 @@ var Line = function () {
           type: sceneComponentType
         })
       });
-
+      return { updatedState: state };
+    }
+  }, {
+    key: 'selectToolDrawingTexture',
+    value: function selectToolDrawingTexture(state, sceneComponentType) {
+      state = state.merge({
+        mode: MODE_WAITING_DRAWING_TEXTURE,
+        drawingSupport: new Map({
+          type: sceneComponentType
+        })
+      });
       return { updatedState: state };
     }
   }, {

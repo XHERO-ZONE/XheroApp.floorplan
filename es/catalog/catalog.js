@@ -168,17 +168,18 @@ var Catalog = function () {
     /** @description Register a new category
      *  @param {string} name Name of category
      *  @param {string} label Label of category
+     *  @param {string} img img of category
      *  @param {array} [childs] Category's childs
      *  @return {?object} Registered category
     */
 
   }, {
     key: 'registerCategory',
-    value: function registerCategory(name, label, childs) {
+    value: function registerCategory(name, label, img, childs) {
       var _this3 = this;
 
       if (this.validateCategory(name, label)) {
-        this.categories[name] = { name: name, label: label, categories: [], elements: [] };
+        this.categories[name] = { name: name, label: label, img: img, categories: [], elements: [] };
         this.categories.root.categories.push(this.categories[name]);
 
         if (childs && childs.length) {

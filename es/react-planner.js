@@ -10,11 +10,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import 'regenerator-runtime/runtime';
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
 import actions from './actions/export';
@@ -22,6 +22,12 @@ import { objectsMap } from './utils/objects-utils';
 import { ToolbarComponents, Content, SidebarComponents, FooterBarComponents } from './components/export';
 import { VERSION } from './version';
 import './styles/export';
+import { isMobile, isTablet } from 'react-device-detect';
+import { useDevice } from './components/responsive';
+import axios from 'axios';
+import Users from './components/users';
+import CatalogList from './components/catalog-view/catalog-list';
+// import { UserService } from './api';
 
 var Toolbar = ToolbarComponents.Toolbar;
 var Sidebar = SidebarComponents.Sidebar;
@@ -30,12 +36,14 @@ var FooterBar = FooterBarComponents.FooterBar;
 
 var toolbarW = 50;
 var sidebarW = 300;
-var footerBarH = 20;
+var footerBarH = 25;
 
 var wrapperStyle = {
   display: 'flex',
-  flexFlow: 'row nowrap'
+  flexFlow: 'row nowrap',
+  height: '100%'
 };
+// const userService = new UserService();
 
 var ReactPlanner = function (_Component) {
   _inherits(ReactPlanner, _Component);
@@ -95,24 +103,27 @@ var ReactPlanner = function (_Component) {
           height = _props2.height,
           state = _props2.state,
           stateExtractor = _props2.stateExtractor,
-          props = _objectWithoutProperties(_props2, ['width', 'height', 'state', 'stateExtractor']);
+          device = _props2.device,
+          props = _objectWithoutProperties(_props2, ['width', 'height', 'state', 'stateExtractor', 'device']);
 
-      var contentW = width - toolbarW - sidebarW;
+      var contentW = width;
       var toolbarH = height - footerBarH;
       var contentH = height - footerBarH;
       var sidebarH = height - footerBarH;
-
       var extractedState = stateExtractor(state);
-
       return React.createElement(
         'div',
         { style: _extends({}, wrapperStyle, { height: height }) },
-        React.createElement(Toolbar, _extends({ width: toolbarW, height: toolbarH, state: extractedState }, props)),
+        React.createElement(Users, null),
         React.createElement(Content, _extends({ width: contentW, height: contentH, state: extractedState }, props, { onWheel: function onWheel(event) {
             return event.preventDefault();
           } })),
-        React.createElement(Sidebar, _extends({ width: sidebarW, height: sidebarH, state: extractedState }, props)),
-        React.createElement(FooterBar, _extends({ width: width, height: footerBarH, state: extractedState }, props))
+        React.createElement(
+          'div',
+          null,
+          React.createElement(CatalogList, { page: 'root', state: state, width: 60, height: height })
+        ),
+        React.createElement(FooterBar, _extends({ width: width, height: device.isMobile === true ? 50 : footerBarH, state: extractedState }, props))
       );
     }
   }]);
@@ -153,11 +164,16 @@ ReactPlanner.defaultProps = {
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,
-  softwareSignature: 'React-Planner ' + VERSION,
+  softwareSignature: 'Xhero Tool',
   toolbarButtons: [],
   sidebarComponents: [],
   footerbarComponents: [],
   customContents: {}
+};
+
+var ReactPlannerWithDevice = function ReactPlannerWithDevice(props) {
+  var device = useDevice();
+  return React.createElement(ReactPlanner, _extends({}, props, { device: device }));
 };
 
 //redux connect
@@ -173,4 +189,4 @@ function mapDispatchToProps(dispatch) {
   });
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactPlanner);
+export default connect(mapStateToProps, mapDispatchToProps)(ReactPlannerWithDevice);

@@ -2,62 +2,73 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _footerBarStyle;
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import If from '../../utils/react-if';
-import FooterToggleButton from './footer-toggle-button';
-import FooterContentButton from './footer-content-button';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
-import { MODE_SNAPPING } from '../../constants';
-import * as SharedStyle from '../../shared-style';
-import { MdAddCircle, MdWarning } from 'react-icons/md';
-import { VERSION } from '../../version';
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var footerBarStyle = {
-  position: 'absolute',
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import If from "../../utils/react-if";
+import FooterToggleButton from "./footer-toggle-button";
+import FooterContentButton from "./footer-content-button";
+import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from "../../utils/snap";
+import { MODE_SNAPPING } from "../../constants";
+import * as SharedStyle from "../../shared-style";
+import { MdAddCircle, MdWarning } from "react-icons/md";
+import { VERSION } from "../../version";
+import { isDesktop, isMobile, isTablet } from "react-device-detect";
+import { useDevice } from "../responsive";
+
+var footerBarStyle = (_footerBarStyle = {
+  position: "absolute",
   bottom: 0,
-  lineHeight: '14px',
-  fontSize: '12px',
+  lineHeight: "14px",
   color: SharedStyle.COLORS.white,
-  backgroundColor: SharedStyle.SECONDARY_COLOR.alt,
-  padding: '3px 1em',
+  backgroundColor: SharedStyle.COLORS.white,
+  padding: "3px 1em",
   margin: 0,
-  boxSizing: 'border-box',
-  cursor: 'default',
-  userSelect: 'none',
-  zIndex: '9001'
-};
+  boxSizing: "border-box",
+  cursor: "default",
+  userSelect: "none",
+  zIndex: "9001",
+  display: "flex"
+}, _defineProperty(_footerBarStyle, "padding", "10px 20px"), _defineProperty(_footerBarStyle, "height", "70px"), _defineProperty(_footerBarStyle, "gap", "20px"), _footerBarStyle);
 
 export var leftTextStyle = {
-  position: 'relative',
-  borderRight: '1px solid #FFF',
-  float: 'left',
-  padding: '0 1em',
-  display: 'inline-block'
+  position: "relative",
+  borderRight: "1px solid #FFF",
+  float: "left",
+  display: "inline-block"
 };
 
 export var rightTextStyle = {
-  position: 'relative',
-  borderLeft: '1px solid #FFF',
-  float: 'right',
-  padding: '0 1em',
-  display: 'inline-block'
+  position: "relative",
+  float: "right",
+  display: "inline-block"
 };
 
 var coordStyle = {
-  display: 'inline-block',
-  width: '6em',
+  display: "inline-block",
   margin: 0,
   padding: 0
 };
-
-var appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
+var textFooter = {
+  fontFamily: "Playpen Sans",
+  fontSize: "14px",
+  fontWeight: "700",
+  lineHeight: "10px",
+  textAlign: "center",
+  background: SharedStyle.COLORS.titleToolBar,
+  webkitBackgroundClip: "text",
+  webkitTextFillColor: "transparent"
+};
+var appMessageStyle = { borderBottom: "1px solid #555", lineHeight: "1.5em" };
 
 var FooterBar = function (_Component) {
   _inherits(FooterBar, _Component);
@@ -72,45 +83,49 @@ var FooterBar = function (_Component) {
   }
 
   _createClass(FooterBar, [{
-    key: 'render',
+    key: "render",
     value: function render() {
       var _props = this.props,
           globalState = _props.state,
           width = _props.width,
-          height = _props.height;
+          height = _props.height,
+          device = _props.device;
       var _context = this.context,
           translator = _context.translator,
           projectActions = _context.projectActions;
 
-      var _globalState$get$toJS = globalState.get('mouse').toJS(),
+      var _globalState$get$toJS = globalState.get("mouse").toJS(),
           x = _globalState$get$toJS.x,
           y = _globalState$get$toJS.y;
 
-      var zoom = globalState.get('zoom');
-      var mode = globalState.get('mode');
+      var zoom = globalState.get("zoom");
+      var mode = globalState.get("mode");
 
-      var errors = globalState.get('errors').toArray();
+      var errors = globalState.get("errors").toArray();
       var errorsJsx = errors.map(function (err, ind) {
         return React.createElement(
-          'div',
+          "div",
           { key: ind, style: appMessageStyle },
-          '[ ',
+          "[ ",
           new Date(err.date).toLocaleString(),
-          ' ] ',
+          " ] ",
           err.error
         );
       });
       var errorLableStyle = errors.length ? { color: SharedStyle.MATERIAL_COLORS[500].red } : {};
-      var errorIconStyle = errors.length ? { transform: 'rotate(45deg)', color: SharedStyle.MATERIAL_COLORS[500].red } : { transform: 'rotate(45deg)' };
+      var errorIconStyle = errors.length ? {
+        transform: "rotate(45deg)",
+        color: SharedStyle.MATERIAL_COLORS[500].red
+      } : { transform: "rotate(45deg)" };
 
-      var warnings = globalState.get('warnings').toArray();
+      var warnings = globalState.get("warnings").toArray();
       var warningsJsx = warnings.map(function (warn, ind) {
         return React.createElement(
-          'div',
+          "div",
           { key: ind, style: appMessageStyle },
-          '[ ',
+          "[ ",
           new Date(warn.date).toLocaleString(),
-          ' ] ',
+          " ] ",
           warn.warning
         );
       });
@@ -121,134 +136,82 @@ var FooterBar = function (_Component) {
         return projectActions.toggleSnap(globalState.snapMask.merge(val));
       };
 
+      var iconTurnBack = require("../../../public/images/iconTurnBack.png");
+      var iconResert = require("../../../public/images/iconResert.png");
+      var iconFloor = require("../../../public/images/iconFloor.png");
+
       return React.createElement(
-        'div',
-        { style: _extends({}, footerBarStyle, { width: width, height: height }) },
+        "div",
+        {
+          style: _extends({}, footerBarStyle, {
+            width: width
+          })
+        },
         React.createElement(
-          If,
-          { condition: MODE_SNAPPING.includes(mode) },
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer"
+            },
+            onClick: function onClick(event) {
+              return projectActions.undo();
+            }
+          },
+          React.createElement("img", { src: iconTurnBack, width: 36, height: 36 }),
           React.createElement(
-            'div',
-            { style: leftTextStyle },
-            React.createElement(
-              'div',
-              { title: translator.t('Mouse X Coordinate'), style: coordStyle },
-              'X : ',
-              x.toFixed(3)
-            ),
-            React.createElement(
-              'div',
-              { title: translator.t('Mouse Y Coordinate'), style: coordStyle },
-              'Y : ',
-              y.toFixed(3)
-            )
-          ),
-          React.createElement(
-            'div',
-            { style: leftTextStyle, title: translator.t('Scene Zoom Level') },
-            'Zoom: ',
-            zoom.toFixed(3),
-            'X'
-          ),
-          React.createElement(
-            'div',
-            { style: leftTextStyle },
-            React.createElement(FooterToggleButton, {
-              state: this.state,
-              toggleOn: function toggleOn() {
-                updateSnapMask({ SNAP_POINT: true });
-              },
-              toggleOff: function toggleOff() {
-                updateSnapMask({ SNAP_POINT: false });
-              },
-              text: 'Snap PT',
-              toggleState: globalState.snapMask.get(SNAP_POINT),
-              title: translator.t('Snap to Point')
-            }),
-            React.createElement(FooterToggleButton, {
-              state: this.state,
-              toggleOn: function toggleOn() {
-                updateSnapMask({ SNAP_LINE: true });
-              },
-              toggleOff: function toggleOff() {
-                updateSnapMask({ SNAP_LINE: false });
-              },
-              text: 'Snap LN',
-              toggleState: globalState.snapMask.get(SNAP_LINE),
-              title: translator.t('Snap to Line')
-            }),
-            React.createElement(FooterToggleButton, {
-              state: this.state,
-              toggleOn: function toggleOn() {
-                updateSnapMask({ SNAP_SEGMENT: true });
-              },
-              toggleOff: function toggleOff() {
-                updateSnapMask({ SNAP_SEGMENT: false });
-              },
-              text: 'Snap SEG',
-              toggleState: globalState.snapMask.get(SNAP_SEGMENT),
-              title: translator.t('Snap to Segment')
-            }),
-            React.createElement(FooterToggleButton, {
-              state: this.state,
-              toggleOn: function toggleOn() {
-                updateSnapMask({ SNAP_GRID: true });
-              },
-              toggleOff: function toggleOff() {
-                updateSnapMask({ SNAP_GRID: false });
-              },
-              text: 'Snap GRD',
-              toggleState: globalState.snapMask.get(SNAP_GRID),
-              title: translator.t('Snap to Grid')
-            }),
-            React.createElement(FooterToggleButton, {
-              state: this.state,
-              toggleOn: function toggleOn() {
-                updateSnapMask({ SNAP_GUIDE: true });
-              },
-              toggleOff: function toggleOff() {
-                updateSnapMask({ SNAP_GUIDE: false });
-              },
-              text: 'Snap GDE',
-              toggleState: globalState.snapMask.get(SNAP_GUIDE),
-              title: translator.t('Snap to Guide')
-            })
+            "span",
+            { style: textFooter },
+            "Ho\xE0n t\xE1c"
           )
         ),
-        this.props.footerbarComponents.map(function (Component, index) {
-          return React.createElement(Component, { state: state, key: index });
-        }),
-        this.props.softwareSignature ? React.createElement(
-          'div',
-          {
-            style: rightTextStyle,
-            title: this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ' using React-Planner ' + VERSION)
-          },
-          this.props.softwareSignature
-        ) : null,
         React.createElement(
-          'div',
-          { style: rightTextStyle },
-          React.createElement(FooterContentButton, {
-            state: this.state,
-            icon: MdAddCircle,
-            iconStyle: errorIconStyle,
-            text: errors.length.toString(),
-            textStyle: errorLableStyle,
-            title: 'Errors [ ' + errors.length + ' ]',
-            titleStyle: errorLableStyle,
-            content: [errorsJsx]
-          }),
-          React.createElement(FooterContentButton, {
-            state: this.state,
-            icon: MdWarning,
-            iconStyle: warningIconStyle,
-            text: warnings.length.toString(),
-            textStyle: warningLableStyle,
-            title: 'Warnings [ ' + warnings.length + ' ]',
-            titleStyle: warningLableStyle,
-            content: [warningsJsx]
-          })
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer"
+            },
+            onClick: function onClick(event) {
+              return confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null;
+            }
+          },
+          React.createElement("img", { src: iconResert, width: 36, height: 36 }),
+          React.createElement(
+            "span",
+            { style: textFooter },
+            "L\xE0m l\u1EA1i"
+          )
+        ),
+        React.createElement(
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer"
+            },
+            onClick: function onClick(event) {
+              return viewer3DActions.selectTool3DView();
+            }
+          },
+          React.createElement("img", { src: iconFloor, width: 36, height: 36 }),
+          React.createElement(
+            "span",
+            { style: textFooter },
+            "T\u1EA7ng"
+          )
         )
       );
     }
@@ -257,8 +220,12 @@ var FooterBar = function (_Component) {
   return FooterBar;
 }(Component);
 
-export default FooterBar;
+var FooterBarWithDevice = function FooterBarWithDevice(props) {
+  var device = useDevice();
+  return React.createElement(FooterBar, _extends({}, props, { device: device }));
+};
 
+export default FooterBarWithDevice;
 
 FooterBar.propTypes = {
   state: PropTypes.object.isRequired,

@@ -2,86 +2,114 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var _containerStyle;
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import CatalogItem from './catalog-item';
-import CatalogBreadcrumb from './catalog-breadcrumb';
-import CatalogPageItem from './catalog-page-item';
-import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
-import ContentContainer from '../style/content-container';
-import ContentTitle from '../style/content-title';
-import * as SharedStyle from '../../shared-style';
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var containerStyle = {
-  position: 'fixed',
-  width: 'calc( 100% - 51px)',
-  height: 'calc( 100% - 20px)',
-  backgroundColor: '#FFF',
-  padding: '1em',
-  left: 50,
-  overflowY: 'auto',
-  overflowX: 'hidden',
-  zIndex: 10
-};
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import CatalogItem from "./catalog-item";
+import CatalogBreadcrumb from "./catalog-breadcrumb";
+import CatalogPageItem from "./catalog-page-item";
+import CatalogTurnBackPageItem from "./catalog-turn-back-page-item";
+import ContentContainer from "../style/content-container";
+import ContentTitle from "../style/content-title";
+import * as SharedStyle from "../../shared-style";
+import Translator from "../../translator/translator";
+import { linesActions } from "../../actions/export";
+var bgToolBar = require("../../../public/images/bgToolBar.png");
+
+var translator = new Translator();
+var containerStyle = (_containerStyle = {
+  position: "fixed",
+  // width:'calc( 100% - 51px)',
+  height: "calc( 100% - 20px)",
+  backgroundImage: "url(" + bgToolBar,
+  right: 0,
+  overflowY: "auto",
+  overflowX: "hidden",
+  zIndex: 10,
+  padding: "0px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center"
+}, _defineProperty(_containerStyle, "padding", "10px"), _defineProperty(_containerStyle, "backgroundSize", "100% 100%"), _defineProperty(_containerStyle, "backgroundRepeat", "no-epeat"), _containerStyle);
 
 var itemsStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(14em, 1fr))',
-  gridGap: '10px',
-  marginTop: '1em'
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+  gridGap: "10px",
+  marginTop: "1em",
+  width: "100%",
+  // padding: "0 10px",
+  justifyContent: "center"
 };
 
 var searchContainer = {
-  width: '100%',
-  height: '3em',
-  padding: '0.625em',
-  background: '#f7f7f9',
-  border: '1px solid #e1e1e8',
-  cursor: 'pointer',
-  position: 'relative',
-  boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px',
-  transition: 'all .2s ease-in-out',
-  WebkitTransition: 'all .2s ease-in-out',
-  marginBottom: '1em'
+  width: "100%",
+  height: "3em",
+  padding: "0.625em",
+  background: "#f7f7f9",
+  border: "1px solid #e1e1e8",
+  cursor: "pointer",
+  position: "relative",
+  boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)",
+  borderRadius: "2px",
+  transition: "all .2s ease-in-out",
+  WebkitTransition: "all .2s ease-in-out",
+  marginBottom: "1em"
 };
 
 var searchText = {
-  width: '8em',
-  display: 'inline-block'
+  width: "8em",
+  display: "inline-block"
 };
 
 var searchInput = {
-  width: 'calc( 100% - 10em )',
-  height: '2em',
-  margin: '0',
-  padding: '0 1em',
-  border: '1px solid #EEE'
+  width: "calc( 100% - 10em )",
+  height: "2em",
+  margin: "0",
+  padding: "0 1em",
+  border: "1px solid #EEE"
 };
 
 var historyContainer = _extends({}, searchContainer, {
-  padding: '0.2em 0.625em'
+  padding: "0.2em 0.625em"
 });
 
 var historyElementStyle = {
-  width: 'auto',
-  height: '2em',
-  lineHeight: '2em',
-  textAlign: 'center',
-  borderRadius: '1em',
-  display: 'inline-block',
-  cursor: 'pointer',
+  width: "auto",
+  height: "2em",
+  lineHeight: "2em",
+  textAlign: "center",
+  borderRadius: "1em",
+  display: "inline-block",
+  cursor: "pointer",
   backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
   color: SharedStyle.PRIMARY_COLOR.text_main,
-  textTransform: 'capitalize',
-  margin: '0.25em',
-  padding: '0 1em'
+  textTransform: "capitalize",
+  margin: "0.25em",
+  padding: "0 1em"
+};
+
+var styleToolBar = {
+  backgroundImage: "url(" + bgToolBar,
+  backgroundSize: "100% 100%",
+  backgroundRepeat: "no-epeat",
+  width: "200px",
+  padding: "20px",
+  height: "100%",
+  position: "absolute",
+  right: "56px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px"
 };
 
 var CatalogList = function (_Component) {
@@ -92,24 +120,27 @@ var CatalogList = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (CatalogList.__proto__ || Object.getPrototypeOf(CatalogList)).call(this, props));
 
-    var page = props.state.catalog.page;
+    var page = props.page;
     var currentCategory = context.catalog.getCategory(page);
     var categoriesToDisplay = currentCategory.categories;
     var elementsToDisplay = currentCategory.elements.filter(function (element) {
       return element.info.visibility ? element.info.visibility.catalog : true;
     });
-
+    _this.changeType = _this.changeType.bind(_this);
+    _this.handleOpenCatolog = _this.handleOpenCatolog.bind(_this);
     _this.state = {
       categories: currentCategory.categories,
       elements: elementsToDisplay,
-      matchString: '',
-      matchedElements: []
+      matchString: "",
+      matchedElements: [],
+      type: "texture",
+      openCatlog: false
     };
     return _this;
   }
 
   _createClass(CatalogList, [{
-    key: 'flattenCategories',
+    key: "flattenCategories",
     value: function flattenCategories(categories) {
       var toRet = [];
 
@@ -122,18 +153,34 @@ var CatalogList = function (_Component) {
       return toRet;
     }
   }, {
-    key: 'matcharray',
+    key: "removeDiacritics",
+    value: function removeDiacritics(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+  }, {
+    key: "handleOpenCatolog",
+    value: function handleOpenCatolog() {
+      this.setState({ openCatlog: !this.state.openCatlog });
+    }
+  }, {
+    key: "matcharray",
     value: function matcharray(text) {
-
       var array = this.state.elements.concat(this.flattenCategories(this.state.categories));
-
       var filtered = [];
 
-      if (text != '') {
-        var regexp = new RegExp(text, 'i');
+      if (text != "") {
+        var regexp = new RegExp(text, "i");
         for (var i = 0; i < array.length; i++) {
-          if (regexp.test(array[i].info.title)) {
+          var title = translator.t(array[i].info.title);
+          var titleNoDiacritics = this.removeDiacritics(title);
+          if (regexp.test(titleNoDiacritics)) {
             filtered.push(array[i]);
+          } else {
+            var titleLowerCase = title.toLowerCase();
+            var textLowerCase = text.toLowerCase();
+            if (titleLowerCase.includes(textLowerCase)) {
+              filtered.push(array[i]);
+            }
           }
         }
       }
@@ -144,17 +191,26 @@ var CatalogList = function (_Component) {
       });
     }
   }, {
-    key: 'select',
+    key: "changeType",
+    value: function changeType(newType) {
+      this.setState({ type: newType });
+    }
+  }, {
+    key: "drawLine",
+    value: function drawLine() {
+      linesActions.beginDrawingLine(200, 100);
+    }
+  }, {
+    key: "select",
     value: function select(element) {
-
       switch (element.prototype) {
-        case 'lines':
+        case "lines":
           this.context.linesActions.selectToolDrawingLine(element.name);
           break;
-        case 'items':
+        case "items":
           this.context.itemsActions.selectToolDrawingItem(element.name);
           break;
-        case 'holes':
+        case "holes":
           this.context.holesActions.selectToolDrawingHole(element.name);
           break;
       }
@@ -162,94 +218,95 @@ var CatalogList = function (_Component) {
       this.context.projectActions.pushLastSelectedCatalogElementToHistory(element);
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var _this2 = this;
 
-      var page = this.props.state.catalog.page;
+      var page = this.state.type;
       var currentCategory = this.context.catalog.getCategory(page);
-      var categoriesToDisplay = currentCategory.categories;
+      var currentCategoryDefault = this.context.catalog.getCategory(this.props.page);
+      var categoriesToDisplay = currentCategoryDefault.categories;
       var elementsToDisplay = currentCategory.elements.filter(function (element) {
         return element.info.visibility ? element.info.visibility.catalog : true;
       });
-
       var breadcrumbComponent = null;
+      var iconToolBar = require("../../../public/images/iconToolBar.png");
+      var iconClose = require("../../../public/images/iconCloseToolBar.png");
+      // if (page !== 'root') {
 
-      if (page !== 'root') {
+      //   let breadcrumbsNames = [];
 
-        var breadcrumbsNames = [];
+      //   this.props.state.catalog.path.forEach(pathName => {
+      //     breadcrumbsNames.push({
+      //       name: this.context.catalog.getCategory(pathName).label,
+      //       action: () => projectActions.goBackToCatalogPage(pathName)
+      //     });
+      //   });
 
-        this.props.state.catalog.path.forEach(function (pathName) {
-          breadcrumbsNames.push({
-            name: _this2.context.catalog.getCategory(pathName).label,
-            action: function action() {
-              return projectActions.goBackToCatalogPage(pathName);
-            }
-          });
-        });
+      //   breadcrumbsNames.push({name: currentCategory.label, action: ''});
 
-        breadcrumbsNames.push({ name: currentCategory.label, action: '' });
+      //   breadcrumbComponent = (<CatalogBreadcrumb names={breadcrumbsNames}/>);
+      // }
 
-        breadcrumbComponent = React.createElement(CatalogBreadcrumb, { names: breadcrumbsNames });
-      }
+      // let pathSize = this.props.state.catalog.path.size;
+      // console.log(this.props.state.catalog.path.size)
 
-      var pathSize = this.props.state.catalog.path.size;
+      // let turnBackButton = pathSize > 0 ? (
+      //   <CatalogTurnBackPageItem key={pathSize} page={this.context.catalog.categories[this.props.state.catalog.path.get(pathSize - 1)]}/>) : null;
 
-      var turnBackButton = pathSize > 0 ? React.createElement(CatalogTurnBackPageItem, { key: pathSize, page: this.context.catalog.categories[this.props.state.catalog.path.get(pathSize - 1)] }) : null;
-
-      var selectedHistory = this.props.state.get('selectedElementsHistory');
-      var selectedHistoryElements = selectedHistory.map(function (el, ind) {
-        return React.createElement(
-          'div',
-          { key: ind, style: historyElementStyle, title: el.name, onClick: function onClick() {
-              return _this2.select(el);
-            } },
-          el.name
-        );
-      });
+      // let selectedHistory = this.props.state.get('selectedElementsHistory');
+      // let selectedHistoryElements = selectedHistory.map( ( el, ind ) =>
+      //   <div key={ind} style={historyElementStyle} title={el.name} onClick={() => this.select(el) }>{el.name}</div>
+      // );
 
       return React.createElement(
-        ContentContainer,
-        { width: this.props.width, height: this.props.height, style: _extends({}, containerStyle, this.props.style) },
+        "div",
+        null,
         React.createElement(
-          ContentTitle,
-          null,
-          this.context.translator.t('Catalog')
-        ),
-        breadcrumbComponent,
-        React.createElement(
-          'div',
-          { style: searchContainer },
+          ContentContainer,
+          {
+            width: this.props.width,
+            height: this.props.height,
+            style: _extends({}, containerStyle, this.props.style)
+          },
           React.createElement(
-            'span',
-            { style: searchText },
-            this.context.translator.t('Search Element')
+            "div",
+            { onClick: this.handleOpenCatolog },
+            this.state.openCatlog === true ? React.createElement("img", { src: iconClose, width: 40, height: 40 }) : React.createElement("img", { src: iconToolBar, width: 40, height: 40 })
           ),
-          React.createElement('input', { type: 'text', style: searchInput, onChange: function onChange(e) {
-              _this2.matcharray(e.target.value);
-            } })
-        ),
-        selectedHistory.size ? React.createElement(
-          'div',
-          { style: historyContainer },
           React.createElement(
-            'span',
-            null,
-            this.context.translator.t('Last Selected')
-          ),
-          selectedHistoryElements
-        ) : null,
-        React.createElement(
-          'div',
-          { style: itemsStyle },
-          this.state.matchString === '' ? [turnBackButton, categoriesToDisplay.map(function (cat) {
-            return React.createElement(CatalogPageItem, { key: cat.name, page: cat, oldPage: currentCategory });
-          }), elementsToDisplay.map(function (elem) {
-            return React.createElement(CatalogItem, { key: elem.name, element: elem });
-          })] : this.state.matchedElements.map(function (elem) {
-            return React.createElement(CatalogItem, { key: elem.name, element: elem });
-          })
-        )
+            "div",
+            { style: itemsStyle },
+            [
+            // turnBackButton,
+            // categoriesToDisplay.map((cat) => (
+            //   <CatalogPageItem
+            //     type={this.state.type}
+            //     selectType={this.changeType}
+            //     key={cat.name}
+            //     page={cat}
+            //     oldPage={currentCategory}
+            //   />
+            // )),
+            elementsToDisplay.map(function (elem) {
+              return React.createElement(CatalogItem, { key: elem.name, element: elem });
+            })]
+          )
+        ),
+        this.state.openCatlog === true ? React.createElement(
+          "div",
+          { style: _extends({}, styleToolBar) },
+          [categoriesToDisplay.map(function (cat) {
+            return React.createElement(CatalogPageItem, {
+              type: _this2.state.type,
+              selectType: _this2.changeType,
+              handleOpenCatolog: _this2.handleOpenCatolog,
+              key: cat.name,
+              page: cat,
+              oldPage: currentCategory
+            });
+          })]
+        ) : null
       );
     }
   }]);

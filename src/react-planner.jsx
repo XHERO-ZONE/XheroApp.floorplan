@@ -1,85 +1,105 @@
-import React, {Component, useEffect} from 'react';
-import PropTypes from 'prop-types';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import 'regenerator-runtime/runtime';
-import Translator from './translator/translator';
-import Catalog from './catalog/catalog';
-import actions from './actions/export';
-import {objectsMap} from './utils/objects-utils';
+import React, { Component, useEffect } from "react";
+import PropTypes from "prop-types";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import "regenerator-runtime/runtime";
+import Translator from "./translator/translator";
+import Catalog from "./catalog/catalog";
+import actions from "./actions/export";
+import { objectsMap } from "./utils/objects-utils";
 import {
   ToolbarComponents,
   Content,
   SidebarComponents,
-  FooterBarComponents
-} from './components/export';
-import {VERSION} from './version';
-import './styles/export';
-import { isMobile, isTablet } from 'react-device-detect';
-import { useDevice } from './components/responsive';
-import axios from 'axios';
-import Users from './components/users';
+  FooterBarComponents,
+} from "./components/export";
+import { VERSION } from "./version";
+import "./styles/export";
+import { isMobile, isTablet } from "react-device-detect";
+import { useDevice } from "./components/responsive";
+import axios from "axios";
+import Users from "./components/users";
+import CatalogList from "./components/catalog-view/catalog-list";
+import ToolbarConfig from "./components/toolconfig/config";
 // import { UserService } from './api';
 
-const {Toolbar} = ToolbarComponents;
-const {Sidebar} = SidebarComponents;
-const {FooterBar} = FooterBarComponents;
+const { Toolbar } = ToolbarComponents;
+const { Sidebar } = SidebarComponents;
+const { FooterBar } = FooterBarComponents;
 
-const toolbarW = 50;
+const catalogWidth = 60;
 const sidebarW = 300;
-const footerBarH= 25;
+const footerBarH = 70;
 
 const wrapperStyle = {
-  display: 'flex',
-  flexFlow: 'row nowrap',
-  height: '100%'
+  display: "flex",
+  flexFlow: "row nowrap",
+  height: "100%",
+  position: "relative",
 };
 // const userService = new UserService();
 class ReactPlanner extends Component {
-
   getChildContext() {
     return {
-      ...objectsMap(actions, actionNamespace => this.props[actionNamespace]),
+      ...objectsMap(actions, (actionNamespace) => this.props[actionNamespace]),
       translator: this.props.translator,
       catalog: this.props.catalog,
-    }
+    };
   }
 
   componentWillMount() {
-    let {store} = this.context;
-    let {projectActions, catalog, stateExtractor, plugins} = this.props;
-    plugins.forEach(plugin => plugin(store, stateExtractor));
+    let { store } = this.context;
+    let { projectActions, catalog, stateExtractor, plugins } = this.props;
+    plugins.forEach((plugin) => plugin(store, stateExtractor));
     projectActions.initCatalog(catalog);
   }
 
   componentWillReceiveProps(nextProps) {
-    let {stateExtractor, state, projectActions, catalog} = nextProps;
+    let { stateExtractor, state, projectActions, catalog } = nextProps;
     let plannerState = stateExtractor(state);
-    let catalogReady = plannerState.getIn(['catalog', 'ready']);
+    let catalogReady = plannerState.getIn(["catalog", "ready"]);
     if (!catalogReady) {
       projectActions.initCatalog(catalog);
     }
   }
 
   render() {
-    let {width, height, state, stateExtractor, device, ...props} = this.props;
-    let contentW = width - toolbarW - sidebarW;
-    let toolbarH = height - footerBarH;
+    let { width, height, state, stateExtractor, device, ...props } = this.props;
+    let contentW = width;
+    let configW = width - catalogWidth;
     let contentH = height - footerBarH;
     let sidebarH = height - footerBarH;
     let extractedState = stateExtractor(state);
     return (
-      <div style={{...wrapperStyle, height}}>
+      <div style={{ ...wrapperStyle, height, width: "100%" }}>
         <Users />
-      <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
-      <Content width={device.isMobile ?  width - toolbarW : contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
-      {
-        device.isMobile ? null : 
-      <Sidebar width={device.isTablet ? 300 :  sidebarW} height={sidebarH} state={extractedState} {...props} />
-      }
-      <FooterBar width={width} height={device.isMobile === true ? 50 : footerBarH} state={extractedState} {...props} />
-    </div>
-     
+        <ToolbarConfig
+          width={width}
+          state={extractedState}
+          heightConfig={height}
+        />
+        <Content
+          width={contentW}
+          height={contentH}
+          state={extractedState}
+          {...props}
+          onWheel={(event) => event.preventDefault()}
+        />
+
+        <CatalogList
+          page={"root"}
+          state={state}
+          width={catalogWidth}
+          height={height}
+        />
+
+        <FooterBar
+          width={width}
+          height={footerBarH}
+          state={extractedState}
+          {...props}
+        />
+      </div>
     );
   }
 }
@@ -98,7 +118,7 @@ ReactPlanner.propTypes = {
   sidebarComponents: PropTypes.array,
   footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
-  softwareSignature: PropTypes.string
+  softwareSignature: PropTypes.string,
 };
 
 ReactPlanner.contextTypes = {
@@ -131,12 +151,17 @@ const ReactPlannerWithDevice = (props) => {
 //redux connect
 function mapStateToProps(reduxState) {
   return {
-    state: reduxState
-  }
+    state: reduxState,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return objectsMap(actions, actionNamespace => bindActionCreators(actions[actionNamespace], dispatch));
+  return objectsMap(actions, (actionNamespace) =>
+    bindActionCreators(actions[actionNamespace], dispatch)
+  );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactPlannerWithDevice);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReactPlannerWithDevice);

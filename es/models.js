@@ -345,11 +345,11 @@ export var Catalog = function (_Record12) {
       var properties = element.properties.map(function (value, key) {
         return initialProperties && initialProperties.has(key) ? initialProperties.get(key) : value.get('defaultValue');
       });
-
       switch (element.prototype) {
         case 'lines':
           return new Line(options).merge({ properties: properties });
-
+        case 'texture':
+          return new Line(options).merge({ properties: properties });
         case 'holes':
           return new Hole(options).merge({ properties: properties });
 

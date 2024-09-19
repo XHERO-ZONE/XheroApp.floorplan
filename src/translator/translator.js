@@ -17,6 +17,8 @@ export default class Translator {
 
     let locale = null
     let languages = Translator.getBrowserLanguages()
+    // let languages = Translator.getBrowserLanguages()
+
     for (let i = 0; i < languages.length; i++) {
       let lang = languages[i]
       if (this.translations.hasOwnProperty(lang)) {

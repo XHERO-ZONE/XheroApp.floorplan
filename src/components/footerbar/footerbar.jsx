@@ -1,53 +1,71 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import If from '../../utils/react-if';
-import FooterToggleButton from './footer-toggle-button';
-import FooterContentButton from './footer-content-button';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
-import { MODE_SNAPPING } from '../../constants';
-import * as SharedStyle from '../../shared-style';
-import { MdAddCircle, MdWarning } from 'react-icons/md';
-import { VERSION } from '../../version';
-import { isDesktop, isMobile, isTablet } from 'react-device-detect';
-import { useDevice } from '../responsive';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import If from "../../utils/react-if";
+import FooterToggleButton from "./footer-toggle-button";
+import FooterContentButton from "./footer-content-button";
+import {
+  SNAP_POINT,
+  SNAP_LINE,
+  SNAP_SEGMENT,
+  SNAP_GRID,
+  SNAP_GUIDE,
+} from "../../utils/snap";
+import { MODE_SNAPPING } from "../../constants";
+import * as SharedStyle from "../../shared-style";
+import { MdAddCircle, MdWarning } from "react-icons/md";
+import { VERSION } from "../../version";
+import { isDesktop, isMobile, isTablet } from "react-device-detect";
+import { useDevice } from "../responsive";
 
 const footerBarStyle = {
-  position: 'absolute',
+  position: "absolute",
   bottom: 0,
-  lineHeight: '14px',
+  lineHeight: "14px",
   color: SharedStyle.COLORS.white,
-  backgroundColor: SharedStyle.SECONDARY_COLOR.alt,
-  padding: '3px 1em',
+  backgroundColor: SharedStyle.COLORS.white,
+  padding: "3px 1em",
   margin: 0,
-  boxSizing: 'border-box',
-  cursor: 'default',
-  userSelect: 'none',
-  zIndex: '9001',
-  display: 'flex',
+  boxSizing: "border-box",
+  cursor: "default",
+  userSelect: "none",
+  zIndex: "9001",
+  display: "flex",
+  padding: "10px 20px",
+  // height: "70px",
+  gap: "20px",
 };
 
 export const leftTextStyle = {
-  position: 'relative',
-  borderRight: '1px solid #FFF',
-  float: 'left',
-  display: 'inline-block'
+  position: "relative",
+  borderRight: "1px solid #FFF",
+  float: "left",
+  display: "inline-block",
 };
 
 export const rightTextStyle = {
-  position: 'relative',
-  float: 'right',
-  display: 'inline-block'
+  position: "relative",
+  float: "right",
+  display: "inline-block",
 };
 
 const coordStyle = {
-  display: 'inline-block',
+  display: "inline-block",
   margin: 0,
-  padding: 0
+  padding: 0,
 };
+const textFooter = {
+  fontFamily: "Playpen Sans",
+  fontSize: "14px",
+  fontWeight: "700",
+  lineHeight: "20px",
+  textAlign: "center",
+  background: SharedStyle.COLORS.titleToolBar,
+  webkitBackgroundClip: "text",
+  webkitTextFillColor: "transparent",
+};
+const appMessageStyle = { borderBottom: "1px solid #555", lineHeight: "1.5em" };
 
-const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
-
- class FooterBar extends Component {
+class FooterBar extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {};
@@ -56,30 +74,53 @@ const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
   render() {
     let { state: globalState, width, height, device } = this.props;
     let { translator, projectActions } = this.context;
-    let { x, y } = globalState.get('mouse').toJS();
-    let zoom = globalState.get('zoom');
-    let mode = globalState.get('mode');
+    let { x, y } = globalState.get("mouse").toJS();
+    let zoom = globalState.get("zoom");
+    let mode = globalState.get("mode");
 
-    let errors = globalState.get('errors').toArray();
-    let errorsJsx = errors.map((err, ind) =>
-      <div key={ind} style={appMessageStyle}>[ {(new Date(err.date)).toLocaleString()} ] {err.error}</div>
-    );
-    let errorLableStyle = errors.length ? { color: SharedStyle.MATERIAL_COLORS[500].red } : {};
-    let errorIconStyle = errors.length ? { transform: 'rotate(45deg)', color: SharedStyle.MATERIAL_COLORS[500].red } : { transform: 'rotate(45deg)' };
+    let errors = globalState.get("errors").toArray();
+    let errorsJsx = errors.map((err, ind) => (
+      <div key={ind} style={appMessageStyle}>
+        [ {new Date(err.date).toLocaleString()} ] {err.error}
+      </div>
+    ));
+    let errorLableStyle = errors.length
+      ? { color: SharedStyle.MATERIAL_COLORS[500].red }
+      : {};
+    let errorIconStyle = errors.length
+      ? {
+          transform: "rotate(45deg)",
+          color: SharedStyle.MATERIAL_COLORS[500].red,
+        }
+      : { transform: "rotate(45deg)" };
 
-    let warnings = globalState.get('warnings').toArray();
-    let warningsJsx = warnings.map((warn, ind) =>
-      <div key={ind} style={appMessageStyle}>[ {(new Date(warn.date)).toLocaleString()} ] {warn.warning}</div>
-    );
-    let warningLableStyle = warnings.length ? { color: SharedStyle.MATERIAL_COLORS[500].yellow } : {};
+    let warnings = globalState.get("warnings").toArray();
+    let warningsJsx = warnings.map((warn, ind) => (
+      <div key={ind} style={appMessageStyle}>
+        [ {new Date(warn.date).toLocaleString()} ] {warn.warning}
+      </div>
+    ));
+    let warningLableStyle = warnings.length
+      ? { color: SharedStyle.MATERIAL_COLORS[500].yellow }
+      : {};
     let warningIconStyle = warningLableStyle;
 
-    let updateSnapMask = (val) => projectActions.toggleSnap(globalState.snapMask.merge(val));
+    let updateSnapMask = (val) =>
+      projectActions.toggleSnap(globalState.snapMask.merge(val));
+
+    let iconTurnBack = require("../../../public/images/iconTurnBack.png");
+    let iconResert = require("../../../public/images/iconResert.png");
+    let iconFloor = require("../../../public/images/iconFloor.png");
 
     return (
-      <div style={{ ...footerBarStyle, width, height, padding: device.isMobile ? '0' : '0px' }}>
-
-        <If condition={MODE_SNAPPING.includes(mode)}>
+      <div
+        style={{
+          ...footerBarStyle,
+          width,
+          height,
+        }}
+      >
+        {/* <If condition={MODE_SNAPPING.includes(mode)}>
           <div style={{...leftTextStyle, display: device.isMobile ?  'flex' : 'block', flexDirection: 'column', height: '100%', justifyContent: 'center', alignItems: 'center', gap: '10px', padding: device.isMobile ? '0 10px' : '5px 1em'}}>
             <div title={translator.t('Mouse X Coordinate')} style={{ ...coordStyle, fontSize: '12px', width: '6em'}}>X : {x.toFixed(3)}</div>
             <div title={translator.t('Mouse Y Coordinate')} style={{ ...coordStyle, fontSize:  '12px',width:  '6em'}}>Y : {y.toFixed(3)}</div>
@@ -186,17 +227,6 @@ const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
         {device.isMobile || device.isTablet ? null :
         <div style={{padding: device.isMobile ? '10px 10px' : '5px 1em'}}>
           {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
-  
-          {/* {
-            this.props.softwareSignature ?
-              <div
-                style={{...rightTextStyle, padding: device.isMobile ? '0 10px' : '0 1em'}}
-                title={this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ` using React-Planner ${VERSION}`)}
-              >
-                {this.props.softwareSignature}
-              </div>
-              : null
-          } */}
         <div               style={{...rightTextStyle, padding: device.isMobile ? '0 10px' : '0 1em'}}>
           <FooterContentButton
             state={this.state}
@@ -220,9 +250,49 @@ const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
           />
         </div>
         </div>
-        }
-
-
+        } */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "5px",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+          onClick={(event) => projectActions.undo()}
+        >
+          <img src={iconTurnBack} width={36} height={36} />
+          <span style={textFooter}>Hoàn tác</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+          onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}
+        >
+          <img src={iconResert} width={36} height={36} />
+          <span style={textFooter}>Làm lại</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+          onClick={event => viewer3DActions.selectTool3DView()}
+        >
+          <img src={iconFloor} width={36} height={36} />
+          <span style={textFooter}>Tầng</span>
+        </div>
       </div>
     );
   }
@@ -233,14 +303,14 @@ const FooterBarWithDevice = (props) => {
   return <FooterBar {...props} device={device} />;
 };
 
-export default FooterBarWithDevice
+export default FooterBarWithDevice;
 
 FooterBar.propTypes = {
   state: PropTypes.object.isRequired,
   footerbarComponents: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  softwareSignature: PropTypes.string
+  softwareSignature: PropTypes.string,
 };
 
 FooterBar.contextTypes = {

@@ -23,8 +23,9 @@ export default function Content(_ref) {
     case constants.MODE_3D_FIRST_PERSON:
       return React.createElement(Viewer3DFirstPerson, { state: state, width: width, height: height });
 
+    // case constants.MODE_VIEWING_CATALOG:
+    //   return <CatalogList state={state} width={width} height={height}/>;
     case constants.MODE_VIEWING_CATALOG:
-      return React.createElement(CatalogList, { state: state, width: width, height: height });
 
     case constants.MODE_IDLE:
     case constants.MODE_2D_ZOOM_IN:

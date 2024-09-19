@@ -6,7 +6,8 @@ import {
   END_DRAWING_LINE,
   BEGIN_DRAGGING_LINE,
   UPDATE_DRAGGING_LINE,
-  END_DRAGGING_LINE
+  END_DRAGGING_LINE,
+  SELECT_TOOL_DRAWING_TEXTURE
 } from '../constants';
 
 export function selectLine(layerID, lineID) {
@@ -20,6 +21,12 @@ export function selectLine(layerID, lineID) {
 export function selectToolDrawingLine(sceneComponentType) {
   return {
     type: SELECT_TOOL_DRAWING_LINE,
+    sceneComponentType
+  }
+}
+export function selectToolDrawingTexture(sceneComponentType) {
+  return {
+    type: SELECT_TOOL_DRAWING_TEXTURE,
     sceneComponentType
   }
 }

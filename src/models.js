@@ -261,11 +261,11 @@ export class Catalog extends Record({
 
     let element = this.elements.get(type);
     let properties = element.properties.map((value, key) => initialProperties && initialProperties.has(key) ? initialProperties.get(key) : value.get('defaultValue'));
-
     switch (element.prototype) {
       case 'lines':
         return new Line(options).merge({properties});
-
+        case 'texture':
+          return new Line(options).merge({properties});
       case 'holes':
         return new Hole(options).merge({properties});
 

@@ -1,12 +1,14 @@
 import WallFactory from './wall-factory';
 import AreaFactory from './area-factory';
-
+import TextureFactory from './texture-factory'
 export {
   WallFactory,
-  AreaFactory
+  AreaFactory,
+  TextureFactory
 };
 
 export default {
   WallFactory,
-  AreaFactory
+  AreaFactory,
+  TextureFactory
 };

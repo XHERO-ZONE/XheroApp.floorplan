@@ -143,12 +143,13 @@ export default class Catalog {
   /** @description Register a new category
    *  @param {string} name Name of category
    *  @param {string} label Label of category
+   *  @param {string} img img of category
    *  @param {array} [childs] Category's childs
    *  @return {?object} Registered category
   */
-  registerCategory(name, label, childs) {
+  registerCategory(name, label, img, childs) {
     if (this.validateCategory(name, label)) {
-      this.categories[name] = {name, label, categories: [], elements: []};
+      this.categories[name] = {name, label, img, categories: [], elements: []};
       this.categories.root.categories.push(this.categories[name]);
 
       if(childs && childs.length) {
