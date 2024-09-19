@@ -38,7 +38,7 @@ var footerBarStyle = (_footerBarStyle = {
   userSelect: "none",
   zIndex: "9001",
   display: "flex"
-}, _defineProperty(_footerBarStyle, "padding", "10px 20px"), _defineProperty(_footerBarStyle, "height", "70px"), _defineProperty(_footerBarStyle, "gap", "20px"), _footerBarStyle);
+}, _defineProperty(_footerBarStyle, "padding", "10px 20px"), _defineProperty(_footerBarStyle, "gap", "20px"), _footerBarStyle);
 
 export var leftTextStyle = {
   position: "relative",
@@ -62,7 +62,7 @@ var textFooter = {
   fontFamily: "Playpen Sans",
   fontSize: "14px",
   fontWeight: "700",
-  lineHeight: "10px",
+  lineHeight: "20px",
   textAlign: "center",
   background: SharedStyle.COLORS.titleToolBar,
   webkitBackgroundClip: "text",
@@ -144,7 +144,8 @@ var FooterBar = function (_Component) {
         "div",
         {
           style: _extends({}, footerBarStyle, {
-            width: width
+            width: width,
+            height: height
           })
         },
         React.createElement(
@@ -153,7 +154,7 @@ var FooterBar = function (_Component) {
             style: {
               display: "flex",
               flexDirection: "column",
-              gap: "10px",
+              gap: "5px",
               justifyContent: "center",
               alignItems: "center",
               cursor: "pointer"

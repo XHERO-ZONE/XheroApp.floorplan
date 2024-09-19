@@ -32,6 +32,7 @@ export default function Content(_ref) {
     case constants.MODE_2D_ZOOM_OUT:
     case constants.MODE_2D_PAN:
     case constants.MODE_WAITING_DRAWING_LINE:
+    case constants.MODE_WAITING_DRAWING_TEXTURE:
     case constants.MODE_DRAGGING_LINE:
     case constants.MODE_DRAGGING_VERTEX:
     case constants.MODE_DRAGGING_ITEM:

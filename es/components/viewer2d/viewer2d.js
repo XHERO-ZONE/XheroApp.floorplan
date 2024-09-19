@@ -216,7 +216,6 @@ export default function Viewer2D(_ref, _ref2) {
         x = _mapCursorPosition3.x,
         y = _mapCursorPosition3.y;
 
-    console.log(mode, 'mode');
     switch (mode) {
       case constants.MODE_IDLE:
         var elementData = extractElementData(event.target);
@@ -247,8 +246,19 @@ export default function Viewer2D(_ref, _ref2) {
         break;
       case constants.MODE_WAITING_DRAWING_TEXTURE:
         linesActions.beginDrawingLine(layerID, 200, 1500, state.snapMask);
+        linesActions.updateDrawingLine(500, 1500, state.snapMask);
         linesActions.endDrawingLine(500, 1500, state.snapMask);
-        // linesActions.beginDrawingLine(layerID, 500, y, state.snapMask);
+        linesActions.beginDrawingLine(layerID, 500, 1500, state.snapMask);
+        linesActions.updateDrawingLine(500, 1300, state.snapMask);
+        linesActions.endDrawingLine(500, 1300, state.snapMask);
+        linesActions.beginDrawingLine(layerID, 500, 1300, state.snapMask);
+        linesActions.updateDrawingLine(200, 1300, state.snapMask);
+        linesActions.endDrawingLine(200, 1300, state.snapMask);
+        linesActions.beginDrawingLine(layerID, 200, 1300, state.snapMask);
+        linesActions.updateDrawingLine(200, 1500, state.snapMask);
+        linesActions.endDrawingLine(200, 1500, state.snapMask);
+        linesActions.beginDrawingLine(layerID, 200, 1500, state.snapMask);
+
         break;
       case constants.MODE_WAITING_DRAWING_LINE:
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);

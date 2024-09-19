@@ -39,7 +39,7 @@ var containerStyle = (_containerStyle = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center"
-}, _defineProperty(_containerStyle, "padding", "10px"), _defineProperty(_containerStyle, "backgroundSize", "100% 100%"), _defineProperty(_containerStyle, "backgroundRepeat", "no-epeat"), _containerStyle);
+}, _defineProperty(_containerStyle, "padding", "10px"), _defineProperty(_containerStyle, "backgroundSize", "100% 100%"), _defineProperty(_containerStyle, "backgroundRepeat", "no-repeat"), _defineProperty(_containerStyle, "zIndex", "9998"), _containerStyle);
 
 var itemsStyle = {
   display: "grid",
@@ -109,7 +109,8 @@ var styleToolBar = {
   right: "56px",
   display: "flex",
   flexDirection: "column",
-  gap: "10px"
+  gap: "10px",
+  zIndex: "10004"
 };
 
 var CatalogList = function (_Component) {

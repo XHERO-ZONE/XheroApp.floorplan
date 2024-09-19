@@ -18,7 +18,7 @@ export default function consoleDebugger() {
         actions = actions.reverse();
         var dispatch = store.dispatch;
         var dispatchAction = function dispatchAction() {
-          console.info("There are other " + actions.length + " actions on stack");
+          console.info('There are other ' + actions.length + ' actions on stack');
           if (actions.length === 0) return;
           dispatch(actions.pop());
           if (actions.length === 0) return;
@@ -27,11 +27,5 @@ export default function consoleDebugger() {
         setTimeout(dispatchAction, 0);
       }
     });
-
-    console.groupCollapsed("ReactPlanner");
-    console.info("ReactPlanner is ready");
-    console.info("console.log(ReactPlanner)");
-    console.log(window.ReactPlanner);
-    console.groupEnd();
   };
 }

@@ -1,7 +1,8 @@
 import * as TabsStyle from './tabs.css';
-
-export { TabsStyle };
+import * as GlobalStyle from './global.css';
+export { TabsStyle, GlobalStyle };
 
 export default {
-  TabsStyle: TabsStyle
+  TabsStyle: TabsStyle,
+  GlobalStyle: GlobalStyle
 };

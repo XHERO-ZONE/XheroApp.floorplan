@@ -129,7 +129,6 @@ var CatalogItem = function (_Component) {
     key: "select",
     value: function select() {
       var element = this.props.element;
-      console.log(this.context.linesActions);
       switch (element.prototype) {
         case "lines":
           this.context.linesActions.selectToolDrawingLine(element.name);

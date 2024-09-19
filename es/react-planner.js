@@ -10,23 +10,24 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import React, { Component, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import 'regenerator-runtime/runtime';
-import Translator from './translator/translator';
-import Catalog from './catalog/catalog';
-import actions from './actions/export';
-import { objectsMap } from './utils/objects-utils';
-import { ToolbarComponents, Content, SidebarComponents, FooterBarComponents } from './components/export';
-import { VERSION } from './version';
-import './styles/export';
-import { isMobile, isTablet } from 'react-device-detect';
-import { useDevice } from './components/responsive';
-import axios from 'axios';
-import Users from './components/users';
-import CatalogList from './components/catalog-view/catalog-list';
+import React, { Component, useEffect } from "react";
+import PropTypes from "prop-types";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import "regenerator-runtime/runtime";
+import Translator from "./translator/translator";
+import Catalog from "./catalog/catalog";
+import actions from "./actions/export";
+import { objectsMap } from "./utils/objects-utils";
+import { ToolbarComponents, Content, SidebarComponents, FooterBarComponents } from "./components/export";
+import { VERSION } from "./version";
+import "./styles/export";
+import { isMobile, isTablet } from "react-device-detect";
+import { useDevice } from "./components/responsive";
+import axios from "axios";
+import Users from "./components/users";
+import CatalogList from "./components/catalog-view/catalog-list";
+import ToolbarConfig from "./components/toolconfig/config";
 // import { UserService } from './api';
 
 var Toolbar = ToolbarComponents.Toolbar;
@@ -34,14 +35,15 @@ var Sidebar = SidebarComponents.Sidebar;
 var FooterBar = FooterBarComponents.FooterBar;
 
 
-var toolbarW = 50;
+var catalogWidth = 60;
 var sidebarW = 300;
-var footerBarH = 25;
+var footerBarH = 70;
 
 var wrapperStyle = {
-  display: 'flex',
-  flexFlow: 'row nowrap',
-  height: '100%'
+  display: "flex",
+  flexFlow: "row nowrap",
+  height: "100%",
+  position: "relative"
 };
 // const userService = new UserService();
 
@@ -55,7 +57,7 @@ var ReactPlanner = function (_Component) {
   }
 
   _createClass(ReactPlanner, [{
-    key: 'getChildContext',
+    key: "getChildContext",
     value: function getChildContext() {
       var _this2 = this;
 
@@ -67,7 +69,7 @@ var ReactPlanner = function (_Component) {
       });
     }
   }, {
-    key: 'componentWillMount',
+    key: "componentWillMount",
     value: function componentWillMount() {
       var store = this.context.store;
       var _props = this.props,
@@ -82,7 +84,7 @@ var ReactPlanner = function (_Component) {
       projectActions.initCatalog(catalog);
     }
   }, {
-    key: 'componentWillReceiveProps',
+    key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       var stateExtractor = nextProps.stateExtractor,
           state = nextProps.state,
@@ -90,13 +92,13 @@ var ReactPlanner = function (_Component) {
           catalog = nextProps.catalog;
 
       var plannerState = stateExtractor(state);
-      var catalogReady = plannerState.getIn(['catalog', 'ready']);
+      var catalogReady = plannerState.getIn(["catalog", "ready"]);
       if (!catalogReady) {
         projectActions.initCatalog(catalog);
       }
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var _props2 = this.props,
           width = _props2.width,
@@ -104,26 +106,42 @@ var ReactPlanner = function (_Component) {
           state = _props2.state,
           stateExtractor = _props2.stateExtractor,
           device = _props2.device,
-          props = _objectWithoutProperties(_props2, ['width', 'height', 'state', 'stateExtractor', 'device']);
+          props = _objectWithoutProperties(_props2, ["width", "height", "state", "stateExtractor", "device"]);
 
       var contentW = width;
-      var toolbarH = height - footerBarH;
+      var configW = width - catalogWidth;
       var contentH = height - footerBarH;
       var sidebarH = height - footerBarH;
       var extractedState = stateExtractor(state);
       return React.createElement(
-        'div',
-        { style: _extends({}, wrapperStyle, { height: height }) },
+        "div",
+        { style: _extends({}, wrapperStyle, { height: height, width: "100%" }) },
         React.createElement(Users, null),
-        React.createElement(Content, _extends({ width: contentW, height: contentH, state: extractedState }, props, { onWheel: function onWheel(event) {
+        React.createElement(ToolbarConfig, {
+          width: width,
+          state: extractedState,
+          heightConfig: height
+        }),
+        React.createElement(Content, _extends({
+          width: contentW,
+          height: contentH,
+          state: extractedState
+        }, props, {
+          onWheel: function onWheel(event) {
             return event.preventDefault();
-          } })),
-        React.createElement(
-          'div',
-          null,
-          React.createElement(CatalogList, { page: 'root', state: state, width: 60, height: height })
-        ),
-        React.createElement(FooterBar, _extends({ width: width, height: device.isMobile === true ? 50 : footerBarH, state: extractedState }, props))
+          }
+        })),
+        React.createElement(CatalogList, {
+          page: "root",
+          state: state,
+          width: catalogWidth,
+          height: height
+        }),
+        React.createElement(FooterBar, _extends({
+          width: width,
+          height: footerBarH,
+          state: extractedState
+        }, props))
       );
     }
   }]);
@@ -164,7 +182,7 @@ ReactPlanner.defaultProps = {
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,
-  softwareSignature: 'Xhero Tool',
+  softwareSignature: "Xhero Tool",
   toolbarButtons: [],
   sidebarComponents: [],
   footerbarComponents: [],
