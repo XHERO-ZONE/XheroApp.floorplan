@@ -13,7 +13,7 @@ export default class Translator {
     this.registerTranslation('en', EN)
     this.registerTranslation('it', IT)
     this.registerTranslation('ru', RU)
-    this.registerTranslation('vi', VN)
+    this.registerTranslation('en', EN)
 
     let locale = null
     let languages = Translator.getBrowserLanguages()

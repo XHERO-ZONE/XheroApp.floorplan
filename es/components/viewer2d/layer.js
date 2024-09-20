@@ -16,7 +16,6 @@ export default function Layer(_ref) {
       items = layer.items,
       opacity = layer.opacity;
 
-
   return React.createElement(
     'g',
     { opacity: opacity },

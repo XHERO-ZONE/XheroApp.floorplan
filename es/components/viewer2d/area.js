@@ -6,7 +6,6 @@ import areapolygon from 'area-polygon';
 var STYLE_TEXT = {
   textAnchor: 'middle',
   fontSize: '12px',
-  fontFamily: '"Courier New", Courier, monospace',
   pointerEvents: 'none',
   fontWeight: 'bold',
 

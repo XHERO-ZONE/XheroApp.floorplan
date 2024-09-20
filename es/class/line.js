@@ -44,7 +44,6 @@ var Line = function () {
     key: 'select',
     value: function select(state, layerID, lineID) {
       state = Layer.select(state, layerID).updatedState;
-
       var line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
 
       state = Layer.selectElement(state, layerID, 'lines', lineID).updatedState;

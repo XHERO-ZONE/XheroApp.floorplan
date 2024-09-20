@@ -47,76 +47,42 @@ catalog.registerCategory("doors", "Doors", iconDoor, [
   Holes.slidingDoor,
 ]);
 catalog.registerCategory("livingroom", "LivingRoom", iconLivingRoom, [
-  Textures.lFrame,
-  Textures.square,
-  Textures.tFrame,
-  Textures.thapFrame,
-  Textures.uFrame,
-  Lines.wall,
-  Holes.gate,
+  Items.airConditioner,
+  Items.camera,
+  Items.sofa,
+  Items.tv,
+  Items.table,
+  Items.routerWifi,
+  Items.umbrellaStand,
+  Items.chair,
 ]);
 catalog.registerCategory("bedroom", "BedRoom", iconBedRoom, [
-  Textures.lFrame,
-  Textures.square,
-  Textures.tFrame,
-  Textures.thapFrame,
-  Textures.uFrame,
-  Lines.wall,
-  Holes.gate,
+  Items.wardrobe,
+  Items.bookcase,
+  Items.airConditioner,
+  Items.sink,
+  Items.hanger,
+  Items.chairdesk,
+  Items.table,
+  Items.monitorPc,
 ]);
 catalog.registerCategory("kitchen", "Kitchen", iconKitchen, [
-  Textures.lFrame,
-  Textures.square,
-  Textures.tFrame,
-  Textures.thapFrame,
-  Textures.uFrame,
-  Lines.wall,
-  Holes.gate,
+  Items.kitchen,
+  Items.table,
+  Items.fridge,
+  Items.sink,
+  Items.camera,
 ]);
-catalog.registerCategory("bathroom", "BathRoom", iconBathRoom, [
-  Textures.lFrame,
-  Textures.square,
-  Textures.tFrame,
-  Textures.thapFrame,
-  Textures.uFrame,
-  Lines.wall,
-  Holes.gate,
-]);
-catalog.registerCategory("worship", "Worship", iconWorship, [
-  Textures.lFrame,
-  Textures.square,
-  Textures.tFrame,
-  Textures.thapFrame,
-  Textures.uFrame,
-  Lines.wall,
-  Holes.gate,
-]);
-catalog.registerCategory("outside", "OutSide", iconOutside, [
-  Textures.lFrame,
-  Textures.square,
-  Textures.tFrame,
-  Textures.thapFrame,
-  Textures.uFrame,
-  Lines.wall,
-  Holes.gate,
-]);
+catalog.registerCategory("bathroom", "BathRoom", iconBathRoom, []);
+catalog.registerCategory("worship", "Worship", iconWorship, []);
+catalog.registerCategory("outside", "OutSide", iconOutside, []);
 catalog.registerCategory("office", "Office", iconOffice, [
-  Textures.lFrame,
-  Textures.square,
-  Textures.tFrame,
-  Textures.thapFrame,
-  Textures.uFrame,
-  Lines.wall,
-  Holes.gate,
+  Items.chairdesk,
+  Items.deskoffice,
+  Items.monitorPc,
+  Items.table,
+
 ]);
-catalog.registerCategory("stair", "Stair", iconStair, [
-  Textures.lFrame,
-  Textures.square,
-  Textures.tFrame,
-  Textures.thapFrame,
-  Textures.uFrame,
-  Lines.wall,
-  Holes.gate,
-]);
+catalog.registerCategory("stair", "Stair", iconStair, []);
 
 export default catalog;

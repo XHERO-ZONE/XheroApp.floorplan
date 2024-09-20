@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import * as SharedStyle from "../../shared-style";
 import { isDesktop, isMobile, isTablet } from "react-device-detect";
 import { CloseOutlined } from "@ant-design/icons";
@@ -6,6 +6,7 @@ import { Checkbox } from "antd";
 import { GlobalStyle } from "../../styles/export";
 import "./style.css";
 import { HexColorPicker, RgbaColorPicker } from "react-colorful";
+import areaPolygon from "area-polygon";
 let bgToolBar = require("../../../public/images/newBg.png");
 let iconConfig = require("../../../public/images/icon-config.png");
 const Wrapper = {
@@ -43,7 +44,7 @@ const DefaultConfig = {
   width: "50%",
 };
 const ActiveConfig = {
-  background: "linear-gradient(180deg, #5C3D2B 0%, #331F15 100%)",
+  background: SharedStyle.COLORS.lightBrown,
   color: SharedStyle.COLORS.white,
   padding: "8px",
   width: "50%",
@@ -56,15 +57,22 @@ const TextConfig = {
   fontWeight: "700",
   lineHeight: "20px",
   textAlign: "left",
-  background: "linear-gradient(180deg, #5C3D2B 0%, #331F15 100%)",
+  background: SharedStyle.COLORS.lightBrown,
   webkitBackgroundClip: "text",
   webkitTextFillColor: "transparent",
+};
+const TextAcreage = {
+  fontSize: "14px",
+  fontWeight: "500",
+  lineHeight: "16px",
+  textAlign: "center",
+  color: SharedStyle.COLORS.black,
 };
 const ContainerConfig = {
   display: "flex",
   backgroundClip: "padding-box",
   borderRadius: "6px",
-  background: "linear-gradient(180deg, #5C3D2B 0%, #331F15 100%)",
+  background: SharedStyle.COLORS.lightBrown,
   fontSize: "12px",
   fontWeight: "500",
   lineHeight: "18.12px",
@@ -108,6 +116,7 @@ const TextMaterial = {
   borderRadius: "4px",
   padding: "4px 0",
 };
+
 export default class ToolbarConfig extends Component {
   constructor(props) {
     super(props);
@@ -119,6 +128,8 @@ export default class ToolbarConfig extends Component {
       openMaterial: false,
       openHexColor: false,
       rgbaColor: { r: 170, g: 187, b: 204, a: 1 },
+      acreage: null,
+      name: "Căn hộ",
     };
     this.onChangeShowName = this.onChangeShowName.bind(this);
     this.onChangeShowAcreage = this.onChangeShowAcreage.bind(this);
@@ -126,7 +137,6 @@ export default class ToolbarConfig extends Component {
     this.onChangeColor = this.onChangeColor.bind(this);
     this.handleOpenChangeColor = this.handleOpenChangeColor.bind(this);
     this.handleOpenConfig = this.handleOpenConfig.bind(this);
-
   }
   onChangeShowName() {
     this.setState({ showName: !this.state.showName });
@@ -144,12 +154,78 @@ export default class ToolbarConfig extends Component {
     this.setState({ openHexColor: !this.state.openHexColor });
   }
   handleOpenConfig() {
-    this.setState({openConfig: !this.state.openConfig})
+    this.setState({ openConfig: !this.state.openConfig });
   }
+  componentDidUpdate(prevProps) {
+    const { scene } = this.props.state;
+    let { layers } = scene;
+
+    // Kiểm tra nếu layers hoặc scene thay đổi thì mới tính lại diện tích
+    if (layers !== prevProps.layers || scene !== prevProps.scene) {
+      this.calculateAcreage(layers, scene);
+    }
+  }
+
+  calculateAcreage(layers, scene) {
+    let selectedLayer = layers.get(scene.selectedLayer);
+    const newAreas = selectedLayer.areas.set(
+      "keyArea",
+      selectedLayer.areas._root
+    );
+    const root = newAreas.get("keyArea");
+
+    if (root && root.entries) {
+      const entries = root.entries;
+      entries.forEach((entry) => {
+        const area = entry[1];
+        if (area.selected) {
+          let polygon = area.vertices.toArray().map((vertexID) => {
+            let { x, y } = selectedLayer.vertices.get(vertexID);
+            return [x, y];
+          });
+
+          let polygonWithHoles = polygon;
+
+          area.holes.forEach((holeID) => {
+            let polygonHole = selectedLayer.areas
+              .get(holeID)
+              .vertices.toArray()
+              .map((vertexID) => {
+                let { x, y } = selectedLayer.vertices.get(vertexID);
+                return [x, y];
+              });
+
+            polygonWithHoles = polygonWithHoles.concat(polygonHole.reverse());
+          });
+
+          let areaSize = areaPolygon(polygon, false);
+
+          // Trừ diện tích của các lỗ
+          area.holes.forEach((areaID) => {
+            let hole = selectedLayer.areas.get(areaID);
+            let holePolygon = hole.vertices.toArray().map((vertexID) => {
+              let { x, y } = selectedLayer.vertices.get(vertexID);
+              return [x, y];
+            });
+            areaSize -= areaPolygon(holePolygon, false);
+          });
+
+          // So sánh acreage hiện tại với giá trị mới trước khi cập nhật state
+          const newAcreage = (areaSize / 10000).toFixed(2);
+          if (this.state.acreage !== newAcreage) {
+            this.setState({ acreage: newAcreage });
+          }
+        }
+      });
+    }
+  }
+
   render() {
     let { state, props } = this;
+    let { scene } = props.state;
+    let { layers } = scene;
     let { r, g, b, a } = this.state.rgbaColor;
-    
+    const { acreage, name } = this.state;
     let dataMaterial = [
       {
         name: "Màu sắc",
@@ -184,12 +260,21 @@ export default class ToolbarConfig extends Component {
         img: require("../../../public/images/Granit.png"),
       },
     ];
+    // this.renderedAreaSize(layers, scene)
     return (
       <div>
         <div style={{ ...Wrapper, width: props.width }}>
-          
-          <div onClick={this.handleOpenConfig} style={{cursor: 'pointer'}}>
-          <img src={iconConfig} width={40} height={40} />
+          <div onClick={this.handleOpenConfig} style={{ cursor: "pointer" }}>
+            <img src={iconConfig} width={40} height={40} />
+          </div>
+          <div style={{display: "flex", flexDirection: "column",height: "auto", alignItems: 'center', justifyContent: "space-between"}}>
+          <span style={TextConfig}>
+              {name}
+            </span>
+            <span style={TextAcreage}>
+              {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}
+            </span>
+
           </div>
         </div>
 
@@ -266,8 +351,22 @@ export default class ToolbarConfig extends Component {
                         padding: "2px",
                       }}
                     >
-                      <span onClick={() => this.setState({openMaterial: false})} style={state.openMaterial ? DefaultConfig : ActiveConfig}>Đối tượng</span>
-                      <span onClick={() => this.setState({openMaterial: true})} style={!state.openMaterial ? DefaultConfig : ActiveConfig}>Chất liệu</span>
+                      <span
+                        onClick={() => this.setState({ openMaterial: false })}
+                        style={
+                          state.openMaterial ? DefaultConfig : ActiveConfig
+                        }
+                      >
+                        Đối tượng
+                      </span>
+                      <span
+                        onClick={() => this.setState({ openMaterial: true })}
+                        style={
+                          !state.openMaterial ? DefaultConfig : ActiveConfig
+                        }
+                      >
+                        Chất liệu
+                      </span>
                     </div>
                   </div>
                   {state.openMaterial ? (
@@ -304,7 +403,7 @@ export default class ToolbarConfig extends Component {
                       }}
                     >
                       <div style={InputWrapper}>
-                        <input style={InputContainer} placeholder="Căn hộ" />
+                        <input style={InputContainer} placeholder="" defaultValue={name} />
                       </div>
                       <div style={{ display: "flex", gap: "10px" }}>
                         <div style={InputWrapper}>
@@ -395,7 +494,7 @@ export default class ToolbarConfig extends Component {
                 </div>
               </div>
             </div>
-          </div> 
+          </div>
         ) : null}
       </div>
     );

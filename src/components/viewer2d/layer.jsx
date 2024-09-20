@@ -9,10 +9,8 @@ import {
 } from './export';
 
 export default function Layer({ layer, scene, catalog }) {
-
   let { unit, groups } = scene;
   let { lines, areas, vertices, holes, id: layerID, items, opacity } = layer;
-
   return (
     <g opacity={opacity}>
       {

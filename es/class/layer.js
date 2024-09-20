@@ -45,7 +45,6 @@ var Layer = function () {
       state = state.updateIn(['scene', 'layers', layerID, 'selected', elementPrototype], function (elems) {
         return elems.push(elementID);
       });
-
       return { updatedState: state };
     }
   }, {

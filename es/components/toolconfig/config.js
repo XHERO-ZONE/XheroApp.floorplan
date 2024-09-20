@@ -12,7 +12,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import * as SharedStyle from "../../shared-style";
 import { isDesktop, isMobile, isTablet } from "react-device-detect";
 import { CloseOutlined } from "@ant-design/icons";
@@ -20,6 +20,7 @@ import { Checkbox } from "antd";
 import { GlobalStyle } from "../../styles/export";
 import "./style.css";
 import { HexColorPicker, RgbaColorPicker } from "react-colorful";
+import areaPolygon from "area-polygon";
 var bgToolBar = require("../../../public/images/newBg.png");
 var iconConfig = require("../../../public/images/icon-config.png");
 var Wrapper = _extends((_extends2 = {
@@ -54,7 +55,7 @@ var DefaultConfig = {
   width: "50%"
 };
 var ActiveConfig = {
-  background: "linear-gradient(180deg, #5C3D2B 0%, #331F15 100%)",
+  background: SharedStyle.COLORS.lightBrown,
   color: SharedStyle.COLORS.white,
   padding: "8px",
   width: "50%",
@@ -67,15 +68,22 @@ var TextConfig = {
   fontWeight: "700",
   lineHeight: "20px",
   textAlign: "left",
-  background: "linear-gradient(180deg, #5C3D2B 0%, #331F15 100%)",
+  background: SharedStyle.COLORS.lightBrown,
   webkitBackgroundClip: "text",
   webkitTextFillColor: "transparent"
+};
+var TextAcreage = {
+  fontSize: "14px",
+  fontWeight: "500",
+  lineHeight: "16px",
+  textAlign: "center",
+  color: SharedStyle.COLORS.black
 };
 var ContainerConfig = {
   display: "flex",
   backgroundClip: "padding-box",
   borderRadius: "6px",
-  background: "linear-gradient(180deg, #5C3D2B 0%, #331F15 100%)",
+  background: SharedStyle.COLORS.lightBrown,
   fontSize: "12px",
   fontWeight: "500",
   lineHeight: "18.12px",
@@ -134,7 +142,9 @@ var ToolbarConfig = function (_Component) {
       showRuler: true,
       openMaterial: false,
       openHexColor: false,
-      rgbaColor: { r: 170, g: 187, b: 204, a: 1 }
+      rgbaColor: { r: 170, g: 187, b: 204, a: 1 },
+      acreage: null,
+      name: "Căn hộ"
     };
     _this.onChangeShowName = _this.onChangeShowName.bind(_this);
     _this.onChangeShowAcreage = _this.onChangeShowAcreage.bind(_this);
@@ -142,7 +152,6 @@ var ToolbarConfig = function (_Component) {
     _this.onChangeColor = _this.onChangeColor.bind(_this);
     _this.handleOpenChangeColor = _this.handleOpenChangeColor.bind(_this);
     _this.handleOpenConfig = _this.handleOpenConfig.bind(_this);
-
     return _this;
   }
 
@@ -177,18 +186,94 @@ var ToolbarConfig = function (_Component) {
       this.setState({ openConfig: !this.state.openConfig });
     }
   }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      var scene = this.props.state.scene;
+      var layers = scene.layers;
+
+      // Kiểm tra nếu layers hoặc scene thay đổi thì mới tính lại diện tích
+
+      if (layers !== prevProps.layers || scene !== prevProps.scene) {
+        this.calculateAcreage(layers, scene);
+      }
+    }
+  }, {
+    key: "calculateAcreage",
+    value: function calculateAcreage(layers, scene) {
+      var _this2 = this;
+
+      var selectedLayer = layers.get(scene.selectedLayer);
+      var newAreas = selectedLayer.areas.set("keyArea", selectedLayer.areas._root);
+      var root = newAreas.get("keyArea");
+
+      if (root && root.entries) {
+        var entries = root.entries;
+        entries.forEach(function (entry) {
+          var area = entry[1];
+          if (area.selected) {
+            var polygon = area.vertices.toArray().map(function (vertexID) {
+              var _selectedLayer$vertic = selectedLayer.vertices.get(vertexID),
+                  x = _selectedLayer$vertic.x,
+                  y = _selectedLayer$vertic.y;
+
+              return [x, y];
+            });
+
+            var polygonWithHoles = polygon;
+
+            area.holes.forEach(function (holeID) {
+              var polygonHole = selectedLayer.areas.get(holeID).vertices.toArray().map(function (vertexID) {
+                var _selectedLayer$vertic2 = selectedLayer.vertices.get(vertexID),
+                    x = _selectedLayer$vertic2.x,
+                    y = _selectedLayer$vertic2.y;
+
+                return [x, y];
+              });
+
+              polygonWithHoles = polygonWithHoles.concat(polygonHole.reverse());
+            });
+
+            var areaSize = areaPolygon(polygon, false);
+
+            // Trừ diện tích của các lỗ
+            area.holes.forEach(function (areaID) {
+              var hole = selectedLayer.areas.get(areaID);
+              var holePolygon = hole.vertices.toArray().map(function (vertexID) {
+                var _selectedLayer$vertic3 = selectedLayer.vertices.get(vertexID),
+                    x = _selectedLayer$vertic3.x,
+                    y = _selectedLayer$vertic3.y;
+
+                return [x, y];
+              });
+              areaSize -= areaPolygon(holePolygon, false);
+            });
+
+            // So sánh acreage hiện tại với giá trị mới trước khi cập nhật state
+            var newAcreage = (areaSize / 10000).toFixed(2);
+            if (_this2.state.acreage !== newAcreage) {
+              _this2.setState({ acreage: newAcreage });
+            }
+          }
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var state = this.state,
           props = this.props;
+      var scene = props.state.scene;
+      var layers = scene.layers;
       var _state$rgbaColor = this.state.rgbaColor,
           r = _state$rgbaColor.r,
           g = _state$rgbaColor.g,
           b = _state$rgbaColor.b,
           a = _state$rgbaColor.a;
-
+      var _state = this.state,
+          acreage = _state.acreage,
+          name = _state.name;
 
       var dataMaterial = [{
         name: "Màu sắc",
@@ -215,6 +300,7 @@ var ToolbarConfig = function (_Component) {
         name: "Đá",
         img: require("../../../public/images/Granit.png")
       }];
+      // this.renderedAreaSize(layers, scene)
       return React.createElement(
         "div",
         null,
@@ -223,8 +309,22 @@ var ToolbarConfig = function (_Component) {
           { style: _extends({}, Wrapper, { width: props.width }) },
           React.createElement(
             "div",
-            { onClick: this.handleOpenConfig, style: { cursor: 'pointer' } },
+            { onClick: this.handleOpenConfig, style: { cursor: "pointer" } },
             React.createElement("img", { src: iconConfig, width: 40, height: 40 })
+          ),
+          React.createElement(
+            "div",
+            { style: { display: "flex", flexDirection: "column", height: "auto", alignItems: 'center', justifyContent: "space-between" } },
+            React.createElement(
+              "span",
+              { style: TextConfig },
+              name
+            ),
+            React.createElement(
+              "span",
+              { style: TextAcreage },
+              acreage ? acreage + " m" + String.fromCharCode(0xb2) : ""
+            )
           )
         ),
         this.state.openConfig ? React.createElement(
@@ -317,16 +417,22 @@ var ToolbarConfig = function (_Component) {
                     },
                     React.createElement(
                       "span",
-                      { onClick: function onClick() {
-                          return _this2.setState({ openMaterial: false });
-                        }, style: state.openMaterial ? DefaultConfig : ActiveConfig },
+                      {
+                        onClick: function onClick() {
+                          return _this3.setState({ openMaterial: false });
+                        },
+                        style: state.openMaterial ? DefaultConfig : ActiveConfig
+                      },
                       "\u0110\u1ED1i t\u01B0\u1EE3ng"
                     ),
                     React.createElement(
                       "span",
-                      { onClick: function onClick() {
-                          return _this2.setState({ openMaterial: true });
-                        }, style: !state.openMaterial ? DefaultConfig : ActiveConfig },
+                      {
+                        onClick: function onClick() {
+                          return _this3.setState({ openMaterial: true });
+                        },
+                        style: !state.openMaterial ? DefaultConfig : ActiveConfig
+                      },
                       "Ch\u1EA5t li\u1EC7u"
                     )
                   )
@@ -339,7 +445,7 @@ var ToolbarConfig = function (_Component) {
                       "div",
                       {
                         onClick: function onClick() {
-                          index === 0 && _this2.handleOpenChangeColor();
+                          index === 0 && _this3.handleOpenChangeColor();
                         },
                         style: {
                           borderRadius: "4px",
@@ -371,7 +477,7 @@ var ToolbarConfig = function (_Component) {
                   React.createElement(
                     "div",
                     { style: InputWrapper },
-                    React.createElement("input", { style: InputContainer, placeholder: "C\u0103n h\u1ED9" })
+                    React.createElement("input", { style: InputContainer, placeholder: "", defaultValue: name })
                   ),
                   React.createElement(
                     "div",

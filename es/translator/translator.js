@@ -19,7 +19,7 @@ var Translator = function () {
     this.registerTranslation('en', EN);
     this.registerTranslation('it', IT);
     this.registerTranslation('ru', RU);
-    this.registerTranslation('vi', VN);
+    this.registerTranslation('en', EN);
 
     var locale = null;
     var languages = Translator.getBrowserLanguages();

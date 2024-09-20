@@ -43,7 +43,6 @@ class Line{
 
   static select( state, layerID, lineID ){
     state = Layer.select( state, layerID ).updatedState;
-
     let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
 
     state = Layer.selectElement( state, layerID, 'lines', lineID ).updatedState;

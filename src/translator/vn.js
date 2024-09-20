@@ -146,7 +146,7 @@ export default {
 "window": "Cửa Sổ",
 "venetian blind window": "Cửa Sổ Có Lưới Che",
 "curtain window": "Cửa sổ Có Rèm Che",
-"Windows": "Các Loại Cửa Sổ",
+"Windows": "Cửa Sổ",
 "Doors": "Các loại cửa",
 "Texture" : "Kết cấu",
 "square-frame" : "Khung Vuông",

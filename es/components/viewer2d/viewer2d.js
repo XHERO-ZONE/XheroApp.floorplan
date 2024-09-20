@@ -206,6 +206,8 @@ export default function Viewer2D(_ref, _ref2) {
   };
 
   var onMouseUp = function onMouseUp(viewerEvent) {
+    console.log("0001");
+
     var event = viewerEvent.originalEvent;
 
     var evt = new Event("mouseup-planner-event");
@@ -224,22 +226,30 @@ export default function Viewer2D(_ref, _ref2) {
 
         switch (elementData ? elementData.prototype : "none") {
           case "areas":
+            console.log("0001", state);
             areaActions.selectArea(elementData.layer, elementData.id);
             break;
 
           case "lines":
+            console.log("0002");
+
             linesActions.selectLine(elementData.layer, elementData.id);
             break;
 
           case "holes":
+            console.log("0003");
+
             holesActions.selectHole(elementData.layer, elementData.id);
             break;
 
           case "items":
+            console.log("0004");
+
             itemsActions.selectItem(elementData.layer, elementData.id);
             break;
 
           case "none":
+            console.log("0005");
             projectActions.unselectAll();
             break;
         }
@@ -300,12 +310,38 @@ export default function Viewer2D(_ref, _ref2) {
 
     event.stopPropagation();
   };
-
-  var onChangeValue = function onChangeValue(value) {
-    projectActions.updateZoomScale(value.a);
-    return viewer2DActions.updateCameraView(value);
+  var defaultValue = {
+    a: 0.6650571136223359,
+    b: 0,
+    SVGWidth: 3000,
+    c: 0,
+    mode: "idle",
+    d: 0.6650571136223359,
+    e: -44.70989917234498,
+    f: -17.51654050009821,
+    miniatureOpen: true,
+    SVGHeight: 2000,
+    pinchPointDistance: null,
+    lastAction: "pan",
+    viewerWidth: 360,
+    startX: null,
+    startY: null,
+    version: 2,
+    focus: false,
+    viewerHeight: 773,
+    prePinchMode: null,
+    endX: null,
+    endY: null
   };
-
+  var onChangeValue = function onChangeValue(value) {
+    if (value.a !== 1) {
+      projectActions.updateZoomScale(value.a);
+      return viewer2DActions.updateCameraView(value);
+    } else {
+      projectActions.updateZoomScale(defaultValue.a);
+      return viewer2DActions.updateCameraView(defaultValue);
+    }
+  };
   var onChangeTool = function onChangeTool(tool) {
     switch (tool) {
       case TOOL_NONE:
@@ -339,10 +375,9 @@ export default function Viewer2D(_ref, _ref2) {
   var rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
   var sceneWidth = SVGWidth || state.getIn(["scene", "width"]);
   var sceneHeight = SVGHeight || state.getIn(["scene", "height"]);
-  var sceneZoom = state.zoom || 1;
+  var sceneZoom = state.zoom || 3;
   var rulerXElements = Math.ceil(sceneWidth / rulerUnitPixelSize) + 1;
   var rulerYElements = Math.ceil(sceneHeight / rulerUnitPixelSize) + 1;
-
   return React.createElement(
     "div",
     {

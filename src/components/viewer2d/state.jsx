@@ -14,6 +14,7 @@ export default function State({state, catalog}) {
   let {activeSnapElement, snapElements, scene} = state;
   let {width, height} = scene;
 
+
   activeSnapElement = activeSnapElement ?
     <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
 // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
