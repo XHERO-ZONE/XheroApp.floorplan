@@ -7,6 +7,9 @@ import { GlobalStyle } from "../../styles/export";
 import "./style.css";
 import { HexColorPicker, RgbaColorPicker } from "react-colorful";
 import areaPolygon from "area-polygon";
+import { Seq } from "immutable";
+import Panel from "../sidebar/panel";
+import ElementEditor from "../sidebar/panel-element-editor/element-editor";
 let bgToolBar = require("../../../public/images/newBg.png");
 let iconConfig = require("../../../public/images/icon-config.png");
 const Wrapper = {
@@ -226,6 +229,28 @@ export default class ToolbarConfig extends Component {
     let { layers } = scene;
     let { r, g, b, a } = this.state.rgbaColor;
     const { acreage, name } = this.state;
+
+    let componentRenderer = (element, layer) => (
+      // <Panel key={element.id} name={('Properties: [{0}] {1}', element.type, element.id)} opened={true}>
+      <div>
+        <ElementEditor
+          element={element}
+          layer={layer}
+          state={this.props.state}
+        />
+      </div>
+    );
+    // </Panel>;
+
+    let layerRenderer = (layer) => {
+      const firstElement = Seq()
+        .concat(layer.lines, layer.holes, layer.areas, layer.items)
+        .filter((element) => element.selected)
+        .first(); // Lấy phần tử đầu tiên
+      return firstElement ? componentRenderer(firstElement, layer) : null;
+    };
+    let firstLayerRenderer = scene.layers.valueSeq().first(); // Lấy phần tử đầu tiên
+
     let dataMaterial = [
       {
         name: "Màu sắc",
@@ -267,14 +292,19 @@ export default class ToolbarConfig extends Component {
           <div onClick={this.handleOpenConfig} style={{ cursor: "pointer" }}>
             <img src={iconConfig} width={40} height={40} />
           </div>
-          <div style={{display: "flex", flexDirection: "column",height: "auto", alignItems: 'center', justifyContent: "space-between"}}>
-          <span style={TextConfig}>
-              {name}
-            </span>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              height: "auto",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={TextConfig}>{name}</span>
             <span style={TextAcreage}>
               {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}
             </span>
-
           </div>
         </div>
 
@@ -296,7 +326,7 @@ export default class ToolbarConfig extends Component {
                 height: props.heightConfig,
               }}
             >
-              {state.openHexColor && (
+              {/* {state.openHexColor && (
                 <section
                   className="custom-layout example"
                   style={{ width: 200, height: props.heightConfig }}
@@ -315,7 +345,7 @@ export default class ToolbarConfig extends Component {
                     onClick={this.handleOpenChangeColor}
                   />
                 </section>
-              )}
+              )} */}
 
               <div style={{ ...ConfigStyle, height: props.heightConfig }}>
                 <div
@@ -369,6 +399,7 @@ export default class ToolbarConfig extends Component {
                       </span>
                     </div>
                   </div>
+
                   {state.openMaterial ? (
                     <div style={WrapperMaterial}>
                       {dataMaterial.map((item, index) => (
@@ -378,6 +409,7 @@ export default class ToolbarConfig extends Component {
                           }}
                           style={{
                             borderRadius: "4px",
+                            position: "relative",
                             background:
                               index === 0
                                 ? `rgba(${r}, ${g}, ${b}, ${a})`
@@ -391,6 +423,13 @@ export default class ToolbarConfig extends Component {
                           }}
                         >
                           <div style={TextMaterial}>{item.name}</div>
+                          {index === 0 && (
+                            <div>
+                              {firstLayerRenderer ? (
+                                <div>{layerRenderer(firstLayerRenderer)}</div>
+                              ) : null}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -403,7 +442,11 @@ export default class ToolbarConfig extends Component {
                       }}
                     >
                       <div style={InputWrapper}>
-                        <input style={InputContainer} placeholder="" defaultValue={name} />
+                        <input
+                          style={InputContainer}
+                          placeholder=""
+                          defaultValue={name}
+                        />
                       </div>
                       <div style={{ display: "flex", gap: "10px" }}>
                         <div style={InputWrapper}>

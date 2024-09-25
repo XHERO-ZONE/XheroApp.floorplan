@@ -20,9 +20,9 @@ export default function PropertyColor({value, onUpdate, configs, sourceElement, 
     <table className="PropertyColor" style={PropertyStyle.tableStyle}>
       <tbody>
       <tr>
-        <td style={PropertyStyle.firstTdStyle}>
+        {/* <td style={PropertyStyle.firstTdStyle}>
           <FormLabel>{configs.label}</FormLabel>
-        </td>
+        </td> */}
         <td>
           <FormColorInput value={value} onChange={event => update(event.target.value)}/>
         </td>

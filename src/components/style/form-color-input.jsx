@@ -5,6 +5,10 @@ import FormTextInput from './form-text-input';
 const STYLE = {
   padding: 0,
   border: 0,
+  with: "100%",
+  height: "100%",
+  position: "absolute",
+  zIndex: 9
 };
 const EREG_NUMBER = /^.*$/;
 

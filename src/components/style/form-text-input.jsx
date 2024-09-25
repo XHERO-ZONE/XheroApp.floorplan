@@ -12,7 +12,7 @@ const STYLE_INPUT = {
   backgroundImage: 'none',
   border: '1px solid rgba(0,0,0,.15)',
   outline: 'none',
-  height: '30px',
+  height: '100%',
 };
 
 
