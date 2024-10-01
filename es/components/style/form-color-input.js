@@ -7,7 +7,13 @@ import FormTextInput from './form-text-input';
 
 var STYLE = {
   padding: 0,
-  border: 0
+  border: 0,
+  with: "100%",
+  height: "100%",
+  position: "absolute",
+  zIndex: 9,
+  top: 0,
+  left: 0
 };
 var EREG_NUMBER = /^.*$/;
 

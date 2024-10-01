@@ -34,15 +34,6 @@ export default function PropertyColor(_ref) {
         null,
         React.createElement(
           'td',
-          { style: PropertyStyle.firstTdStyle },
-          React.createElement(
-            FormLabel,
-            null,
-            configs.label
-          )
-        ),
-        React.createElement(
-          'td',
           null,
           React.createElement(FormColorInput, { value: value, onChange: function onChange(event) {
               return update(event.target.value);

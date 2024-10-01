@@ -51,7 +51,7 @@ export default function AreaFactory(name, info, textures) {
         });
       });
 
-      var fill = element.selected ? SharedStyle.AREA_MESH_COLOR.selected : element.properties.get('patternColor');
+      var fill = element.properties.get('patternColor');
 
       return React.createElement('path', { d: path, fill: fill });
     },

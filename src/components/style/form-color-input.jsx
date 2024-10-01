@@ -8,7 +8,9 @@ const STYLE = {
   with: "100%",
   height: "100%",
   position: "absolute",
-  zIndex: 9
+  zIndex: 9,
+  top: 0,
+  left: 0,
 };
 const EREG_NUMBER = /^.*$/;
 

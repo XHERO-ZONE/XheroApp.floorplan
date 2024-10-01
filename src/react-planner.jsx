@@ -21,6 +21,7 @@ import axios from "axios";
 import Users from "./components/users";
 import CatalogList from "./components/catalog-view/catalog-list";
 import ToolbarConfig from "./components/toolconfig/config";
+import ToolView2D from "./components/ToolView";
 // import { UserService } from './api';
 
 const { Toolbar } = ToolbarComponents;
@@ -39,6 +40,16 @@ const wrapperStyle = {
 };
 // const userService = new UserService();
 class ReactPlanner extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+    };
+    this.updateState = this.updateState.bind(this)
+  }
+  updateState (newState) {
+    this.setState({ data: newState });
+  };
   getChildContext() {
     return {
       ...objectsMap(actions, (actionNamespace) => this.props[actionNamespace]),
@@ -72,12 +83,14 @@ class ReactPlanner extends Component {
     let extractedState = stateExtractor(state);
     return (
       <div style={{ ...wrapperStyle, height, width: "100%" }}>
-        <Users />
+        <Users state={extractedState} updateState={this.updateState} />
         <ToolbarConfig
           width={width}
           state={extractedState}
           heightConfig={height}
+          data={this.state.data}
         />
+        <ToolView2D width={100} height={100}  state={extractedState} {...props} />
         <Content
           width={contentW}
           height={contentH}
@@ -97,6 +110,7 @@ class ReactPlanner extends Component {
           width={width}
           height={footerBarH}
           state={extractedState}
+          data={this.state.data}
           {...props}
         />
       </div>

@@ -21,6 +21,9 @@ import { GlobalStyle } from "../../styles/export";
 import "./style.css";
 import { HexColorPicker, RgbaColorPicker } from "react-colorful";
 import areaPolygon from "area-polygon";
+import { Seq } from "immutable";
+import Panel from "../sidebar/panel";
+import ElementEditor from "../sidebar/panel-element-editor/element-editor";
 var bgToolBar = require("../../../public/images/newBg.png");
 var iconConfig = require("../../../public/images/icon-config.png");
 var Wrapper = _extends((_extends2 = {
@@ -63,14 +66,13 @@ var ActiveConfig = {
 };
 
 var TextConfig = {
-  fontFamily: "Playpen Sans",
   fontSize: "16px",
   fontWeight: "700",
   lineHeight: "20px",
   textAlign: "left",
   background: SharedStyle.COLORS.lightBrown,
-  webkitBackgroundClip: "text",
-  webkitTextFillColor: "transparent"
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent"
 };
 var TextAcreage = {
   fontSize: "14px",
@@ -117,6 +119,7 @@ var WrapperMaterial = {
 };
 var TextMaterial = {
   width: "100%",
+  minWidth: "80px",
   background: "#00000040",
   fontSize: "10px",
   fontWeight: "400",
@@ -124,7 +127,9 @@ var TextMaterial = {
   textAlign: "center",
   color: SharedStyle.COLORS.white,
   borderRadius: "4px",
-  padding: "4px 0"
+  padding: "4px 0",
+  position: "relative",
+  zIndex: 10
 };
 
 var ToolbarConfig = function (_Component) {
@@ -144,7 +149,8 @@ var ToolbarConfig = function (_Component) {
       openHexColor: false,
       rgbaColor: { r: 170, g: 187, b: 204, a: 1 },
       acreage: null,
-      name: "Căn hộ"
+      name: "Căn hộ",
+      areaSelected: false
     };
     _this.onChangeShowName = _this.onChangeShowName.bind(_this);
     _this.onChangeShowAcreage = _this.onChangeShowAcreage.bind(_this);
@@ -187,13 +193,13 @@ var ToolbarConfig = function (_Component) {
     }
   }, {
     key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps) {
+    value: function componentDidUpdate(prevProps, prevState) {
       var scene = this.props.state.scene;
       var layers = scene.layers;
 
       // Kiểm tra nếu layers hoặc scene thay đổi thì mới tính lại diện tích
 
-      if (layers !== prevProps.layers || scene !== prevProps.scene) {
+      if (layers !== prevProps.state.scene.layers || scene !== prevProps.state.scene || this.state !== prevState) {
         this.calculateAcreage(layers, scene);
       }
     }
@@ -253,6 +259,8 @@ var ToolbarConfig = function (_Component) {
             if (_this2.state.acreage !== newAcreage) {
               _this2.setState({ acreage: newAcreage });
             }
+          }if (area.selected !== _this2.state.areaSelected) {
+            _this2.setState({ areaSelected: area.selected });
           }
         });
       }
@@ -265,15 +273,32 @@ var ToolbarConfig = function (_Component) {
       var state = this.state,
           props = this.props;
       var scene = props.state.scene;
-      var layers = scene.layers;
-      var _state$rgbaColor = this.state.rgbaColor,
-          r = _state$rgbaColor.r,
-          g = _state$rgbaColor.g,
-          b = _state$rgbaColor.b,
-          a = _state$rgbaColor.a;
+
+      var type = this.props.data.type;
       var _state = this.state,
           acreage = _state.acreage,
           name = _state.name;
+
+
+      var componentRenderer = function componentRenderer(element, layer) {
+        return React.createElement(
+          "div",
+          { style: { width: "100%" } },
+          React.createElement(ElementEditor, {
+            element: element,
+            layer: layer,
+            state: _this3.props.state
+          })
+        );
+      };
+
+      var layerRenderer = function layerRenderer(layer) {
+        return Seq().concat(layer.lines, layer.holes, layer.areas, layer.items).filter(function (element) {
+          return element.selected;
+        }).map(function (element) {
+          return componentRenderer(element, layer);
+        }).valueSeq();
+      };
 
       var dataMaterial = [{
         name: "Màu sắc",
@@ -314,17 +339,25 @@ var ToolbarConfig = function (_Component) {
           ),
           React.createElement(
             "div",
-            { style: { display: "flex", flexDirection: "column", height: "auto", alignItems: 'center', justifyContent: "space-between" } },
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                height: "auto",
+                alignItems: "center",
+                justifyContent: "space-between"
+              }
+            },
             React.createElement(
               "span",
               { style: TextConfig },
-              name
+              type
             ),
-            React.createElement(
+            this.state.areaSelected ? React.createElement(
               "span",
               { style: TextAcreage },
               acreage ? acreage + " m" + String.fromCharCode(0xb2) : ""
-            )
+            ) : null
           )
         ),
         this.state.openConfig ? React.createElement(
@@ -348,26 +381,6 @@ var ToolbarConfig = function (_Component) {
                 height: props.heightConfig
               }
             },
-            state.openHexColor && React.createElement(
-              "section",
-              {
-                className: "custom-layout example",
-                style: { width: 200, height: props.heightConfig }
-              },
-              React.createElement(RgbaColorPicker, {
-                color: this.state.hexColor,
-                onChange: this.onChangeColor
-              }),
-              React.createElement(CloseOutlined, {
-                style: {
-                  position: "absolute",
-                  top: "21%",
-                  zIndex: 10003,
-                  right: "2%"
-                },
-                onClick: this.handleOpenChangeColor
-              })
-            ),
             React.createElement(
               "div",
               { style: _extends({}, ConfigStyle, { height: props.heightConfig }) },
@@ -440,31 +453,15 @@ var ToolbarConfig = function (_Component) {
                 state.openMaterial ? React.createElement(
                   "div",
                   { style: WrapperMaterial },
-                  dataMaterial.map(function (item, index) {
-                    return React.createElement(
+                  React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
                       "div",
-                      {
-                        onClick: function onClick() {
-                          index === 0 && _this3.handleOpenChangeColor();
-                        },
-                        style: {
-                          borderRadius: "4px",
-                          background: index === 0 ? "rgba(" + r + ", " + g + ", " + b + ", " + a + ")" : "url(" + item.img + ")",
-                          backgroundSize: "100% 100%",
-                          backgroundRepeat: "no-repeat",
-                          width: "80px",
-                          height: 85,
-                          display: "flex",
-                          alignItems: "flex-end"
-                        }
-                      },
-                      React.createElement(
-                        "div",
-                        { style: TextMaterial },
-                        item.name
-                      )
-                    );
-                  })
+                      null,
+                      scene.layers.valueSeq().map(layerRenderer)
+                    )
+                  )
                 ) : React.createElement(
                   "div",
                   {
@@ -477,7 +474,11 @@ var ToolbarConfig = function (_Component) {
                   React.createElement(
                     "div",
                     { style: InputWrapper },
-                    React.createElement("input", { style: InputContainer, placeholder: "", defaultValue: name })
+                    React.createElement("input", {
+                      style: InputContainer,
+                      placeholder: "",
+                      defaultValue: name
+                    })
                   ),
                   React.createElement(
                     "div",

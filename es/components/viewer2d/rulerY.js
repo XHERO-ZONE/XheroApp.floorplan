@@ -50,10 +50,11 @@ var RulerY = function (_Component) {
       };
 
       var rulerStyle = {
-        backgroundColor: this.props.backgroundColor,
+        backgroundColor: "transparent",
         height: this.props.height,
         width: '100%',
-        color: this.props.fontColor
+        color: this.props.fontColor,
+        opacity: 0
       };
 
       var markerStyle = {
@@ -65,7 +66,8 @@ var RulerY = function (_Component) {
         borderTop: '5px solid transparent',
         borderBottom: '5px solid transparent',
         borderLeft: '8px solid ' + this.props.markerColor,
-        zIndex: 9001
+        zIndex: 9001,
+        opacity: 0
       };
 
       var rulerContainer = {

@@ -55,14 +55,13 @@ const ActiveConfig = {
 };
 
 const TextConfig = {
-  fontFamily: "Playpen Sans",
   fontSize: "16px",
   fontWeight: "700",
   lineHeight: "20px",
   textAlign: "left",
   background: SharedStyle.COLORS.lightBrown,
-  webkitBackgroundClip: "text",
-  webkitTextFillColor: "transparent",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
 };
 const TextAcreage = {
   fontSize: "14px",
@@ -110,6 +109,7 @@ const WrapperMaterial = {
 };
 const TextMaterial = {
   width: "100%",
+  minWidth: "80px",
   background: "#00000040",
   fontSize: "10px",
   fontWeight: "400",
@@ -118,6 +118,8 @@ const TextMaterial = {
   color: SharedStyle.COLORS.white,
   borderRadius: "4px",
   padding: "4px 0",
+  position: "relative",
+  zIndex: 10,
 };
 
 export default class ToolbarConfig extends Component {
@@ -133,6 +135,7 @@ export default class ToolbarConfig extends Component {
       rgbaColor: { r: 170, g: 187, b: 204, a: 1 },
       acreage: null,
       name: "Căn hộ",
+      areaSelected: false,
     };
     this.onChangeShowName = this.onChangeShowName.bind(this);
     this.onChangeShowAcreage = this.onChangeShowAcreage.bind(this);
@@ -159,12 +162,16 @@ export default class ToolbarConfig extends Component {
   handleOpenConfig() {
     this.setState({ openConfig: !this.state.openConfig });
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const { scene } = this.props.state;
     let { layers } = scene;
 
     // Kiểm tra nếu layers hoặc scene thay đổi thì mới tính lại diện tích
-    if (layers !== prevProps.layers || scene !== prevProps.scene) {
+    if (
+      layers !== prevProps.state.scene.layers ||
+      scene !== prevProps.state.scene ||
+      this.state !== prevState
+    ) {
       this.calculateAcreage(layers, scene);
     }
   }
@@ -218,6 +225,8 @@ export default class ToolbarConfig extends Component {
           if (this.state.acreage !== newAcreage) {
             this.setState({ acreage: newAcreage });
           }
+        } if (area.selected !== this.state.areaSelected) {
+          this.setState({ areaSelected: area.selected });
         }
       });
     }
@@ -226,13 +235,11 @@ export default class ToolbarConfig extends Component {
   render() {
     let { state, props } = this;
     let { scene } = props.state;
-    let { layers } = scene;
-    let { r, g, b, a } = this.state.rgbaColor;
+    let type = this.props.data.type
     const { acreage, name } = this.state;
 
     let componentRenderer = (element, layer) => (
-      // <Panel key={element.id} name={('Properties: [{0}] {1}', element.type, element.id)} opened={true}>
-      <div>
+      <div style={{ width: "100%" }}>
         <ElementEditor
           element={element}
           layer={layer}
@@ -240,16 +247,13 @@ export default class ToolbarConfig extends Component {
         />
       </div>
     );
-    // </Panel>;
 
-    let layerRenderer = (layer) => {
-      const firstElement = Seq()
+    let layerRenderer = (layer) =>
+      Seq()
         .concat(layer.lines, layer.holes, layer.areas, layer.items)
         .filter((element) => element.selected)
-        .first(); // Lấy phần tử đầu tiên
-      return firstElement ? componentRenderer(firstElement, layer) : null;
-    };
-    let firstLayerRenderer = scene.layers.valueSeq().first(); // Lấy phần tử đầu tiên
+        .map((element) => componentRenderer(element, layer))
+        .valueSeq();
 
     let dataMaterial = [
       {
@@ -301,10 +305,12 @@ export default class ToolbarConfig extends Component {
               justifyContent: "space-between",
             }}
           >
-            <span style={TextConfig}>{name}</span>
-            <span style={TextAcreage}>
-              {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}
-            </span>
+            <span style={TextConfig}>{type}</span>
+            {this.state.areaSelected ? (
+              <span style={TextAcreage}>
+                {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}
+              </span>
+            ) : null}
           </div>
         </div>
 
@@ -402,36 +408,26 @@ export default class ToolbarConfig extends Component {
 
                   {state.openMaterial ? (
                     <div style={WrapperMaterial}>
-                      {dataMaterial.map((item, index) => (
-                        <div
-                          onClick={() => {
-                            index === 0 && this.handleOpenChangeColor();
-                          }}
-                          style={{
-                            borderRadius: "4px",
-                            position: "relative",
-                            background:
-                              index === 0
-                                ? `rgba(${r}, ${g}, ${b}, ${a})`
-                                : `url(${item.img})`,
-                            backgroundSize: "100% 100%",
-                            backgroundRepeat: "no-repeat",
-                            width: "80px",
-                            height: 85,
-                            display: "flex",
-                            alignItems: "flex-end",
-                          }}
-                        >
-                          <div style={TextMaterial}>{item.name}</div>
-                          {index === 0 && (
-                            <div>
-                              {firstLayerRenderer ? (
-                                <div>{layerRenderer(firstLayerRenderer)}</div>
-                              ) : null}
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                      <div
+                      // style={{
+                      //   borderRadius: "4px",
+                      //   position: "relative",
+                      //   background:
+                      //     index === 0
+                      //       ? `rgba(${r}, ${g}, ${b}, ${a})`
+                      //       : `url(${item.img})`,
+                      //   backgroundSize: "100% 100%",
+                      //   backgroundRepeat: "no-repeat",
+                      //   width: "80px",
+                      //   height: 85,
+                      //   display: "flex",
+                      //   alignItems: "flex-end",
+                      // }}
+                      >
+                        {/* <div style={TextMaterial}>{item.name}</div> */}
+
+                        <div>{scene.layers.valueSeq().map(layerRenderer)}</div>
+                      </div>
                     </div>
                   ) : (
                     <div

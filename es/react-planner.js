@@ -28,6 +28,7 @@ import axios from "axios";
 import Users from "./components/users";
 import CatalogList from "./components/catalog-view/catalog-list";
 import ToolbarConfig from "./components/toolconfig/config";
+import ToolView2D from "./components/ToolView";
 // import { UserService } from './api';
 
 var Toolbar = ToolbarComponents.Toolbar;
@@ -50,13 +51,24 @@ var wrapperStyle = {
 var ReactPlanner = function (_Component) {
   _inherits(ReactPlanner, _Component);
 
-  function ReactPlanner() {
+  function ReactPlanner(props) {
     _classCallCheck(this, ReactPlanner);
 
-    return _possibleConstructorReturn(this, (ReactPlanner.__proto__ || Object.getPrototypeOf(ReactPlanner)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (ReactPlanner.__proto__ || Object.getPrototypeOf(ReactPlanner)).call(this, props));
+
+    _this.state = {
+      data: []
+    };
+    _this.updateState = _this.updateState.bind(_this);
+    return _this;
   }
 
   _createClass(ReactPlanner, [{
+    key: "updateState",
+    value: function updateState(newState) {
+      this.setState({ data: newState });
+    }
+  }, {
     key: "getChildContext",
     value: function getChildContext() {
       var _this2 = this;
@@ -116,12 +128,14 @@ var ReactPlanner = function (_Component) {
       return React.createElement(
         "div",
         { style: _extends({}, wrapperStyle, { height: height, width: "100%" }) },
-        React.createElement(Users, null),
+        React.createElement(Users, { state: extractedState, updateState: this.updateState }),
         React.createElement(ToolbarConfig, {
           width: width,
           state: extractedState,
-          heightConfig: height
+          heightConfig: height,
+          data: this.state.data
         }),
+        React.createElement(ToolView2D, _extends({ width: 100, height: 100, state: extractedState }, props)),
         React.createElement(Content, _extends({
           width: contentW,
           height: contentH,
@@ -140,7 +154,8 @@ var ReactPlanner = function (_Component) {
         React.createElement(FooterBar, _extends({
           width: width,
           height: footerBarH,
-          state: extractedState
+          state: extractedState,
+          data: this.state.data
         }, props))
       );
     }

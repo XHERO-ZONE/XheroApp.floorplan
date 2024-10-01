@@ -1,3 +1,5 @@
-import UserService from "./users";
-
-export { UserService };
+var API = {
+    postDrawings: "/FengShui/drawings",
+    getMe: "/me"
+};
+export default API;

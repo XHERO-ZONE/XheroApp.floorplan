@@ -449,26 +449,49 @@ export default class ElementEditor extends Component {
       props: { state: appState, element },
     } = this;
     let firstPropertyEntry = propertiesFormData.entrySeq().first();
-    let renderEditer = () => {
-      if (firstPropertyEntry) {
-        const [propertyName, data] = firstPropertyEntry;
-        let currentValue = data.get('currentValue'), configs = data.get('configs');
-        let { Editor } = catalog.getPropertyType(configs.type = "color");
-      
+    let LastPropertyEntry = propertiesFormData.entrySeq().last();
+    let renderLastEditer = () => {
+      if (LastPropertyEntry) {
+        const [propertyName, data] = LastPropertyEntry;
+        let currentValue = data.get("currentValue"),
+          configs = data.get("configs");
+        let { Editor } = catalog.getPropertyType((configs.type = "enum"));
+
         return (
           <Editor
             key={propertyName}
             propertyName={propertyName}
             value={currentValue}
             configs={configs}
-            onUpdate={value => this.updateProperty(propertyName, value)}
+            onUpdate={(value) => this.updateProperty(propertyName, value)}
             state={appState}
             sourceElement={element}
             internalState={this.state}
           />
         );
       }
-    }
+    };
+    let renderEditer = () => {
+      if (firstPropertyEntry) {
+        const [propertyName, data] = firstPropertyEntry;
+        let currentValue = data.get("currentValue"),
+          configs = data.get("configs");
+        let { Editor } = catalog.getPropertyType((configs.type = "color"));
+
+        return (
+          <Editor
+            key={propertyName}
+            propertyName={propertyName}
+            value={currentValue}
+            configs={configs}
+            onUpdate={(value) => this.updateProperty(propertyName, value)}
+            state={appState}
+            sourceElement={element}
+            internalState={this.state}
+          />
+        );
+      }
+    };
     return (
       <div>
         <AttributesEditor
@@ -517,7 +540,8 @@ export default class ElementEditor extends Component {
             />
           })
         } */}
-        {renderEditer()}
+        {/* {renderEditer()} */}
+        {renderLastEditer()}
       </div>
     );
   }

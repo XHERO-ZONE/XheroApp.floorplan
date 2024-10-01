@@ -6,16 +6,14 @@ import { isDesktop, isMobile, isTablet } from 'react-device-detect';
 //http://www.cssportal.com/css-tooltip-generator/
 
 const STYLE = {
-  width: '30px',
-  height: '30px',
+  width: '36px',
+  height: '36px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginBottom: '5px',
   fontSize: '25px',
   position: 'relative',
   cursor: 'pointer',
-  marginTop: isMobile ?  '20px' : isDesktop ? '10px' :'0'
 };
 
 const STYLE_TOOLTIP = {
@@ -68,14 +66,14 @@ export default class ToolbarButton extends Component {
           {props.children}
         </div>
 
-        {
+        {/* {
           state.active ?
           <div style={STYLE_TOOLTIP}>
             <span style={STYLE_TOOLTIP_PIN} />
             {props.tooltip}
           </div>
           : null
-        }
+        } */}
 
       </div>
     )

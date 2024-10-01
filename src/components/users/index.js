@@ -1,53 +1,69 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { Component } from "react";
 import { notification } from "antd";
 import Notification from "../notification";
-const Users = () => {
-  const [api, contextHolder] = notification.useNotification();
-  const openNotification = (message) => {
-    api.open(Notification('error', message));
-  };
-  const getUsers = async (token) => {
-   
-       try {
-         const data = await axios.get('https://apis-dev.xheroapp.com/me',{
-           headers: {
-             Authorization: `bearer ${token}`
-           }
-         })
+import { getDrawingsId, getMe } from "../../services";
+import PropTypes from "prop-types";
 
-       } catch(error) {
-        console.log(error)
-        openNotification(error.response.data.message)
-       }
-  
-     }
-     
-   
-  
-  useEffect(() => {
-    const link = window.location.href
-   const index = link.indexOf('=')
-   console.warn = () => {};
-   if(index !== -1) {
-     const token = link.slice(index + 1)
-     localStorage.setItem('token', token)
-     if(token) { 
-       getUsers(token)
-     }
+class Users extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      params: new URLSearchParams(window.location.search),
+    };
+    this.api = notification;
+  }
+
+  componentDidMount() {
+    const getTokenUrl = this.state.params.get("token");
+    if (getTokenUrl) {
+      this.getUsers(getTokenUrl);
     }
-    else {
-     if(localStorage.getItem('token')) {
-       const token = localStorage.getItem('token')
-       getUsers(token)
-     }
+  }
 
+  openNotification(message) {
+    this.api.open(Notification("error", message));
+  };
+
+  async getUsers(token) {
+    try {
+      await getMe(token);
+      localStorage.setItem("token", token)
+      const getIdUrl = this.state.params.get("id");
+      if (getIdUrl) {
+        const id = localStorage.getItem("idDrawings")
+        if(id && id !== getIdUrl) {
+            localStorage.setItem("idDrawings", getIdUrl)
+        }
+        else {
+          localStorage.setItem("idDrawings", getIdUrl)
+        }
+        const data = await getDrawingsId(token, getIdUrl);
+        if(data) {
+          this.props.updateState(data)
+          if(data.drawings !== "")
+        this.context.projectActions.loadProject(JSON.parse(data.drawings));
+        }
       }
-  },[])
-  return (
-    <div>
-      {contextHolder}
-    </div>
-  )
+      else {
+        localStorage.removeItem("idDrawings")
+      }
+    } catch (error) {
+      console.log(error);
+      this.openNotification(error.response.data.message);
+    }
+  };
+
+  render() {
+    return <div>{this.api.contextHolder}</div>;
+  }
 }
-export default Users
+Users.propTypes = {
+  state: PropTypes.object.isRequired,
+}
+Users.contextTypes = {
+  projectActions: PropTypes.object.isRequired,
+
+}
+
+export default Users;

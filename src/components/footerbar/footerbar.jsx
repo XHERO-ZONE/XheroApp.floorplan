@@ -16,6 +16,7 @@ import { MdAddCircle, MdWarning } from "react-icons/md";
 import { VERSION } from "../../version";
 import { isDesktop, isMobile, isTablet } from "react-device-detect";
 import { useDevice } from "../responsive";
+import ToolbarSaveButton from "../toolbar/toolbar-save-button";
 
 const footerBarStyle = {
   position: "absolute",
@@ -23,14 +24,13 @@ const footerBarStyle = {
   lineHeight: "14px",
   color: SharedStyle.COLORS.white,
   backgroundColor: SharedStyle.COLORS.white,
-  padding: "3px 1em",
+  padding: "3px 20px",
   margin: 0,
   boxSizing: "border-box",
   cursor: "default",
   userSelect: "none",
   zIndex: "9001",
   display: "flex",
-  padding: "10px 20px",
   // height: "70px",
   gap: "20px",
 };
@@ -55,20 +55,54 @@ const coordStyle = {
 };
 const textFooter = {
   fontFamily: "Playpen Sans",
-  fontSize: "14px",
+  fontSize: "12px",
   fontWeight: "700",
   lineHeight: "20px",
   textAlign: "center",
   background: SharedStyle.COLORS.titleToolBar,
-  webkitBackgroundClip: "text",
-  webkitTextFillColor: "transparent",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
 };
 const appMessageStyle = { borderBottom: "1px solid #555", lineHeight: "1.5em" };
 
 class FooterBar extends Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {};
+    this.state = {
+      selected: false,
+    };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { scene } = this.props.state;
+    let { layers } = scene;
+
+    // Kiểm tra nếu props hoặc state thay đổi thì mới tính lại diện tích
+    if (
+      layers !== prevProps.state.scene.layers ||
+      scene !== prevProps.state.scene ||
+      this.state !== prevState
+    ) {
+      this.slectedArea(layers, scene);
+    }
+  }
+  slectedArea(layers, scene) {
+    let selectedLayer = layers.get(scene.selectedLayer);
+    const newAreas = selectedLayer.areas.set(
+      "keyArea",
+      selectedLayer.areas._root
+    );
+    const root = newAreas.get("keyArea");
+    if (root && root.entries) {
+      const entries = root.entries;
+      entries.forEach((entry) => {
+        const area = entry[1];
+        if (area.selected !== this.state.selected) {
+          // Chỉ gọi setState nếu giá trị selected thực sự thay đổi
+          this.setState({ selected: area.selected });
+        }
+      });
+    }
   }
 
   render() {
@@ -111,6 +145,9 @@ class FooterBar extends Component {
     let iconTurnBack = require("../../../public/images/iconTurnBack.png");
     let iconResert = require("../../../public/images/iconResert.png");
     let iconFloor = require("../../../public/images/iconFloor.png");
+    let iconTurn = require("../../../public/images/iconTurn.png");
+    let iconLock = require("../../../public/images/iconLock.png");
+    let iconDeleted = require("../../../public/images/iconDeleted.png");
 
     return (
       <div
@@ -120,143 +157,12 @@ class FooterBar extends Component {
           height,
         }}
       >
-        {/* <If condition={MODE_SNAPPING.includes(mode)}>
-          <div style={{...leftTextStyle, display: device.isMobile ?  'flex' : 'block', flexDirection: 'column', height: '100%', justifyContent: 'center', alignItems: 'center', gap: '10px', padding: device.isMobile ? '0 10px' : '5px 1em'}}>
-            <div title={translator.t('Mouse X Coordinate')} style={{ ...coordStyle, fontSize: '12px', width: '6em'}}>X : {x.toFixed(3)}</div>
-            <div title={translator.t('Mouse Y Coordinate')} style={{ ...coordStyle, fontSize:  '12px',width:  '6em'}}>Y : {y.toFixed(3)}</div>
-          </div>
-          {device.isMobile || device.isTablet ? null : 
-          <div style={{...leftTextStyle, fontSize: device.isTablet == true ? '24px' : '14px',padding: device.isMobile ? '0 10px' : '5px 1em'}} title={translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
-          
-          }
-          {device.isMobile ? 
-          
-          <div style={{...leftTextStyle, fontSize: device.isTablet == true ? '24px' : '14px',padding: device.isMobile ? '5px 10px' : '0 1em', display: device.isMobile ? 'flex': ''}}>
-          <div style={{display: 'flex' , flexDirection:  'column', gap: '10px'}}>
-
-
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_POINT: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_POINT: false }); }}
-              text="Snap PT"
-              toggleState={globalState.snapMask.get(SNAP_POINT)}
-              title={translator.t('Snap to Point')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_LINE: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_LINE: false }); }}
-              text="Snap LN"
-              toggleState={globalState.snapMask.get(SNAP_LINE)}
-              title={translator.t('Snap to Line')}
-            />
-            </div>
-            <div style={{display: device.isMobile ? 'flex' : '', flexDirection: 'column', gap: '10px'}}>
-
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_SEGMENT: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_SEGMENT: false }); }}
-              text="Snap SEG"
-              toggleState={globalState.snapMask.get(SNAP_SEGMENT)}
-              title={translator.t('Snap to Segment')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_GRID: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_GRID: false }); }}
-              text="Snap GRD"
-              toggleState={globalState.snapMask.get(SNAP_GRID)}
-              title={translator.t('Snap to Grid')}
-            />
-            </div>
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_GUIDE: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_GUIDE: false }); }}
-              text="Snap GDE"
-              toggleState={globalState.snapMask.get(SNAP_GUIDE)}
-              title={translator.t('Snap to Guide')}
-            />
-          </div> : 
-           <div style={{...leftTextStyle, padding: device.isMobile ? '10px 10px' : '5px 1em'}}>
-           <FooterToggleButton
-             state={this.state}
-             toggleOn={() => { updateSnapMask({ SNAP_POINT: true }); }}
-             toggleOff={() => { updateSnapMask({ SNAP_POINT: false }); }}
-             text="Snap PT"
-             toggleState={globalState.snapMask.get(SNAP_POINT)}
-             title={translator.t('Snap to Point')}
-           />
-           <FooterToggleButton
-             state={this.state}
-             toggleOn={() => { updateSnapMask({ SNAP_LINE: true }); }}
-             toggleOff={() => { updateSnapMask({ SNAP_LINE: false }); }}
-             text="Snap LN"
-             toggleState={globalState.snapMask.get(SNAP_LINE)}
-             title={translator.t('Snap to Line')}
-           />
-           <FooterToggleButton
-             state={this.state}
-             toggleOn={() => { updateSnapMask({ SNAP_SEGMENT: true }); }}
-             toggleOff={() => { updateSnapMask({ SNAP_SEGMENT: false }); }}
-             text="Snap SEG"
-             toggleState={globalState.snapMask.get(SNAP_SEGMENT)}
-             title={translator.t('Snap to Segment')}
-           />
-           <FooterToggleButton
-             state={this.state}
-             toggleOn={() => { updateSnapMask({ SNAP_GRID: true }); }}
-             toggleOff={() => { updateSnapMask({ SNAP_GRID: false }); }}
-             text="Snap GRD"
-             toggleState={globalState.snapMask.get(SNAP_GRID)}
-             title={translator.t('Snap to Grid')}
-           />
-           <FooterToggleButton
-             state={this.state}
-             toggleOn={() => { updateSnapMask({ SNAP_GUIDE: true }); }}
-             toggleOff={() => { updateSnapMask({ SNAP_GUIDE: false }); }}
-             text="Snap GDE"
-             toggleState={globalState.snapMask.get(SNAP_GUIDE)}
-             title={translator.t('Snap to Guide')}
-           />
-         </div>
-        }
-        </If>
-        {device.isMobile || device.isTablet ? null :
-        <div style={{padding: device.isMobile ? '10px 10px' : '5px 1em'}}>
-          {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
-        <div               style={{...rightTextStyle, padding: device.isMobile ? '0 10px' : '0 1em'}}>
-          <FooterContentButton
-            state={this.state}
-            icon={MdAddCircle}
-            iconStyle={errorIconStyle}
-            text={errors.length.toString()}
-            textStyle={errorLableStyle}
-            title={`Errors [ ${errors.length} ]`}
-            titleStyle={errorLableStyle}
-            content={[errorsJsx]}
-          />
-          <FooterContentButton
-            state={this.state}
-            icon={MdWarning}
-            iconStyle={warningIconStyle}
-            text={warnings.length.toString()}
-            textStyle={warningLableStyle}
-            title={`Warnings [ ${warnings.length} ]`}
-            titleStyle={warningLableStyle}
-            content={[warningsJsx]}
-          />
-        </div>
-        </div>
-        } */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             gap: "5px",
-            justifyContent: "center",
+            justifyContent: "space-between",
             alignItems: "center",
             cursor: "pointer",
           }}
@@ -274,7 +180,11 @@ class FooterBar extends Component {
             alignItems: "center",
             cursor: "pointer",
           }}
-          onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}
+          onClick={(event) =>
+            confirm(translator.t("Would you want to start a new Project?"))
+              ? projectActions.newProject()
+              : null
+          }
         >
           <img src={iconResert} width={36} height={36} />
           <span style={textFooter}>Làm lại</span>
@@ -288,11 +198,67 @@ class FooterBar extends Component {
             alignItems: "center",
             cursor: "pointer",
           }}
-          onClick={event => viewer3DActions.selectTool3DView()}
         >
           <img src={iconFloor} width={36} height={36} />
           <span style={textFooter}>Tầng</span>
         </div>
+        {this.state.selected === false ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+          >
+            <ToolbarSaveButton state={this.props.state} data={this.props.data} />
+            <span style={textFooter}>Lưu</span>
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: "20px" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
+              <img src={iconTurn} width={36} height={36} />
+              <span style={textFooter}>Lật</span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
+              <img src={iconLock} width={36} height={36} />
+              <span style={textFooter}>Khóa</span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
+              <img src={iconDeleted} width={36} height={36} />
+              <span style={textFooter}>Xóa</span>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

@@ -206,7 +206,6 @@ export default function Viewer2D(_ref, _ref2) {
   };
 
   var onMouseUp = function onMouseUp(viewerEvent) {
-    console.log("0001");
 
     var event = viewerEvent.originalEvent;
 
@@ -226,30 +225,24 @@ export default function Viewer2D(_ref, _ref2) {
 
         switch (elementData ? elementData.prototype : "none") {
           case "areas":
-            console.log("0001", state);
             areaActions.selectArea(elementData.layer, elementData.id);
             break;
 
           case "lines":
-            console.log("0002");
 
             linesActions.selectLine(elementData.layer, elementData.id);
             break;
 
           case "holes":
-            console.log("0003");
 
             holesActions.selectHole(elementData.layer, elementData.id);
             break;
 
           case "items":
-            console.log("0004");
-
             itemsActions.selectItem(elementData.layer, elementData.id);
             break;
 
           case "none":
-            console.log("0005");
             projectActions.unselectAll();
             break;
         }

@@ -2,15 +2,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _footerBarStyle;
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
@@ -24,21 +20,24 @@ import { MdAddCircle, MdWarning } from "react-icons/md";
 import { VERSION } from "../../version";
 import { isDesktop, isMobile, isTablet } from "react-device-detect";
 import { useDevice } from "../responsive";
+import ToolbarSaveButton from "../toolbar/toolbar-save-button";
 
-var footerBarStyle = (_footerBarStyle = {
+var footerBarStyle = {
   position: "absolute",
   bottom: 0,
   lineHeight: "14px",
   color: SharedStyle.COLORS.white,
   backgroundColor: SharedStyle.COLORS.white,
-  padding: "3px 1em",
+  padding: "3px 20px",
   margin: 0,
   boxSizing: "border-box",
   cursor: "default",
   userSelect: "none",
   zIndex: "9001",
-  display: "flex"
-}, _defineProperty(_footerBarStyle, "padding", "10px 20px"), _defineProperty(_footerBarStyle, "gap", "20px"), _footerBarStyle);
+  display: "flex",
+  // height: "70px",
+  gap: "20px"
+};
 
 export var leftTextStyle = {
   position: "relative",
@@ -60,13 +59,13 @@ var coordStyle = {
 };
 var textFooter = {
   fontFamily: "Playpen Sans",
-  fontSize: "14px",
+  fontSize: "12px",
   fontWeight: "700",
   lineHeight: "20px",
   textAlign: "center",
   background: SharedStyle.COLORS.titleToolBar,
-  webkitBackgroundClip: "text",
-  webkitTextFillColor: "transparent"
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent"
 };
 var appMessageStyle = { borderBottom: "1px solid #555", lineHeight: "1.5em" };
 
@@ -78,11 +77,44 @@ var FooterBar = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (FooterBar.__proto__ || Object.getPrototypeOf(FooterBar)).call(this, props, context));
 
-    _this.state = {};
+    _this.state = {
+      selected: false
+    };
     return _this;
   }
 
   _createClass(FooterBar, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      var scene = this.props.state.scene;
+      var layers = scene.layers;
+
+      // Kiểm tra nếu props hoặc state thay đổi thì mới tính lại diện tích
+
+      if (layers !== prevProps.state.scene.layers || scene !== prevProps.state.scene || this.state !== prevState) {
+        this.slectedArea(layers, scene);
+      }
+    }
+  }, {
+    key: "slectedArea",
+    value: function slectedArea(layers, scene) {
+      var _this2 = this;
+
+      var selectedLayer = layers.get(scene.selectedLayer);
+      var newAreas = selectedLayer.areas.set("keyArea", selectedLayer.areas._root);
+      var root = newAreas.get("keyArea");
+      if (root && root.entries) {
+        var entries = root.entries;
+        entries.forEach(function (entry) {
+          var area = entry[1];
+          if (area.selected !== _this2.state.selected) {
+            // Chỉ gọi setState nếu giá trị selected thực sự thay đổi
+            _this2.setState({ selected: area.selected });
+          }
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       var _props = this.props,
@@ -139,6 +171,9 @@ var FooterBar = function (_Component) {
       var iconTurnBack = require("../../../public/images/iconTurnBack.png");
       var iconResert = require("../../../public/images/iconResert.png");
       var iconFloor = require("../../../public/images/iconFloor.png");
+      var iconTurn = require("../../../public/images/iconTurn.png");
+      var iconLock = require("../../../public/images/iconLock.png");
+      var iconDeleted = require("../../../public/images/iconDeleted.png");
 
       return React.createElement(
         "div",
@@ -155,7 +190,7 @@ var FooterBar = function (_Component) {
               display: "flex",
               flexDirection: "column",
               gap: "5px",
-              justifyContent: "center",
+              justifyContent: "space-between",
               alignItems: "center",
               cursor: "pointer"
             },
@@ -182,7 +217,7 @@ var FooterBar = function (_Component) {
               cursor: "pointer"
             },
             onClick: function onClick(event) {
-              return confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null;
+              return confirm(translator.t("Would you want to start a new Project?")) ? projectActions.newProject() : null;
             }
           },
           React.createElement("img", { src: iconResert, width: 36, height: 36 }),
@@ -202,9 +237,6 @@ var FooterBar = function (_Component) {
               justifyContent: "center",
               alignItems: "center",
               cursor: "pointer"
-            },
-            onClick: function onClick(event) {
-              return viewer3DActions.selectTool3DView();
             }
           },
           React.createElement("img", { src: iconFloor, width: 36, height: 36 }),
@@ -212,6 +244,85 @@ var FooterBar = function (_Component) {
             "span",
             { style: textFooter },
             "T\u1EA7ng"
+          )
+        ),
+        this.state.selected === false ? React.createElement(
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer"
+            }
+          },
+          React.createElement(ToolbarSaveButton, { state: this.props.state, data: this.props.data }),
+          React.createElement(
+            "span",
+            { style: textFooter },
+            "L\u01B0u"
+          )
+        ) : React.createElement(
+          "div",
+          { style: { display: "flex", gap: "20px" } },
+          React.createElement(
+            "div",
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer"
+              }
+            },
+            React.createElement("img", { src: iconTurn, width: 36, height: 36 }),
+            React.createElement(
+              "span",
+              { style: textFooter },
+              "L\u1EADt"
+            )
+          ),
+          React.createElement(
+            "div",
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer"
+              }
+            },
+            React.createElement("img", { src: iconLock, width: 36, height: 36 }),
+            React.createElement(
+              "span",
+              { style: textFooter },
+              "Kh\xF3a"
+            )
+          ),
+          React.createElement(
+            "div",
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer"
+              }
+            },
+            React.createElement("img", { src: iconDeleted, width: 36, height: 36 }),
+            React.createElement(
+              "span",
+              { style: textFooter },
+              "X\xF3a"
+            )
           )
         )
       );

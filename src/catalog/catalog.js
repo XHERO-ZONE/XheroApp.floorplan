@@ -60,7 +60,6 @@ export default class Catalog {
    *  @return {?object} Property
   */
   getPropertyType(type) {
-    console.log(type)
     if (this.propertyTypes.hasOwnProperty(type)) {
       return this.propertyTypes[type];
     }
