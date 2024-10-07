@@ -291,7 +291,8 @@ export var Scene = function (_Record10) {
   width: 3000,
   height: 2000,
   meta: new Map(), //additional info
-  guides: new Map()
+  guides: new Map(),
+  floor: "Tầng trệt"
 }, 'Scene'));
 
 export var CatalogElement = function (_Record11) {
@@ -435,5 +436,7 @@ export var State = function (_Record14) {
   clipboardProperties: new Map(),
   selectedElementsHistory: new List(),
   misc: new Map(), //additional info
-  alterate: false
+  alterate: false,
+  currentFloor: 0,
+  arrFloor: new Map({ 0: "Tầng trệt" })
 }, 'State'));

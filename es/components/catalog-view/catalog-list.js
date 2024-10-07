@@ -32,8 +32,8 @@ var containerStyle = (_containerStyle = {
   height: "calc( 100% - 20px)",
   backgroundImage: "url(" + bgToolBar,
   right: 0,
-  overflowY: "auto",
-  overflowX: "hidden",
+  // overflowY: "auto",
+  // overflowX: "hidden",
   zIndex: 10,
   padding: "0px",
   display: "flex",
@@ -48,7 +48,9 @@ var itemsStyle = {
   marginTop: "1em",
   width: "100%",
   // padding: "0 10px",
-  justifyContent: "center"
+  justifyContent: "center",
+  overflowY: "auto",
+  overflowX: "hidden"
 };
 
 var searchContainer = {
@@ -278,18 +280,7 @@ var CatalogList = function (_Component) {
           React.createElement(
             "div",
             { style: itemsStyle },
-            [
-            // turnBackButton,
-            // categoriesToDisplay.map((cat) => (
-            //   <CatalogPageItem
-            //     type={this.state.type}
-            //     selectType={this.changeType}
-            //     key={cat.name}
-            //     page={cat}
-            //     oldPage={currentCategory}
-            //   />
-            // )),
-            elementsToDisplay.map(function (elem) {
+            [elementsToDisplay.map(function (elem) {
               return React.createElement(CatalogItem, { key: elem.name, element: elem });
             })]
           )

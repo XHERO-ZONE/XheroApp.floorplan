@@ -26,6 +26,8 @@ import Panel from "../sidebar/panel";
 import ElementEditor from "../sidebar/panel-element-editor/element-editor";
 var bgToolBar = require("../../../public/images/newBg.png");
 var iconConfig = require("../../../public/images/icon-config.png");
+var bgButton = require("../../../public/images/bgButton.png");
+
 var Wrapper = _extends((_extends2 = {
   position: "absolute",
   top: 0,
@@ -38,7 +40,8 @@ var Wrapper = _extends((_extends2 = {
   cursor: "default",
   userSelect: "none",
   zIndex: "9001",
-  display: "flex"
+  display: "flex",
+  alignItems: "center"
 }, _defineProperty(_extends2, "padding", "10px 20px"), _defineProperty(_extends2, "gap", "20px"), _extends2), GlobalStyle);
 var ConfigStyle = {
   backgroundImage: "url(" + bgToolBar,
@@ -55,14 +58,16 @@ var ConfigStyle = {
 var DefaultConfig = {
   background: "linear-gradient(90deg, #F0F0F0 0%, #D5D5D5 42%, #F2F2F2 100%)",
   color: "#9C9C9C",
-  width: "50%"
+  width: "50%",
+  cursor: "pointer"
 };
 var ActiveConfig = {
   background: SharedStyle.COLORS.lightBrown,
   color: SharedStyle.COLORS.white,
   padding: "8px",
   width: "50%",
-  borderRadius: "4px"
+  borderRadius: "4px",
+  cursor: "pointer"
 };
 
 var TextConfig = {
@@ -117,19 +122,27 @@ var WrapperMaterial = {
   gridTemplateColumns: "1fr 1fr",
   gap: "10px"
 };
-var TextMaterial = {
+var TextFloor = {
   width: "100%",
   minWidth: "80px",
-  background: "#00000040",
-  fontSize: "10px",
-  fontWeight: "400",
+  background: "linear-gradient(86.63deg, #8A4026 -51.27%, #966D32 -48.54%, #A78041 -43.09%, #BA9653 -40.36%, #D8B870 -29.45%, #E4C67B -26.73%, #DBB565 -18.55%, #D9B160 -15.82%, #D2A550 -7.64%, #D0A14B -2.18%, #D5A750 6%, #DDB258 14.18%, #E4BD61 22.36%, #F4D576 33.26%, #F8E881 49.63%, #F2DF7B 57.81%, #E7C969 71.44%, #E3C263 79.62%, #F0D35A 95.98%, #F9DF58 106.89%, #EFD052 117.8%, #DBB640 136.88%, #D2AA38 150.52%, #C69930 164.15%, #C1932D 177.79%, #C59833 180.51%, #D2A744 188.69%, #EAC565 194.15%, #DCB755 202.33%, #D5AF4C 207.78%, #CBA542 213.24%)",
+  fontSize: "12px",
+  fontWeight: "600",
   lineHeight: "20px",
   textAlign: "center",
-  color: SharedStyle.COLORS.white,
-  borderRadius: "4px",
-  padding: "4px 0",
-  position: "relative",
-  zIndex: 10
+  zIndex: 10,
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent"
+};
+var TextDisabled = {
+  width: "100%",
+  minWidth: "80px",
+  fontSize: "12px",
+  fontWeight: "600",
+  lineHeight: "20px",
+  textAlign: "center",
+  zIndex: 10,
+  color: "gray"
 };
 
 var ToolbarConfig = function (_Component) {
@@ -149,7 +162,7 @@ var ToolbarConfig = function (_Component) {
       openHexColor: false,
       rgbaColor: { r: 170, g: 187, b: 204, a: 1 },
       acreage: null,
-      name: "Căn hộ",
+      // type: this.props.data.type,
       areaSelected: false
     };
     _this.onChangeShowName = _this.onChangeShowName.bind(_this);
@@ -259,7 +272,8 @@ var ToolbarConfig = function (_Component) {
             if (_this2.state.acreage !== newAcreage) {
               _this2.setState({ acreage: newAcreage });
             }
-          }if (area.selected !== _this2.state.areaSelected) {
+          }
+          if (area.selected !== _this2.state.areaSelected) {
             _this2.setState({ areaSelected: area.selected });
           }
         });
@@ -275,11 +289,20 @@ var ToolbarConfig = function (_Component) {
       var scene = props.state.scene;
 
       var type = this.props.data.type;
-      var _state = this.state,
-          acreage = _state.acreage,
-          name = _state.name;
+      var acreage = this.state.acreage;
 
-
+      var floor = this.props.state.toJS().arrFloor;
+      var nameFloor = Object.values(floor);
+      var currentFloor = this.props.state.toJS().currentFloor;
+      if (localStorage.getItem("arrFloor") !== null) {
+        var storedArrFloor = localStorage.getItem("arrFloor");
+        var arr = JSON.parse(storedArrFloor);
+        nameFloor = Object.values(arr);
+      }
+      if (localStorage.getItem("currentFloor") !== null) {
+        var _storedArrFloor = localStorage.getItem("currentFloor");
+        currentFloor = _storedArrFloor;
+      }
       var componentRenderer = function componentRenderer(element, layer) {
         return React.createElement(
           "div",
@@ -299,32 +322,6 @@ var ToolbarConfig = function (_Component) {
           return componentRenderer(element, layer);
         }).valueSeq();
       };
-
-      var dataMaterial = [{
-        name: "Màu sắc",
-        img: ""
-      }, {
-        name: "Đá Granit",
-        img: require("../../../public/images/Granit.png")
-      }, {
-        name: "Đá cẩm thạch",
-        img: require("../../../public/images/Granit.png")
-      }, {
-        name: "Gạch lát",
-        img: require("../../../public/images/Granit.png")
-      }, {
-        name: "Vân gỗ",
-        img: require("../../../public/images/Granit.png")
-      }, {
-        name: "Đá lát nền",
-        img: require("../../../public/images/Granit.png")
-      }, {
-        name: "Gạch hoa văn",
-        img: require("../../../public/images/Granit.png")
-      }, {
-        name: "Đá",
-        img: require("../../../public/images/Granit.png")
-      }];
       // this.renderedAreaSize(layers, scene)
       return React.createElement(
         "div",
@@ -334,30 +331,85 @@ var ToolbarConfig = function (_Component) {
           { style: _extends({}, Wrapper, { width: props.width }) },
           React.createElement(
             "div",
-            { onClick: this.handleOpenConfig, style: { cursor: "pointer" } },
-            React.createElement("img", { src: iconConfig, width: 40, height: 40 })
+            null,
+            React.createElement(
+              "div",
+              { onClick: this.handleOpenConfig, style: { cursor: "pointer" } },
+              React.createElement("img", { src: iconConfig, width: 40, height: 40 })
+            )
           ),
           React.createElement(
             "div",
-            {
-              style: {
-                display: "flex",
-                flexDirection: "column",
-                height: "auto",
-                alignItems: "center",
-                justifyContent: "space-between"
-              }
-            },
+            { style: { display: "flex", flexDirection: "column", gap: "5px" } },
             React.createElement(
-              "span",
-              { style: TextConfig },
-              type
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "row",
+                  height: "auto",
+                  alignItems: "flex-end",
+                  gap: "3px"
+                }
+              },
+              React.createElement(
+                "span",
+                { style: TextConfig },
+                type,
+                ":"
+              ),
+              this.state.areaSelected ? React.createElement(
+                "span",
+                { style: TextAcreage },
+                acreage ? acreage + " m" + String.fromCharCode(0xb2) : ""
+              ) : null
             ),
-            this.state.areaSelected ? React.createElement(
-              "span",
-              { style: TextAcreage },
-              acreage ? acreage + " m" + String.fromCharCode(0xb2) : ""
-            ) : null
+            React.createElement(
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  overflow: "auto",
+                  width: "100%",
+                  paddingRight: 60
+                }
+              },
+              nameFloor.map(function (items, index) {
+                return React.createElement(
+                  "div",
+                  {
+                    key: index,
+                    style: {
+                      backgroundImage: "url(" + bgButton + ")",
+                      padding: "6px 20px",
+                      backgroundSize: "100% 100%",
+                      backgroundRepeat: "no-repeat",
+                      whiteSpace: "nowrap",
+                      cursor: "pointer"
+                    }
+                  },
+                  Number(currentFloor) === index ? React.createElement(
+                    "span",
+                    {
+                      onClick: function onClick() {
+                        return _this3.props.updateCurrentFloor(_this3.props.state, index);
+                      },
+                      style: TextFloor
+                    },
+                    nameFloor[index]
+                  ) : React.createElement(
+                    "span",
+                    {
+                      onClick: function onClick() {
+                        return _this3.props.updateCurrentFloor(_this3.props.state, index);
+                      },
+                      style: _extends({}, TextDisabled)
+                    },
+                    nameFloor[index]
+                  )
+                );
+              })
+            )
           )
         ),
         this.state.openConfig ? React.createElement(
@@ -458,7 +510,7 @@ var ToolbarConfig = function (_Component) {
                     null,
                     React.createElement(
                       "div",
-                      null,
+                      { style: { position: "relative" } },
                       scene.layers.valueSeq().map(layerRenderer)
                     )
                   )
@@ -477,7 +529,8 @@ var ToolbarConfig = function (_Component) {
                     React.createElement("input", {
                       style: InputContainer,
                       placeholder: "",
-                      defaultValue: name
+                      defaultValue: type,
+                      disabled: true
                     })
                   ),
                   React.createElement(

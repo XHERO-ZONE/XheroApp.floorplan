@@ -28,15 +28,15 @@ var footerBarStyle = {
   lineHeight: "14px",
   color: SharedStyle.COLORS.white,
   backgroundColor: SharedStyle.COLORS.white,
-  padding: "3px 20px",
+  padding: "3px 10px",
   margin: 0,
   boxSizing: "border-box",
   cursor: "default",
   userSelect: "none",
-  zIndex: "9001",
+  zIndex: "9999",
   display: "flex",
   // height: "70px",
-  gap: "20px"
+  gap: "15px"
 };
 
 export var leftTextStyle = {
@@ -88,7 +88,6 @@ var FooterBar = function (_Component) {
     value: function componentDidUpdate(prevProps, prevState) {
       var scene = this.props.state.scene;
       var layers = scene.layers;
-
       // Kiểm tra nếu props hoặc state thay đổi thì mới tính lại diện tích
 
       if (layers !== prevProps.state.scene.layers || scene !== prevProps.state.scene || this.state !== prevState) {
@@ -117,6 +116,8 @@ var FooterBar = function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var _props = this.props,
           globalState = _props.state,
           width = _props.width,
@@ -237,6 +238,9 @@ var FooterBar = function (_Component) {
               justifyContent: "center",
               alignItems: "center",
               cursor: "pointer"
+            },
+            onClick: function onClick() {
+              return _this3.props.addFloor(_this3.props.state);
             }
           },
           React.createElement("img", { src: iconFloor, width: 36, height: 36 }),
@@ -266,7 +270,7 @@ var FooterBar = function (_Component) {
           )
         ) : React.createElement(
           "div",
-          { style: { display: "flex", gap: "20px" } },
+          { style: { display: "flex", gap: "15px" } },
           React.createElement(
             "div",
             {

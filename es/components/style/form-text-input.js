@@ -22,7 +22,7 @@ var STYLE_INPUT = {
   color: SharedStyle.PRIMARY_COLOR.input,
   backgroundColor: SharedStyle.COLORS.white,
   backgroundImage: 'none',
-  border: '1px solid rgba(0,0,0,.15)',
+  // border: '1px solid rgba(0,0,0,.15)',
   outline: 'none',
   height: '100%'
 };
@@ -49,7 +49,7 @@ var FormTextInput = function (_Component) {
           rest = _objectWithoutProperties(_props, ['style']);
 
       var textInputStyle = _extends({}, STYLE_INPUT, style);
-      if (this.state.focus) textInputStyle.border = '1px solid ' + SharedStyle.SECONDARY_COLOR.main;
+      // if (this.state.focus) textInputStyle.border = `1px solid ${SharedStyle.SECONDARY_COLOR.main}`;
 
       return React.createElement('input', _extends({
         onFocus: function onFocus(e) {

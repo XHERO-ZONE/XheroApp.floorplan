@@ -45,7 +45,7 @@ export default function ToolbarSaveButton(_ref, _ref2) {
   var iconSave = require("../../../public/images/save.png");
   var saveProjectToFile = function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      var updatedState, fileDrawing, token, id, body, params, _body;
+      var updatedState, fileDrawing, floors, token, id, body, params, _body;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -54,12 +54,13 @@ export default function ToolbarSaveButton(_ref, _ref2) {
               e.preventDefault();
               _context.prev = 1;
               updatedState = Project.unselectAll(state).updatedState;
-              fileDrawing = JSON.stringify(updatedState.get("scene").toJS());
+              fileDrawing = localStorage.getItem("react-planner_v0") || JSON.stringify(updatedState.get("scene").toJS());
+              floors = localStorage.getItem("arrFloor") || JSON.stringify(state.toJS().arrFloor);
               token = localStorage.getItem("token");
               id = localStorage.getItem("idDrawings");
 
               if (!id) {
-                _context.next = 13;
+                _context.next = 14;
                 break;
               }
 
@@ -67,49 +68,51 @@ export default function ToolbarSaveButton(_ref, _ref2) {
                 name: data.name,
                 address: data.address,
                 type: data.type,
-                drawings: fileDrawing || data.drawings
+                drawings: fileDrawing || data.drawings,
+                floors: floors
               };
-              _context.next = 10;
+              _context.next = 11;
               return putDrawings(token, body, id);
 
-            case 10:
+            case 11:
               setOpenModal(false);
 
-              _context.next = 18;
+              _context.next = 19;
               break;
 
-            case 13:
+            case 14:
               params = new URLSearchParams(window.location.search);
               _body = {
-                name: params.get("name"),
-                address: params.get("address"),
-                type: params.get("type"),
-                drawings: fileDrawing
+                name: params.get("name") || "",
+                address: params.get("address") || "",
+                type: params.get("type") || "Căn Hộ",
+                drawings: fileDrawing,
+                floors: floors
               };
-              _context.next = 17;
+              _context.next = 18;
               return postDrawings(token, _body);
 
-            case 17:
+            case 18:
               setOpenModal(false);
 
-            case 18:
-              _context.next = 24;
+            case 19:
+              _context.next = 25;
               break;
 
-            case 20:
-              _context.prev = 20;
+            case 21:
+              _context.prev = 21;
               _context.t0 = _context["catch"](1);
 
               // api.open(Notification("erorr", "Save Error"));
               console.log(_context.t0);
               setOpenModal(false);
 
-            case 24:
+            case 25:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, _this, [[1, 20]]);
+      }, _callee, _this, [[1, 21]]);
     }));
 
     return function saveProjectToFile(_x) {

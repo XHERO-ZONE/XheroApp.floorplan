@@ -24,15 +24,15 @@ const footerBarStyle = {
   lineHeight: "14px",
   color: SharedStyle.COLORS.white,
   backgroundColor: SharedStyle.COLORS.white,
-  padding: "3px 20px",
+  padding: "3px 10px",
   margin: 0,
   boxSizing: "border-box",
   cursor: "default",
   userSelect: "none",
-  zIndex: "9001",
+  zIndex: "9999",
   display: "flex",
   // height: "70px",
-  gap: "20px",
+  gap: "15px",
 };
 
 export const leftTextStyle = {
@@ -73,10 +73,11 @@ class FooterBar extends Component {
     };
   }
 
+
+
   componentDidUpdate(prevProps, prevState) {
     const { scene } = this.props.state;
     let { layers } = scene;
-
     // Kiểm tra nếu props hoặc state thay đổi thì mới tính lại diện tích
     if (
       layers !== prevProps.state.scene.layers ||
@@ -104,6 +105,7 @@ class FooterBar extends Component {
       });
     }
   }
+  
 
   render() {
     let { state: globalState, width, height, device } = this.props;
@@ -198,6 +200,7 @@ class FooterBar extends Component {
             alignItems: "center",
             cursor: "pointer",
           }}
+          onClick={() => this.props.addFloor(this.props.state)}
         >
           <img src={iconFloor} width={36} height={36} />
           <span style={textFooter}>Tầng</span>
@@ -217,7 +220,7 @@ class FooterBar extends Component {
             <span style={textFooter}>Lưu</span>
           </div>
         ) : (
-          <div style={{ display: "flex", gap: "20px" }}>
+          <div style={{ display: "flex", gap: "15px" }}>
             <div
               style={{
                 display: "flex",

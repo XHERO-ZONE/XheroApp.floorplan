@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormLabel, FormColorInput } from '../../components/style/export';
@@ -25,7 +27,7 @@ export default function PropertyColor(_ref) {
 
   return React.createElement(
     'table',
-    { className: 'PropertyColor', style: PropertyStyle.tableStyle },
+    { className: 'PropertyColor', style: _extends({}, PropertyStyle.tableStyle, { height: 0, width: "auto", marginBottom: 0 }) },
     React.createElement(
       'tbody',
       null,

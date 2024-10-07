@@ -484,6 +484,7 @@ var ElementEditor = function (_Component) {
           attributeFormData: attributesFormData,
           state: appState
         }),
+        renderEditer(),
         renderLastEditer()
       );
     }

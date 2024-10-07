@@ -23,7 +23,8 @@ export default function ToolbarSaveButton({ state, data }, { translator }) {
     e.preventDefault();
     try {
       const updatedState = Project.unselectAll(state).updatedState;
-      const fileDrawing = JSON.stringify(updatedState.get("scene").toJS());
+      const fileDrawing = localStorage.getItem("react-planner_v0") || JSON.stringify(updatedState.get("scene").toJS());
+      const floors = localStorage.getItem("arrFloor") || JSON.stringify(state.toJS().arrFloor)
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("idDrawings");
       if (id) {
@@ -32,6 +33,7 @@ export default function ToolbarSaveButton({ state, data }, { translator }) {
           address: data.address,
           type: data.type,
           drawings: fileDrawing || data.drawings,
+          floors: floors
         };
         await putDrawings(token, body, id);
         setOpenModal(false);
@@ -39,10 +41,11 @@ export default function ToolbarSaveButton({ state, data }, { translator }) {
       } else {
         const params = new URLSearchParams(window.location.search)
         const body = {
-          name: params.get("name"),
-          address: params.get("address"),
-          type: params.get("type"),
+          name: params.get("name") || "",
+          address: params.get("address") || "",
+          type: params.get("type") || "Căn Hộ",
           drawings: fileDrawing,
+          floors: floors
         };
         await postDrawings(token, body);
         setOpenModal(false);

@@ -12,6 +12,8 @@ import Panel from "../sidebar/panel";
 import ElementEditor from "../sidebar/panel-element-editor/element-editor";
 let bgToolBar = require("../../../public/images/newBg.png");
 let iconConfig = require("../../../public/images/icon-config.png");
+let bgButton = require("../../../public/images/bgButton.png");
+
 const Wrapper = {
   position: "absolute",
   top: 0,
@@ -25,6 +27,7 @@ const Wrapper = {
   userSelect: "none",
   zIndex: "9001",
   display: "flex",
+  alignItems: "center",
   padding: "10px 20px",
   gap: "20px",
   ...GlobalStyle,
@@ -45,6 +48,7 @@ const DefaultConfig = {
   background: "linear-gradient(90deg, #F0F0F0 0%, #D5D5D5 42%, #F2F2F2 100%)",
   color: "#9C9C9C",
   width: "50%",
+  cursor: "pointer",
 };
 const ActiveConfig = {
   background: SharedStyle.COLORS.lightBrown,
@@ -52,6 +56,7 @@ const ActiveConfig = {
   padding: "8px",
   width: "50%",
   borderRadius: "4px",
+  cursor: "pointer",
 };
 
 const TextConfig = {
@@ -107,19 +112,28 @@ const WrapperMaterial = {
   gridTemplateColumns: "1fr 1fr",
   gap: "10px",
 };
-const TextMaterial = {
+const TextFloor = {
   width: "100%",
   minWidth: "80px",
-  background: "#00000040",
-  fontSize: "10px",
-  fontWeight: "400",
+  background:
+    "linear-gradient(86.63deg, #8A4026 -51.27%, #966D32 -48.54%, #A78041 -43.09%, #BA9653 -40.36%, #D8B870 -29.45%, #E4C67B -26.73%, #DBB565 -18.55%, #D9B160 -15.82%, #D2A550 -7.64%, #D0A14B -2.18%, #D5A750 6%, #DDB258 14.18%, #E4BD61 22.36%, #F4D576 33.26%, #F8E881 49.63%, #F2DF7B 57.81%, #E7C969 71.44%, #E3C263 79.62%, #F0D35A 95.98%, #F9DF58 106.89%, #EFD052 117.8%, #DBB640 136.88%, #D2AA38 150.52%, #C69930 164.15%, #C1932D 177.79%, #C59833 180.51%, #D2A744 188.69%, #EAC565 194.15%, #DCB755 202.33%, #D5AF4C 207.78%, #CBA542 213.24%)",
+  fontSize: "12px",
+  fontWeight: "600",
   lineHeight: "20px",
   textAlign: "center",
-  color: SharedStyle.COLORS.white,
-  borderRadius: "4px",
-  padding: "4px 0",
-  position: "relative",
   zIndex: 10,
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+};
+const TextDisabled = {
+  width: "100%",
+  minWidth: "80px",
+  fontSize: "12px",
+  fontWeight: "600",
+  lineHeight: "20px",
+  textAlign: "center",
+  zIndex: 10,
+  color: "gray",
 };
 
 export default class ToolbarConfig extends Component {
@@ -134,7 +148,7 @@ export default class ToolbarConfig extends Component {
       openHexColor: false,
       rgbaColor: { r: 170, g: 187, b: 204, a: 1 },
       acreage: null,
-      name: "Căn hộ",
+      // type: this.props.data.type,
       areaSelected: false,
     };
     this.onChangeShowName = this.onChangeShowName.bind(this);
@@ -175,7 +189,6 @@ export default class ToolbarConfig extends Component {
       this.calculateAcreage(layers, scene);
     }
   }
-
   calculateAcreage(layers, scene) {
     let selectedLayer = layers.get(scene.selectedLayer);
     const newAreas = selectedLayer.areas.set(
@@ -225,7 +238,8 @@ export default class ToolbarConfig extends Component {
           if (this.state.acreage !== newAcreage) {
             this.setState({ acreage: newAcreage });
           }
-        } if (area.selected !== this.state.areaSelected) {
+        }
+        if (area.selected !== this.state.areaSelected) {
           this.setState({ areaSelected: area.selected });
         }
       });
@@ -235,9 +249,20 @@ export default class ToolbarConfig extends Component {
   render() {
     let { state, props } = this;
     let { scene } = props.state;
-    let type = this.props.data.type
-    const { acreage, name } = this.state;
-
+    let type = this.props.data.type;
+    const { acreage } = this.state;
+    let floor = this.props.state.toJS().arrFloor;
+    let nameFloor = Object.values(floor);
+    let currentFloor = this.props.state.toJS().currentFloor;
+    if (localStorage.getItem("arrFloor") !== null) {
+      const storedArrFloor = localStorage.getItem("arrFloor");
+      const arr = JSON.parse(storedArrFloor);
+      nameFloor = Object.values(arr);
+    }
+    if (localStorage.getItem("currentFloor") !== null) {
+      const storedArrFloor = localStorage.getItem("currentFloor");
+      currentFloor = storedArrFloor;
+    }
     let componentRenderer = (element, layer) => (
       <div style={{ width: "100%" }}>
         <ElementEditor
@@ -254,63 +279,74 @@ export default class ToolbarConfig extends Component {
         .filter((element) => element.selected)
         .map((element) => componentRenderer(element, layer))
         .valueSeq();
-
-    let dataMaterial = [
-      {
-        name: "Màu sắc",
-        img: "",
-      },
-      {
-        name: "Đá Granit",
-        img: require("../../../public/images/Granit.png"),
-      },
-      {
-        name: "Đá cẩm thạch",
-        img: require("../../../public/images/Granit.png"),
-      },
-      {
-        name: "Gạch lát",
-        img: require("../../../public/images/Granit.png"),
-      },
-      {
-        name: "Vân gỗ",
-        img: require("../../../public/images/Granit.png"),
-      },
-      {
-        name: "Đá lát nền",
-        img: require("../../../public/images/Granit.png"),
-      },
-      {
-        name: "Gạch hoa văn",
-        img: require("../../../public/images/Granit.png"),
-      },
-      {
-        name: "Đá",
-        img: require("../../../public/images/Granit.png"),
-      },
-    ];
     // this.renderedAreaSize(layers, scene)
     return (
       <div>
         <div style={{ ...Wrapper, width: props.width }}>
-          <div onClick={this.handleOpenConfig} style={{ cursor: "pointer" }}>
-            <img src={iconConfig} width={40} height={40} />
+          <div>
+            <div onClick={this.handleOpenConfig} style={{ cursor: "pointer" }}>
+              <img src={iconConfig} width={40} height={40} />
+            </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              height: "auto",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <span style={TextConfig}>{type}</span>
-            {this.state.areaSelected ? (
-              <span style={TextAcreage}>
-                {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}
-              </span>
-            ) : null}
+          <div style={{display: "flex", flexDirection: "column", gap: "5px"}}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                height: "auto",
+                alignItems: "flex-end",
+                gap: "3px"
+              }}
+            >
+              <span style={TextConfig}>{type}:</span>
+              {this.state.areaSelected ? (
+                <span style={TextAcreage}>
+                  {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}
+                </span>
+              ) : null}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                overflow: "auto",
+                width: "100%",
+                paddingRight: 60,
+              }}
+            >
+              {nameFloor.map((items, index) => (
+                <div
+                  key={index}
+                  style={{
+                    backgroundImage: `url(${bgButton})`,
+                    padding: "6px 20px",
+                    backgroundSize: "100% 100%",
+                    backgroundRepeat: "no-repeat",
+                    whiteSpace: "nowrap",
+                    cursor: "pointer",
+                  }}
+                >
+                  {Number(currentFloor) === index ? (
+                    <span
+                      onClick={() =>
+                        this.props.updateCurrentFloor(this.props.state, index)
+                      }
+                      style={TextFloor}
+                    >
+                      {nameFloor[index]}
+                    </span>
+                  ) : (
+                    <span
+                      onClick={() =>
+                        this.props.updateCurrentFloor(this.props.state, index)
+                      }
+                      style={{ ...TextDisabled }}
+                    >
+                      {nameFloor[index]}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -408,25 +444,10 @@ export default class ToolbarConfig extends Component {
 
                   {state.openMaterial ? (
                     <div style={WrapperMaterial}>
-                      <div
-                      // style={{
-                      //   borderRadius: "4px",
-                      //   position: "relative",
-                      //   background:
-                      //     index === 0
-                      //       ? `rgba(${r}, ${g}, ${b}, ${a})`
-                      //       : `url(${item.img})`,
-                      //   backgroundSize: "100% 100%",
-                      //   backgroundRepeat: "no-repeat",
-                      //   width: "80px",
-                      //   height: 85,
-                      //   display: "flex",
-                      //   alignItems: "flex-end",
-                      // }}
-                      >
-                        {/* <div style={TextMaterial}>{item.name}</div> */}
-
-                        <div>{scene.layers.valueSeq().map(layerRenderer)}</div>
+                      <div>
+                        <div style={{ position: "relative" }}>
+                          {scene.layers.valueSeq().map(layerRenderer)}
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -441,7 +462,8 @@ export default class ToolbarConfig extends Component {
                         <input
                           style={InputContainer}
                           placeholder=""
-                          defaultValue={name}
+                          defaultValue={type}
+                          disabled
                         />
                       </div>
                       <div style={{ display: "flex", gap: "10px" }}>

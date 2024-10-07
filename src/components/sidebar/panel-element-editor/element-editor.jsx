@@ -540,8 +540,8 @@ export default class ElementEditor extends Component {
             />
           })
         } */}
-        {/* {renderEditer()} */}
-        {renderLastEditer()}
+          {renderEditer()}
+          {renderLastEditer()}
       </div>
     );
   }

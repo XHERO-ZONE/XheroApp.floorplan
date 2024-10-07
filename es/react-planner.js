@@ -30,6 +30,8 @@ import CatalogList from "./components/catalog-view/catalog-list";
 import ToolbarConfig from "./components/toolconfig/config";
 import ToolView2D from "./components/ToolView";
 // import { UserService } from './api';
+import { loadProject } from "../src/actions/project-actions";
+import { updateArrFloor } from "./components/footerbar/action";
 
 var Toolbar = ToolbarComponents.Toolbar;
 var Sidebar = SidebarComponents.Sidebar;
@@ -46,7 +48,62 @@ var wrapperStyle = {
   height: "100%",
   position: "relative"
 };
+var defaultDrawing = {
+  unit: "cm",
+  layers: {
+    "layer-1": {
+      id: "layer-1",
+      altitude: 0,
+      order: 0,
+      opacity: 1,
+      name: "default",
+      visible: true,
+      vertices: {},
+      lines: {},
+      holes: {},
+      areas: {},
+      items: {},
+      selected: {
+        vertices: [],
+        lines: [],
+        holes: [],
+        areas: [],
+        items: []
+      }
+    }
+  },
+  grids: {
+    h1: {
+      id: "h1",
+      type: "horizontal-streak",
+      properties: {
+        step: 20,
+        colors: ["#808080", "#ddd", "#ddd", "#ddd", "#ddd"]
+      }
+    },
+    v1: {
+      id: "v1",
+      type: "vertical-streak",
+      properties: {
+        step: 20,
+        colors: ["#808080", "#ddd", "#ddd", "#ddd", "#ddd"]
+      }
+    }
+  },
+  selectedLayer: "layer-1",
+  groups: {},
+  width: 3000,
+  height: 2000,
+  meta: {},
+  guides: {
+    horizontal: {},
+    vertical: {},
+    circular: {}
+  },
+  floor: "Tầng trệt"
+};
 // const userService = new UserService();
+var arr = [];
 
 var ReactPlanner = function (_Component) {
   _inherits(ReactPlanner, _Component);
@@ -57,9 +114,13 @@ var ReactPlanner = function (_Component) {
     var _this = _possibleConstructorReturn(this, (ReactPlanner.__proto__ || Object.getPrototypeOf(ReactPlanner)).call(this, props));
 
     _this.state = {
-      data: []
+      data: [],
+      newFloor: Object.values(_this.props.state.toJS())[0].arrFloor,
+      currentFloor: _this.props.state.toJS().currentFloor
     };
     _this.updateState = _this.updateState.bind(_this);
+    _this.addFloor = _this.addFloor.bind(_this);
+    _this.updateCurrentFloor = _this.updateCurrentFloor.bind(_this);
     return _this;
   }
 
@@ -81,6 +142,68 @@ var ReactPlanner = function (_Component) {
       });
     }
   }, {
+    key: "loadDrawings",
+    value: function loadDrawings() {
+      var projectActions = this.props.projectActions;
+
+      if (localStorage.getItem("react-planner_v0") !== null) {
+        var data = localStorage.getItem("react-planner_v0");
+        arr = JSON.parse(data);
+        if (localStorage.getItem("currentFloor") !== null) {
+          var currentFloor = localStorage.getItem("currentFloor");
+          projectActions.loadProject(arr[currentFloor]);
+        } else {
+          projectActions.loadProject(arr[0]);
+        }
+      } else {
+        arr = [defaultDrawing];
+        projectActions.loadProject(defaultDrawing);
+      }
+    }
+  }, {
+    key: "saveDrawings",
+    value: function saveDrawings(state) {
+      if (localStorage.getItem("currentFloor") !== null) {
+        var currentFloor = localStorage.getItem("currentFloor");
+        arr[currentFloor] = state.scene.toJS();
+        arr.push(defaultDrawing);
+        localStorage.setItem("react-planner_v0", JSON.stringify(arr));
+      } else {
+        arr[0] = state.scene.toJS();
+        arr.push(defaultDrawing);
+        console.log(arr);
+        localStorage.setItem("react-planner_v0", JSON.stringify(arr));
+      }
+    }
+  }, {
+    key: "updateCurrentFloor",
+    value: function updateCurrentFloor(state, floor) {
+      state = state.updateIn(["currentFloor"], function () {
+        return floor;
+      });
+      localStorage.setItem("currentFloor", floor);
+      this.setState({ currentFloor: floor });
+      arr[this.state.currentFloor] = state.scene.toJS();
+      localStorage.setItem("react-planner_v0", JSON.stringify(arr));
+      this.loadDrawings(floor);
+    }
+  }, {
+    key: "addFloor",
+    value: function addFloor(state) {
+      var projectActions = this.props.projectActions;
+
+      var getfloor = this.props.state.toJS();
+      var floor = Object.values(getfloor)[0].arrFloor;
+      var keyFloor = Object.keys(floor);
+      var newKey = Number(keyFloor[keyFloor.length - 1]) + 1;
+      var newValue = "T\u1EA7ng " + newKey;
+      floor[newKey] = newValue;
+      this.setState({ newFloor: floor });
+      localStorage.setItem("arrFloor", JSON.stringify(floor));
+      this.saveDrawings(state);
+      projectActions.updateArrFloor(floor);
+    }
+  }, {
     key: "componentWillMount",
     value: function componentWillMount() {
       var store = this.context.store;
@@ -94,6 +217,7 @@ var ReactPlanner = function (_Component) {
         return plugin(store, stateExtractor);
       });
       projectActions.initCatalog(catalog);
+      this.loadDrawings();
     }
   }, {
     key: "componentWillReceiveProps",
@@ -105,6 +229,7 @@ var ReactPlanner = function (_Component) {
 
       var plannerState = stateExtractor(state);
       var catalogReady = plannerState.getIn(["catalog", "ready"]);
+
       if (!catalogReady) {
         projectActions.initCatalog(catalog);
       }
@@ -133,9 +258,14 @@ var ReactPlanner = function (_Component) {
           width: width,
           state: extractedState,
           heightConfig: height,
-          data: this.state.data
+          data: this.state.data,
+          updateCurrentFloor: this.updateCurrentFloor
         }),
-        React.createElement(ToolView2D, _extends({ width: 100, height: 100, state: extractedState }, props)),
+        React.createElement(ToolView2D, _extends({
+          width: 100,
+          height: 100,
+          state: extractedState
+        }, props)),
         React.createElement(Content, _extends({
           width: contentW,
           height: contentH,
@@ -155,7 +285,8 @@ var ReactPlanner = function (_Component) {
           width: width,
           height: footerBarH,
           state: extractedState,
-          data: this.state.data
+          data: this.state.data,
+          addFloor: this.addFloor
         }, props))
       );
     }

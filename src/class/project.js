@@ -16,6 +16,60 @@ import {
   VerticalGuide
 } from '../class/export';
 
+let defaultDrawing = {
+  unit: "cm",
+  layers: {
+    "layer-1": {
+      id: "layer-1",
+      altitude: 0,
+      order: 0,
+      opacity: 1,
+      name: "default",
+      visible: true,
+      vertices: {},
+      lines: {},
+      holes: {},
+      areas: {},
+      items: {},
+      selected: {
+        vertices: [],
+        lines: [],
+        holes: [],
+        areas: [],
+        items: [],
+      },
+    },
+  },
+  grids: {
+    h1: {
+      id: "h1",
+      type: "horizontal-streak",
+      properties: {
+        step: 20,
+        colors: ["#808080", "#ddd", "#ddd", "#ddd", "#ddd"],
+      },
+    },
+    v1: {
+      id: "v1",
+      type: "vertical-streak",
+      properties: {
+        step: 20,
+        colors: ["#808080", "#ddd", "#ddd", "#ddd", "#ddd"],
+      },
+    },
+  },
+  selectedLayer: "layer-1",
+  groups: {},
+  width: 3000,
+  height: 2000,
+  meta: {},
+  guides: {
+    horizontal: {},
+    vertical: {},
+    circular: {},
+  },
+  floor: "Tầng trệt",
+};
 class Project{
 
   static setAlterate( state ){
@@ -29,14 +83,21 @@ class Project{
   }
 
   static newProject(state) {
+    localStorage.removeItem("arrFloor");
+    localStorage.removeItem("currentFloor");
+    localStorage.setItem("react-planner_v0", JSON.stringify([defaultDrawing]));
     state = new State({'viewer2D': state.get('viewer2D')});
-
     return { updatedState: state };
   }
 
   static loadProject(state, sceneJSON) {
     state = new State({ scene: sceneJSON, catalog: state.catalog.toJS() });
 
+    return { updatedState: state };
+  }
+
+  static updateArrFloor(state, newFloor) {
+    state = new State({ arrFloor: newFloor });
     return { updatedState: state };
   }
 

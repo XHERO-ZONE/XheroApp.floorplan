@@ -1,6 +1,7 @@
 import { history } from '../utils/export';
 import {
   LOAD_PROJECT,
+  UPDATE_ARR_FLOOR,
   NEW_PROJECT,
   OPEN_CATALOG,
   SELECT_TOOL_EDIT,
@@ -46,6 +47,9 @@ export default function (state, action) {
 
     case LOAD_PROJECT:
       return Project.loadProject(state, action.sceneJSON).updatedState;
+
+      case UPDATE_ARR_FLOOR:
+      return Project.updateArrFloor(state, action.payload).updatedState;
 
     case OPEN_CATALOG:
       return Project.openCatalog(state).updatedState;

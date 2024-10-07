@@ -17,7 +17,7 @@ export default function PropertyColor({value, onUpdate, configs, sourceElement, 
   };
 
   return (
-    <table className="PropertyColor" style={PropertyStyle.tableStyle}>
+    <table className="PropertyColor" style={{...PropertyStyle.tableStyle, height: 0, width: "auto", marginBottom: 0}}>
       <tbody>
       <tr>
         {/* <td style={PropertyStyle.firstTdStyle}>

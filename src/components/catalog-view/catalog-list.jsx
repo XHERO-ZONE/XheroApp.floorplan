@@ -18,8 +18,8 @@ const containerStyle = {
   height: "calc( 100% - 20px)",
   backgroundImage: `url(${bgToolBar}`,
   right: 0,
-  overflowY: "auto",
-  overflowX: "hidden",
+  // overflowY: "auto",
+  // overflowX: "hidden",
   zIndex: 10,
   padding: "0px",
   display: "flex",
@@ -39,6 +39,8 @@ const itemsStyle = {
   width: "100%",
   // padding: "0 10px",
   justifyContent: "center",
+  overflowY: "auto",
+  overflowX: "hidden",
 };
 
 const searchContainer = {
@@ -241,19 +243,6 @@ export default class CatalogList extends Component {
           height={this.props.height}
           style={{ ...containerStyle, ...this.props.style }}
         >
-          {/* <ContentTitle>{this.context.translator.t('Catalog')}</ContentTitle> */}
-          {/* {breadcrumbComponent} */}
-          {/* <div style={searchContainer}>
-          <span style={searchText}>{this.context.translator.t('Search Element')}</span>
-          <input type="text" style={searchInput} onChange={( e ) => { this.matcharray( e.target.value ); } }/>
-        </div> */}
-          {/* { selectedHistory.size ?
-          <div style={historyContainer}>
-            <span>{this.context.translator.t('Last Selected')}</span>
-            {selectedHistoryElements}
-          </div> :
-          null
-        } */}
           <div onClick={this.handleOpenCatolog}>
             {this.state.openCatlog === true ? (
               <img src={iconClose} width={40} height={40} />
@@ -263,16 +252,6 @@ export default class CatalogList extends Component {
           </div>
           <div style={itemsStyle}>
             {[
-              // turnBackButton,
-              // categoriesToDisplay.map((cat) => (
-              //   <CatalogPageItem
-              //     type={this.state.type}
-              //     selectType={this.changeType}
-              //     key={cat.name}
-              //     page={cat}
-              //     oldPage={currentCategory}
-              //   />
-              // )),
               elementsToDisplay.map((elem) => (
                 <CatalogItem key={elem.name} element={elem} />
               )),
