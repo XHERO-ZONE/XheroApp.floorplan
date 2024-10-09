@@ -2,18 +2,19 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { UNITS_LENGTH, UNIT_CENTIMETER } from './../../constants';
-import convert from 'convert-units';
-import { FormLabel, FormNumberInput, FormSelect } from '../../components/style/export';
-import { Map } from 'immutable';
-import { toFixedFloat } from '../../utils/math';
-import PropertyStyle from './shared-property-style';
+import React from "react";
+import PropTypes from "prop-types";
+import { UNITS_LENGTH, UNIT_CENTIMETER } from "./../../constants";
+import convert from "convert-units";
+import { FormLabel, FormNumberInput, FormSelect } from "../../components/style/export";
+import { Map } from "immutable";
+import { toFixedFloat } from "../../utils/math";
+import PropertyStyle from "./shared-property-style";
+import { InputWrapper, TextDefault } from "../../components/toolconfig/config";
 
-var internalTableStyle = { borderCollapse: 'collapse' };
+var internalTableStyle = { borderCollapse: "collapse" };
 var secondTdStyle = { padding: 0 };
-var unitContainerStyle = { width: '5em' };
+var unitContainerStyle = { width: "5em" };
 
 export default function PropertyLengthMeasure(_ref, _ref2) {
   var value = _ref.value,
@@ -25,21 +26,19 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
       state = _ref.state;
   var catalog = _ref2.catalog;
 
-
-  var length = value.get('length') || 0;
-  var _length = value.get('_length') || length;
-  var _unit = value.get('_unit') || UNIT_CENTIMETER;
+  var length = value.get("length") || 0;
+  var _length = value.get("_length") || length;
+  var _unit = value.get("_unit") || UNIT_CENTIMETER;
 
   var hook = configs.hook,
       label = configs.label,
-      configRest = _objectWithoutProperties(configs, ['hook', 'label']);
+      configRest = _objectWithoutProperties(configs, ["hook", "label"]);
 
   var update = function update(lengthInput, unitInput) {
-
     var newLength = toFixedFloat(lengthInput);
     var merged = value.merge({
-      length: unitInput !== UNIT_CENTIMETER ? convert(newLength).from(unitInput).to(UNIT_CENTIMETER) : newLength,
-      _length: lengthInput,
+      length: unitInput !== UNIT_CENTIMETER ? convert(newLength * 100).from(unitInput).to(UNIT_CENTIMETER) : newLength * 100,
+      _length: lengthInput * 100,
       _unit: unitInput
     });
 
@@ -53,61 +52,52 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
   };
 
   return React.createElement(
-    'table',
-    { className: 'PropertyLengthMeasure', style: PropertyStyle.tableStyle },
+    "table",
+    { className: "PropertyLengthMeasure", style: PropertyStyle.tableStyle },
     React.createElement(
-      'tbody',
+      "tbody",
       null,
       React.createElement(
-        'tr',
+        "tr",
         null,
         React.createElement(
-          'td',
-          { style: PropertyStyle.firstTdStyle },
+          "td",
+          { style: TextDefault },
           React.createElement(
             FormLabel,
             null,
             label
           )
-        ),
+        )
+      ),
+      React.createElement(
+        "tr",
+        null,
         React.createElement(
-          'td',
+          "td",
           { style: secondTdStyle },
           React.createElement(
-            'table',
+            "table",
             { style: internalTableStyle },
             React.createElement(
-              'tbody',
+              "tbody",
               null,
               React.createElement(
-                'tr',
+                "tr",
                 null,
                 React.createElement(
-                  'td',
+                  "td",
                   null,
-                  React.createElement(FormNumberInput, _extends({
-                    value: _length,
-                    onChange: function onChange(event) {
-                      return update(event.target.value, _unit);
-                    },
-                    onValid: onValid
-                  }, configRest))
-                ),
-                React.createElement(
-                  'td',
-                  { style: unitContainerStyle },
                   React.createElement(
-                    FormSelect,
-                    { value: _unit, onChange: function onChange(event) {
-                        return update(_length, event.target.value);
-                      } },
-                    UNITS_LENGTH.map(function (el) {
-                      return React.createElement(
-                        'option',
-                        { key: el, value: el },
-                        el
-                      );
-                    })
+                    "div",
+                    { style: InputWrapper },
+                    React.createElement(FormNumberInput, _extends({
+                      value: (Number(_length) / 100).toFixed(0),
+                      onChange: function onChange(event) {
+                        return update(event.target.value, _unit);
+                      },
+                      onValid: onValid
+                    }, configRest))
                   )
                 )
               )

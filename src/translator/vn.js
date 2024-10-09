@@ -81,7 +81,7 @@ export default {
     "wall": "Tường",
       "Wall with bricks": "Tường xây gạch",
   "gate": "Cổng",
-  "hole in the wall": "hole in the wall",
+  "hole in the wall": "Cổng trên tường",
   "air Conditioner": "Máy lạnh",
   "air conditioner": "máy lạnh",
   "furnishings": "nội thất",
@@ -154,5 +154,14 @@ export default {
 "T-frame" : "Khung chữ T",
 "U-frame" : "Khung chữ U",
 "thap-frame" : "Khung chữ Thập",
+"Wall": "Tường Gạch",
+"LivingRoom": "Phòng Khách",
+"BedRoom": "phòng Ngủ",
+"Kitchen": "Phòng Bếp",
+"BathRoom": "Phòng Tắm",
+"Worship": "Phòng Thờ",
+"OutSide": "Sân Ngoài",
+"Office": "Văn Phòng",
+"Stair": "Cầu Thang"
   };
   

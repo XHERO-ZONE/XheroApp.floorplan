@@ -1,34 +1,51 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import { FormNumberInput, FormTextInput } from '../../../style/export';
-import { PropertyLengthMeasure } from '../../../../catalog/properties/export';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { FormNumberInput, FormTextInput } from "../../../style/export";
+import { PropertyLengthMeasure } from "../../../../catalog/properties/export";
+import {
+  InputContainer,
+  InputWrapper,
+  TextDefault,
+} from "../../../toolconfig/config";
 
-const tableStyle = { width: '100%' };
-const firstTdStyle = { width: '6em' };
-const inputStyle = { textAlign: 'left' };
+const tableStyle = { width: "100%" };
+const firstTdStyle = { width: "6em" };
+const inputStyle = { textAlign: "left" };
 
-export default function LineAttributesEditor({element, onUpdate, attributeFormData, state, ...rest}, {translator}) {
-
-  let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
-  let vertexOne = attributeFormData.has('vertexOne') ? attributeFormData.get('vertexOne') : null;
-  let vertexTwo = attributeFormData.has('vertexTwo') ? attributeFormData.get('vertexTwo') : null;
-  let lineLength = attributeFormData.has('lineLength') ? attributeFormData.get('lineLength') : null;
+export default function LineAttributesEditor(
+  { element, onUpdate, attributeFormData, state, ...rest },
+  { translator }
+) {
+  let name = attributeFormData.has("name")
+    ? attributeFormData.get("name")
+    : element.name;
+  let vertexOne = attributeFormData.has("vertexOne")
+    ? attributeFormData.get("vertexOne")
+    : null;
+  let vertexTwo = attributeFormData.has("vertexTwo")
+    ? attributeFormData.get("vertexTwo")
+    : null;
+  let lineLength = attributeFormData.has("lineLength")
+    ? attributeFormData.get("lineLength")
+    : null;
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       <table style={tableStyle}>
         <tbody>
           <tr>
-            <td style={firstTdStyle}>{translator.t('Name')}</td>
+            <td style={TextDefault}>{translator.t("Name")}</td>
             <td>
-              <FormTextInput
-                value={name}
-                onChange={event => onUpdate('name', event.target.value)}
-                style={inputStyle}
-              />
+              <div style={InputWrapper}>
+                <FormTextInput
+                  style={InputContainer}
+                  value={translator.t(`${name}`)}
+                  onChange={(event) => onUpdate("name", event.target.value)}
+                />
+              </div>
             </td>
           </tr>
-          <tr>
+          {/* <tr>
             <td style={firstTdStyle}>X1</td>
             <td>
               <FormNumberInput
@@ -40,8 +57,8 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
                 {...rest}
               />
             </td>
-          </tr>
-          <tr>
+          </tr> */}
+          {/* <tr>
             <td style={firstTdStyle}>Y1</td>
             <td>
               <FormNumberInput
@@ -53,8 +70,8 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
                 {...rest}
               />
             </td>
-          </tr>
-          <tr>
+          </tr> */}
+          {/* <tr>
             <td style={firstTdStyle}>X2</td>
             <td>
               <FormNumberInput
@@ -66,8 +83,8 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
                 {...rest}
               />
             </td>
-          </tr>
-          <tr>
+          </tr> */}
+          {/* <tr>
             <td style={firstTdStyle}>Y2</td>
             <td>
               <FormNumberInput
@@ -79,15 +96,24 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
                 {...rest}
               />
             </td>
-          </tr>
+          </tr> */}
         </tbody>
       </table>
-      <PropertyLengthMeasure
-        value={ lineLength }
-        onUpdate={mapped => onUpdate('lineLength', mapped)}
-        configs={{label: translator.t('Length'), min: 0, max: Infinity, precision: 2}}
-        state={state}
-      />
+      <div>
+        <PropertyLengthMeasure
+          style={InputContainer}
+          value={lineLength}
+          onUpdate={(mapped) => onUpdate("lineLength", mapped)}
+          configs={{
+            label: translator.t("Length"),
+            min: 0,
+            max: Infinity,
+            precision: 2,
+          }}
+          state={state}
+        />
+        <span style={{ width: "50%", fontSize: "14px" }}>Đơn vị: mét</span>
+      </div>
     </div>
   );
 }
@@ -97,7 +123,7 @@ LineAttributesEditor.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   onValid: PropTypes.func,
   attributeFormData: PropTypes.object.isRequired,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
 };
 
 LineAttributesEditor.contextTypes = {

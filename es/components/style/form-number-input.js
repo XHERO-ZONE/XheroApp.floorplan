@@ -8,36 +8,38 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
-import { MdUpdate } from 'react-icons/md';
-import { KEYBOARD_BUTTON_CODE } from '../../constants';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import * as SharedStyle from "../../shared-style";
+import { MdUpdate } from "react-icons/md";
+import { KEYBOARD_BUTTON_CODE } from "../../constants";
+import { InputContainer, TextFloor } from "../toolconfig/config";
+
+var bgButton = require("../../../public/images/bgButton.png");
 
 var STYLE_INPUT = {
-  display: 'block',
-  width: '100%',
-  padding: '0 2px',
-  fontSize: '20px',
-  lineHeight: '1.25',
+  display: "block",
+  width: "100%",
+  padding: "0 2px",
+  fontSize: "20px",
+  lineHeight: "1.25",
   color: SharedStyle.PRIMARY_COLOR.input,
   backgroundColor: SharedStyle.COLORS.white,
-  backgroundImage: 'none',
-  border: '1px solid rgba(0,0,0,.15)',
-  outline: 'none',
-  height: '30px'
+  backgroundImage: "none",
+  outline: "none",
+  height: "30px"
 };
 
 var confirmStyle = {
-  position: 'absolute',
-  cursor: 'pointer',
-  width: '2em',
-  height: '2em',
-  right: '0.35em',
-  top: '0.35em',
+  position: "absolute",
+  cursor: "pointer",
+  width: "2em",
+  height: "2em",
+  right: "0.35em",
+  top: "0.35em",
   backgroundColor: SharedStyle.SECONDARY_COLOR.main,
-  color: '#FFF',
-  transition: 'all 0.1s linear'
+  color: "#FFF",
+  transition: "all 0.1s linear"
 };
 
 var FormNumberInput = function (_Component) {
@@ -57,14 +59,14 @@ var FormNumberInput = function (_Component) {
   }
 
   _createClass(FormNumberInput, [{
-    key: 'componentWillReceiveProps',
+    key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       if (this.props.value !== nextProps.value) {
         this.setState({ showedValue: nextProps.value });
       }
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var _this2 = this;
 
@@ -81,9 +83,9 @@ var FormNumberInput = function (_Component) {
 
       var numericInputStyle = _extends({}, STYLE_INPUT, style);
 
-      if (this.state.focus) numericInputStyle.border = '1px solid ' + SharedStyle.SECONDARY_COLOR.main;
+      if (this.state.focus) numericInputStyle.border = "1px solid " + SharedStyle.SECONDARY_COLOR.main;
 
-      var regexp = new RegExp('^-?([0-9]+)?\\.?([0-9]{0,' + precision + '})?$');
+      var regexp = new RegExp("^-?([0-9]+)?\\.?([0-9]{0," + precision + "})?$");
 
       if (!isNaN(min) && isFinite(min) && this.state.showedValue < min) this.setState({ showedValue: min }); // value = min;
       if (!isNaN(max) && isFinite(max) && this.state.showedValue > max) this.setState({ showedValue: max }); // value = max;
@@ -96,7 +98,7 @@ var FormNumberInput = function (_Component) {
         e.stopPropagation();
 
         if (_this2.state.valid) {
-          var savedValue = _this2.state.showedValue !== '' && _this2.state.showedValue !== '-' ? parseFloat(_this2.state.showedValue) : 0;
+          var savedValue = _this2.state.showedValue !== "" && _this2.state.showedValue !== "-" ? parseFloat(_this2.state.showedValue) : 0;
 
           _this2.setState({ showedValue: savedValue });
           onChange({ target: { value: savedValue } });
@@ -104,12 +106,12 @@ var FormNumberInput = function (_Component) {
       };
 
       return React.createElement(
-        'div',
-        { style: { position: 'relative' } },
-        React.createElement('input', {
-          type: 'text',
+        "div",
+        { style: { position: "relative", width: "100%", height: "100%" } },
+        React.createElement("input", {
+          type: "text",
           value: currValue,
-          style: numericInputStyle,
+          style: InputContainer,
           onChange: function onChange(evt) {
             var valid = regexp.test(evt.nativeEvent.target.value);
 
@@ -137,15 +139,25 @@ var FormNumberInput = function (_Component) {
           placeholder: placeholder
         }),
         React.createElement(
-          'div',
+          "div",
           {
-            onClick: function onClick(e) {
-              if (different) saveFn(e);
-            },
-            title: this.context.translator.t('Confirm'),
-            style: _extends({}, confirmStyle, { visibility: different ? 'visible' : 'hidden', opacity: different ? '1' : '0' })
+            style: {
+              backgroundImage: "url(" + bgButton + ")",
+              padding: "6px 20px",
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
+              whiteSpace: "nowrap",
+              cursor: "pointer",
+              marginTop: "40px"
+            }
           },
-          React.createElement(MdUpdate, { style: { width: '100%', height: '100%', padding: '0.2em', color: '#FFF' } })
+          React.createElement(
+            "span",
+            { onClick: function onClick(e) {
+                return saveFn(e);
+              }, style: TextFloor },
+            "X\xE1c nh\u1EADn"
+          )
         )
       );
     }

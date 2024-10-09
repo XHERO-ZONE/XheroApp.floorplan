@@ -2,8 +2,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-import React from 'react';
-import FormTextInput from './form-text-input';
+import React from "react";
+import FormTextInput from "./form-text-input";
 
 var STYLE = {
   padding: 0,
@@ -18,11 +18,28 @@ var STYLE = {
   left: 0,
   borderRadius: "4px"
 };
+
+var TextName = {
+  fontFamily: "Playpen Sans",
+  fontSize: "10px",
+  fontWeight: "400",
+  lineHeight: "20px",
+  textAlign: "center",
+  background: "#00000040",
+  borderBottomLeftRadius: "4px",
+  borderBottomRightRadius: "4px",
+  width: "100%",
+  color: "#FFFFFF",
+  position: "absolute",
+  bottom: 3,
+  zIndex: 10,
+  padding: "2px 0"
+};
 var EREG_NUMBER = /^.*$/;
 
 export default function FormColorInput(_ref) {
   var onChange = _ref.onChange,
-      rest = _objectWithoutProperties(_ref, ['onChange']);
+      rest = _objectWithoutProperties(_ref, ["onChange"]);
 
   var onChangeCustom = function onChangeCustom(event) {
     var value = event.target.value;
@@ -31,5 +48,19 @@ export default function FormColorInput(_ref) {
     }
   };
 
-  return React.createElement(FormTextInput, _extends({ type: 'color', style: STYLE, onChange: onChangeCustom, autoComplete: 'off' }, rest));
+  return React.createElement(
+    "div",
+    { style: { position: "absolute", height: 90, width: 85 } },
+    React.createElement(
+      "div",
+      { style: TextName },
+      "M\xE0u s\u1EAFc"
+    ),
+    React.createElement(FormTextInput, _extends({
+      type: "color",
+      style: STYLE,
+      onChange: onChangeCustom,
+      autoComplete: "off"
+    }, rest))
+  );
 }

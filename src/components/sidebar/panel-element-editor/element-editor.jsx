@@ -171,10 +171,10 @@ export default class ElementEditor extends Component {
     let { attributesFormData } = this.state;
 
     switch (this.props.element.prototype) {
-      case "items": {
-        attributesFormData = attributesFormData.set(attributeName, value);
-        break;
-      }
+      // case "items": {
+      //   attributesFormData = attributesFormData.set(attributeName, value);
+      //   break;
+      // }
       case "lines": {
         switch (attributeName) {
           case "lineLength": {
@@ -230,153 +230,153 @@ export default class ElementEditor extends Component {
         }
         break;
       }
-      case "holes": {
-        switch (attributeName) {
-          case "offsetA": {
-            let line = this.props.layer.lines.get(this.props.element.line);
+      // case "holes": {
+      //   switch (attributeName) {
+      //     case "offsetA": {
+      //       let line = this.props.layer.lines.get(this.props.element.line);
 
-            let orderedVertices = GeometryUtils.orderVertices([
-              this.props.layer.vertices.get(line.vertices.get(0)),
-              this.props.layer.vertices.get(line.vertices.get(1)),
-            ]);
+      //       let orderedVertices = GeometryUtils.orderVertices([
+      //         this.props.layer.vertices.get(line.vertices.get(0)),
+      //         this.props.layer.vertices.get(line.vertices.get(1)),
+      //       ]);
 
-            let [{ x: x0, y: y0 }, { x: x1, y: y1 }] = orderedVertices;
+      //       let [{ x: x0, y: y0 }, { x: x1, y: y1 }] = orderedVertices;
 
-            let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
-            let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
-            let widthLength = this.props.element.properties
-              .get("width")
-              .get("length");
-            let halfWidthLength = widthLength / 2;
+      //       let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
+      //       let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
+      //       let widthLength = this.props.element.properties
+      //         .get("width")
+      //         .get("length");
+      //       let halfWidthLength = widthLength / 2;
 
-            let lengthValue = value.get("length");
-            lengthValue = Math.max(lengthValue, 0);
-            lengthValue = Math.min(lengthValue, lineLength - widthLength);
+      //       let lengthValue = value.get("length");
+      //       lengthValue = Math.max(lengthValue, 0);
+      //       lengthValue = Math.min(lengthValue, lineLength - widthLength);
 
-            let xp = (lengthValue + halfWidthLength) * Math.cos(alpha) + x0;
-            let yp = (lengthValue + halfWidthLength) * Math.sin(alpha) + y0;
+      //       let xp = (lengthValue + halfWidthLength) * Math.cos(alpha) + x0;
+      //       let yp = (lengthValue + halfWidthLength) * Math.sin(alpha) + y0;
 
-            let offset = GeometryUtils.pointPositionOnLineSegment(
-              x0,
-              y0,
-              x1,
-              y1,
-              xp,
-              yp
-            );
+      //       let offset = GeometryUtils.pointPositionOnLineSegment(
+      //         x0,
+      //         y0,
+      //         x1,
+      //         y1,
+      //         xp,
+      //         yp
+      //       );
 
-            let endAt = MathUtils.toFixedFloat(
-              lineLength - lineLength * offset - halfWidthLength,
-              PRECISION
-            );
-            let offsetUnit = attributesFormData.getIn(["offsetB", "_unit"]);
+      //       let endAt = MathUtils.toFixedFloat(
+      //         lineLength - lineLength * offset - halfWidthLength,
+      //         PRECISION
+      //       );
+      //       let offsetUnit = attributesFormData.getIn(["offsetB", "_unit"]);
 
-            let offsetB = new Map({
-              length: endAt,
-              _length: convert(endAt)
-                .from(this.context.catalog.unit)
-                .to(offsetUnit),
-              _unit: offsetUnit,
-            });
+      //       let offsetB = new Map({
+      //         length: endAt,
+      //         _length: convert(endAt)
+      //           .from(this.context.catalog.unit)
+      //           .to(offsetUnit),
+      //         _unit: offsetUnit,
+      //       });
 
-            attributesFormData = attributesFormData
-              .set("offsetB", offsetB)
-              .set("offset", offset);
+      //       attributesFormData = attributesFormData
+      //         .set("offsetB", offsetB)
+      //         .set("offset", offset);
 
-            let offsetAttribute = new Map({
-              length: MathUtils.toFixedFloat(lengthValue, PRECISION),
-              _unit: value.get("_unit"),
-              _length: MathUtils.toFixedFloat(
-                convert(lengthValue)
-                  .from(this.context.catalog.unit)
-                  .to(value.get("_unit")),
-                PRECISION
-              ),
-            });
+      //       let offsetAttribute = new Map({
+      //         length: MathUtils.toFixedFloat(lengthValue, PRECISION),
+      //         _unit: value.get("_unit"),
+      //         _length: MathUtils.toFixedFloat(
+      //           convert(lengthValue)
+      //             .from(this.context.catalog.unit)
+      //             .to(value.get("_unit")),
+      //           PRECISION
+      //         ),
+      //       });
 
-            attributesFormData = attributesFormData.set(
-              attributeName,
-              offsetAttribute
-            );
+      //       attributesFormData = attributesFormData.set(
+      //         attributeName,
+      //         offsetAttribute
+      //       );
 
-            break;
-          }
-          case "offsetB": {
-            let line = this.props.layer.lines.get(this.props.element.line);
+      //       break;
+      //     }
+      //     case "offsetB": {
+      //       let line = this.props.layer.lines.get(this.props.element.line);
 
-            let orderedVertices = GeometryUtils.orderVertices([
-              this.props.layer.vertices.get(line.vertices.get(0)),
-              this.props.layer.vertices.get(line.vertices.get(1)),
-            ]);
+      //       let orderedVertices = GeometryUtils.orderVertices([
+      //         this.props.layer.vertices.get(line.vertices.get(0)),
+      //         this.props.layer.vertices.get(line.vertices.get(1)),
+      //       ]);
 
-            let [{ x: x0, y: y0 }, { x: x1, y: y1 }] = orderedVertices;
+      //       let [{ x: x0, y: y0 }, { x: x1, y: y1 }] = orderedVertices;
 
-            let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
-            let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
-            let widthLength = this.props.element.properties
-              .get("width")
-              .get("length");
-            let halfWidthLength = widthLength / 2;
+      //       let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
+      //       let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
+      //       let widthLength = this.props.element.properties
+      //         .get("width")
+      //         .get("length");
+      //       let halfWidthLength = widthLength / 2;
 
-            let lengthValue = value.get("length");
-            lengthValue = Math.max(lengthValue, 0);
-            lengthValue = Math.min(lengthValue, lineLength - widthLength);
+      //       let lengthValue = value.get("length");
+      //       lengthValue = Math.max(lengthValue, 0);
+      //       lengthValue = Math.min(lengthValue, lineLength - widthLength);
 
-            let xp = x1 - (lengthValue + halfWidthLength) * Math.cos(alpha);
-            let yp = y1 - (lengthValue + halfWidthLength) * Math.sin(alpha);
+      //       let xp = x1 - (lengthValue + halfWidthLength) * Math.cos(alpha);
+      //       let yp = y1 - (lengthValue + halfWidthLength) * Math.sin(alpha);
 
-            let offset = GeometryUtils.pointPositionOnLineSegment(
-              x0,
-              y0,
-              x1,
-              y1,
-              xp,
-              yp
-            );
+      //       let offset = GeometryUtils.pointPositionOnLineSegment(
+      //         x0,
+      //         y0,
+      //         x1,
+      //         y1,
+      //         xp,
+      //         yp
+      //       );
 
-            let startAt = MathUtils.toFixedFloat(
-              lineLength * offset - halfWidthLength,
-              PRECISION
-            );
-            let offsetUnit = attributesFormData.getIn(["offsetA", "_unit"]);
+      //       let startAt = MathUtils.toFixedFloat(
+      //         lineLength * offset - halfWidthLength,
+      //         PRECISION
+      //       );
+      //       let offsetUnit = attributesFormData.getIn(["offsetA", "_unit"]);
 
-            let offsetA = new Map({
-              length: startAt,
-              _length: convert(startAt)
-                .from(this.context.catalog.unit)
-                .to(offsetUnit),
-              _unit: offsetUnit,
-            });
+      //       let offsetA = new Map({
+      //         length: startAt,
+      //         _length: convert(startAt)
+      //           .from(this.context.catalog.unit)
+      //           .to(offsetUnit),
+      //         _unit: offsetUnit,
+      //       });
 
-            attributesFormData = attributesFormData
-              .set("offsetA", offsetA)
-              .set("offset", offset);
+      //       attributesFormData = attributesFormData
+      //         .set("offsetA", offsetA)
+      //         .set("offset", offset);
 
-            let offsetAttribute = new Map({
-              length: MathUtils.toFixedFloat(lengthValue, PRECISION),
-              _unit: value.get("_unit"),
-              _length: MathUtils.toFixedFloat(
-                convert(lengthValue)
-                  .from(this.context.catalog.unit)
-                  .to(value.get("_unit")),
-                PRECISION
-              ),
-            });
+      //       let offsetAttribute = new Map({
+      //         length: MathUtils.toFixedFloat(lengthValue, PRECISION),
+      //         _unit: value.get("_unit"),
+      //         _length: MathUtils.toFixedFloat(
+      //           convert(lengthValue)
+      //             .from(this.context.catalog.unit)
+      //             .to(value.get("_unit")),
+      //           PRECISION
+      //         ),
+      //       });
 
-            attributesFormData = attributesFormData.set(
-              attributeName,
-              offsetAttribute
-            );
+      //       attributesFormData = attributesFormData.set(
+      //         attributeName,
+      //         offsetAttribute
+      //       );
 
-            break;
-          }
-          default: {
-            attributesFormData = attributesFormData.set(attributeName, value);
-            break;
-          }
-        }
-        break;
-      }
+      //       break;
+      //     }
+      //     default: {
+      //       attributesFormData = attributesFormData.set(attributeName, value);
+      //       break;
+      //     }
+      //   }
+      //   break;
+      // }
       default:
         break;
     }
@@ -418,18 +418,18 @@ export default class ElementEditor extends Component {
 
     if (attributesFormData) {
       switch (this.props.element.prototype) {
-        case "items": {
-          this.context.projectActions.setItemsAttributes(attributesFormData);
-          break;
-        }
+        // case "items": {
+        //   this.context.projectActions.setItemsAttributes(attributesFormData);
+        //   break;
+        // }
         case "lines": {
           this.context.projectActions.setLinesAttributes(attributesFormData);
           break;
         }
-        case "holes": {
-          this.context.projectActions.setHolesAttributes(attributesFormData);
-          break;
-        }
+        // case "holes": {
+        //   this.context.projectActions.setHolesAttributes(attributesFormData);
+        //   break;
+        // }
       }
     }
   }
@@ -540,8 +540,12 @@ export default class ElementEditor extends Component {
             />
           })
         } */}
-          {renderEditer()}
-          {renderLastEditer()}
+        {this.props.element.prototype === "areas" && (
+          <div>
+            {renderEditer()}
+            {renderLastEditer()}
+          </div>
+        )}
       </div>
     );
   }

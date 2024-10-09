@@ -1,5 +1,8 @@
 .ant-checkbox-wrapper {
-  width: 190px;
+  width: "100%";
+}
+input :focus-visible{
+  outline: none;
 }
 .custom-checkbox .ant-checkbox-wrapper .ant-checkbox {
   border-radius: 4px; /* Bo góc cho checkbox */

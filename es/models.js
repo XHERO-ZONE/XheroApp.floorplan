@@ -291,8 +291,7 @@ export var Scene = function (_Record10) {
   width: 3000,
   height: 2000,
   meta: new Map(), //additional info
-  guides: new Map(),
-  floor: "Tầng trệt"
+  guides: new Map()
 }, 'Scene'));
 
 export var CatalogElement = function (_Record11) {

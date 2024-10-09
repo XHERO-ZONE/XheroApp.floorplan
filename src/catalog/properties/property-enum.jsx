@@ -56,16 +56,31 @@ export default function PropertyEnum({
       name: "Gạch hoa văn",
       img: require("../../../public/images/stone.png"),
     },
-
   ];
   const WrapperMaterial = {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "10px",
-    width: "100%"
+    width: "100%",
+  };
+  const TextName = {
+    fontFamily: "Playpen Sans",
+    fontSize: "10px",
+    fontWeight: "400",
+    lineHeight: "20px",
+    textAlign: "center",
+    background: "#00000040",
+    borderBottomLeftRadius: "4px",
+    borderBottomRightRadius: "4px",
+    width: "100%",
+    color: "#FFFFFF",
+    padding: "2px 0",
   };
   return (
-    <table className="PropertyEnum" style={{...PropertyStyle.tableStyle, padding: 0}}>
+    <table
+      className="PropertyEnum"
+      style={{ ...PropertyStyle.tableStyle, padding: 0 }}
+    >
       <tbody>
         <tr>
           {/* <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td> */}
@@ -88,7 +103,9 @@ export default function PropertyEnum({
                       alignItems: "flex-end",
                     }}
                     onClick={() => update(key)}
-                  ></div>
+                  >
+                    <div style={TextName}>{dataMaterial[index].name}</div>
+                  </div>
                 ))}
             </div>
           </td>

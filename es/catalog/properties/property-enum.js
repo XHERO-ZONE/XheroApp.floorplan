@@ -56,9 +56,25 @@ export default function PropertyEnum(_ref) {
     gap: "10px",
     width: "100%"
   };
+  var TextName = {
+    fontFamily: "Playpen Sans",
+    fontSize: "10px",
+    fontWeight: "400",
+    lineHeight: "20px",
+    textAlign: "center",
+    background: "#00000040",
+    borderBottomLeftRadius: "4px",
+    borderBottomRightRadius: "4px",
+    width: "100%",
+    color: "#FFFFFF",
+    padding: "2px 0"
+  };
   return React.createElement(
     "table",
-    { className: "PropertyEnum", style: _extends({}, PropertyStyle.tableStyle, { padding: 0 }) },
+    {
+      className: "PropertyEnum",
+      style: _extends({}, PropertyStyle.tableStyle, { padding: 0 })
+    },
     React.createElement(
       "tbody",
       null,
@@ -76,23 +92,31 @@ export default function PropertyEnum(_ref) {
                   key = _ref3[0],
                   value = _ref3[1];
 
-              return React.createElement("div", {
-                key: key,
-                style: {
-                  borderRadius: "4px",
-                  position: "relative",
-                  background: "url(" + dataMaterial[index].img + ")",
-                  backgroundSize: "100% 100%",
-                  backgroundRepeat: "no-repeat",
-                  width: "80px",
-                  height: 85,
-                  display: "flex",
-                  alignItems: "flex-end"
+              return React.createElement(
+                "div",
+                {
+                  key: key,
+                  style: {
+                    borderRadius: "4px",
+                    position: "relative",
+                    background: "url(" + dataMaterial[index].img + ")",
+                    backgroundSize: "100% 100%",
+                    backgroundRepeat: "no-repeat",
+                    width: "80px",
+                    height: 85,
+                    display: "flex",
+                    alignItems: "flex-end"
+                  },
+                  onClick: function onClick() {
+                    return update(key);
+                  }
                 },
-                onClick: function onClick() {
-                  return update(key);
-                }
-              });
+                React.createElement(
+                  "div",
+                  { style: TextName },
+                  dataMaterial[index].name
+                )
+              );
             })
           )
         )

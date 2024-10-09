@@ -5,10 +5,10 @@ import areapolygon from 'area-polygon';
 
 const STYLE_TEXT = {
   textAnchor: 'middle',
-  fontSize: '12px',
+  fontSize: '20px',
   pointerEvents: 'none',
   fontWeight: 'bold',
-
+  fontFamily: "Playpen Sans",
   //http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css
   WebkitTouchCallout: 'none', /* iOS Safari */
   WebkitUserSelect: 'none', /* Chrome/Safari/Opera */

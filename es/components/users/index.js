@@ -15,7 +15,7 @@ import Notification from "../notification";
 import { getDrawingsId, getMe } from "../../services";
 import PropTypes from "prop-types";
 var defaultDrawing = {
-  unit: "cm",
+  unit: "m",
   layers: {
     "layer-1": {
       id: "layer-1",
@@ -65,8 +65,7 @@ var defaultDrawing = {
     horizontal: {},
     vertical: {},
     circular: {}
-  },
-  floor: "Tầng trệt"
+  }
 };
 
 var Users = function (_Component) {
