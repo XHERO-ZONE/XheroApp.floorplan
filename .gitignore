@@ -7,3 +7,5 @@ dist/*
 .env
 .yarn.lock
 .package-lock.json
+.es
+.lib
