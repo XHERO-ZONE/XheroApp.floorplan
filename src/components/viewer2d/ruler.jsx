@@ -8,8 +8,8 @@ const STYLE = {
 
 const STYLE_TEXT = {
   textAnchor: "middle",
-  fontSize: "12px",
-  fontFamily: "'Courier New', Courier, monospace",
+  fontSize: "14px",
+  fontFamily: "Playpen Sans",
   pointerEvents: "none",
   fontWeight: "bold",
 
@@ -24,7 +24,7 @@ const STYLE_TEXT = {
 
 export default function Ruler({length, unit, transform}) {
 
-  let distanceText = `${length.toFixed(2)} ${unit}`;
+  let distanceText = `${(Number(length) / 100).toFixed(2)} ${unit}`;
 
   return (
     <g transform={transform}>

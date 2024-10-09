@@ -10,6 +10,7 @@ import areaPolygon from "area-polygon";
 import { Seq } from "immutable";
 import Panel from "../sidebar/panel";
 import ElementEditor from "../sidebar/panel-element-editor/element-editor";
+import Sidebar from "../sidebar/sidebar";
 let bgToolBar = require("../../../public/images/newBg.png");
 let iconConfig = require("../../../public/images/icon-config.png");
 let bgButton = require("../../../public/images/bgButton.png");
@@ -89,7 +90,7 @@ const ContainerConfig = {
   borderColor: "transparent",
 };
 
-const InputWrapper = {
+export const InputWrapper = {
   border: "1px solid",
   backgroundClip: "padding-box",
   borderRadius: "6px",
@@ -99,7 +100,15 @@ const InputWrapper = {
   height: "40px",
   borderColor: "transparent",
 };
-const InputContainer = {
+export const TextDefault = {
+  fontFamily: "Playpen Sans",
+  fontSize: "14px",
+  fontWeight: "500",
+  lineHeight: "20px",
+  textAlign: "left",
+  color: "#000000",
+};
+export const InputContainer = {
   borderRadius: "6px",
   padding: "10px 12px",
   background: SharedStyle.COLORS.white,
@@ -112,7 +121,7 @@ const WrapperMaterial = {
   gridTemplateColumns: "1fr 1fr",
   gap: "10px",
 };
-const TextFloor = {
+export const TextFloor = {
   width: "100%",
   minWidth: "80px",
   background:
@@ -250,10 +259,29 @@ export default class ToolbarConfig extends Component {
     let { state, props } = this;
     let { scene } = props.state;
     let type = this.props.data.type;
+    let name = this.props.data.name;
     const { acreage } = this.state;
     let floor = this.props.state.toJS().arrFloor;
     let nameFloor = Object.values(floor);
     let currentFloor = this.props.state.toJS().currentFloor;
+    let selectedLayer = this.props.state.getIn(["scene", "selectedLayer"]);
+    //TODO change in multi-layer check
+    let selected = this.props.state.getIn([
+      "scene",
+      "layers",
+      selectedLayer,
+      "selected",
+    ]);
+    let selectedArea = selected.areas.size === 1;
+    let multiselected =
+      selected.lines.size > 1 ||
+      selected.items.size > 1 ||
+      selected.holes.size > 1 ||
+      selected.lines.size +
+        selected.items.size +
+        selected.holes.size +
+        selected.areas.size >
+        1;
     if (localStorage.getItem("arrFloor") !== null) {
       const storedArrFloor = localStorage.getItem("arrFloor");
       const arr = JSON.parse(storedArrFloor);
@@ -275,7 +303,7 @@ export default class ToolbarConfig extends Component {
 
     let layerRenderer = (layer) =>
       Seq()
-        .concat(layer.lines, layer.holes, layer.areas, layer.items)
+        .concat(layer.areas)
         .filter((element) => element.selected)
         .map((element) => componentRenderer(element, layer))
         .valueSeq();
@@ -288,14 +316,14 @@ export default class ToolbarConfig extends Component {
               <img src={iconConfig} width={40} height={40} />
             </div>
           </div>
-          <div style={{display: "flex", flexDirection: "column", gap: "5px"}}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
             <div
               style={{
                 display: "flex",
                 flexDirection: "row",
                 height: "auto",
                 alignItems: "flex-end",
-                gap: "3px"
+                gap: "3px",
               }}
             >
               <span style={TextConfig}>{type}:</span>
@@ -353,7 +381,7 @@ export default class ToolbarConfig extends Component {
         {this.state.openConfig ? (
           <div
             style={{
-              width: props.width - 10,
+              width: props.width,
               background: "#00000040",
               height: props.heightConfig,
               position: "absolute",
@@ -451,105 +479,119 @@ export default class ToolbarConfig extends Component {
                       </div>
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "10px",
-                      }}
-                    >
-                      <div style={InputWrapper}>
-                        <input
-                          style={InputContainer}
-                          placeholder=""
-                          defaultValue={type}
-                          disabled
-                        />
-                      </div>
-                      <div style={{ display: "flex", gap: "10px" }}>
-                        <div style={InputWrapper}>
-                          <input
-                            style={InputContainer}
-                            placeholder="Chiều dài"
-                          />
-                        </div>
-                        <div style={InputWrapper}>
-                          <input
-                            style={InputContainer}
-                            placeholder="Chiều rộng"
-                          />
-                        </div>
-                      </div>
+                    <div style={{ width: "100%", height: "100%" }}>
                       <div
                         style={{
-                          display: "flex",
-                          gap: "10px",
-                          width: "100%",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div style={{ ...InputWrapper, width: "50%" }}>
-                          <input
-                            style={InputContainer}
-                            placeholder="Chiều cao"
-                          />
-                        </div>
-                        <span style={{ width: "50%", fontSize: "14px" }}>
-                          Đơn vị: mét
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          width: "190px",
                           display: "flex",
                           flexDirection: "column",
-                          gap: "5px",
+                          gap: "10px",
+                          width: "100%",
                         }}
                       >
-                        <div
-                          className={
-                            state.showName
-                              ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox"
-                              : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
-                          }
-                        >
-                          <Checkbox
-                            checked={state.showName}
-                            onChange={this.onChangeShowName}
-                          >
-                            Hiển thị tên
-                          </Checkbox>
+                        {state.showName && (
+                          <div>
+                            <span style={TextDefault}>Tên Bản vẽ</span>
+                            <div style={InputWrapper}>
+                              <input
+                                style={InputContainer}
+                                placeholder=""
+                                defaultValue={name}
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        )}
+                        <div>
+                          <span style={TextDefault}>Loại bản vẽ</span>
+                          <div style={InputWrapper}>
+                            <input
+                              style={InputContainer}
+                              placeholder=""
+                              defaultValue={type}
+                              disabled
+                            />
+                          </div>
                         </div>
+                        {state.showAcreage && (
+                          <div>
+                            <span style={TextDefault}>Diện tích</span>
+                            <div style={InputWrapper}>
+                              <input
+                                style={InputContainer}
+                                placeholder=""
+                                defaultValue={
+                                  acreage
+                                    ? `${acreage} m${String.fromCharCode(0xb2)}`
+                                    : ""
+                                }
+                                disabled
+                              />
+                            </div>
+                            <span style={TextDefault}>Đơn vị: mét</span>
+                          </div>
+                        )}
+
                         <div
-                          className={
-                            state.showAcreage
-                              ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox"
-                              : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
-                          }
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "5px",
+                          }}
                         >
-                          <Checkbox
-                            checked={state.showAcreage}
-                            onChange={this.onChangeShowAcreage}
+                          <div
+                            style={{ width: "100%", height: "100%" }}
+                            className={
+                              state.showName
+                                ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox"
+                                : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
+                            }
                           >
-                            Hiển thị diện tích
-                          </Checkbox>
-                        </div>
-                        <div
-                          className={
-                            state.showRuler
-                              ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox"
-                              : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
-                          }
-                        >
-                          <Checkbox
-                            checked={state.showRuler}
-                            onChange={this.onChangeShowRuler}
+                            <Checkbox
+                              checked={state.showName}
+                              onChange={this.onChangeShowName}
+                            >
+                              Hiển thị tên
+                            </Checkbox>
+                          </div>
+                          <div
+                            className={
+                              state.showAcreage
+                                ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox"
+                                : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
+                            }
                           >
-                            Hiển thị thước đo
-                          </Checkbox>
+                            <Checkbox
+                              checked={state.showAcreage}
+                              onChange={this.onChangeShowAcreage}
+                            >
+                              Hiển thị diện tích
+                            </Checkbox>
+                          </div>
+                          <div
+                            className={
+                              state.showRuler
+                                ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox"
+                                : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
+                            }
+                          >
+                            <Checkbox
+                              checked={state.showRuler}
+                              onChange={this.onChangeShowRuler}
+                            >
+                              Hiển thị thước đo
+                            </Checkbox>
+                          </div>
                         </div>
                       </div>
+                      {!selectedArea && (
+                        <Sidebar
+                          width={300}
+                          height={500}
+                          state={this.props.state}
+                          {...props}
+                        />
+                      )}
                     </div>
                   )}
                 </div>

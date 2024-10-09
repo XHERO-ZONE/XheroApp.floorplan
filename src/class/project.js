@@ -17,7 +17,7 @@ import {
 } from '../class/export';
 
 let defaultDrawing = {
-  unit: "cm",
+  unit: "m",
   layers: {
     "layer-1": {
       id: "layer-1",
@@ -68,7 +68,6 @@ let defaultDrawing = {
     vertical: {},
     circular: {},
   },
-  floor: "Tầng trệt",
 };
 class Project{
 

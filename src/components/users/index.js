@@ -5,7 +5,7 @@ import Notification from "../notification";
 import { getDrawingsId, getMe } from "../../services";
 import PropTypes from "prop-types";
 let defaultDrawing = {
-  unit: "cm",
+  unit: "m",
   layers: {
     "layer-1": {
       id: "layer-1",
@@ -56,7 +56,6 @@ let defaultDrawing = {
     vertical: {},
     circular: {},
   },
-  floor: "Tầng trệt",
 };
 class Users extends Component {
   constructor(props, context) {

@@ -24,6 +24,7 @@ import areaPolygon from "area-polygon";
 import { Seq } from "immutable";
 import Panel from "../sidebar/panel";
 import ElementEditor from "../sidebar/panel-element-editor/element-editor";
+import Sidebar from "../sidebar/sidebar";
 var bgToolBar = require("../../../public/images/newBg.png");
 var iconConfig = require("../../../public/images/icon-config.png");
 var bgButton = require("../../../public/images/bgButton.png");
@@ -100,7 +101,7 @@ var ContainerConfig = {
   borderColor: "transparent"
 };
 
-var InputWrapper = {
+export var InputWrapper = {
   border: "1px solid",
   backgroundClip: "padding-box",
   borderRadius: "6px",
@@ -109,7 +110,15 @@ var InputWrapper = {
   height: "40px",
   borderColor: "transparent"
 };
-var InputContainer = {
+export var TextDefault = {
+  fontFamily: "Playpen Sans",
+  fontSize: "14px",
+  fontWeight: "500",
+  lineHeight: "20px",
+  textAlign: "left",
+  color: "#000000"
+};
+export var InputContainer = {
   borderRadius: "6px",
   padding: "10px 12px",
   background: SharedStyle.COLORS.white,
@@ -122,7 +131,7 @@ var WrapperMaterial = {
   gridTemplateColumns: "1fr 1fr",
   gap: "10px"
 };
-var TextFloor = {
+export var TextFloor = {
   width: "100%",
   minWidth: "80px",
   background: "linear-gradient(86.63deg, #8A4026 -51.27%, #966D32 -48.54%, #A78041 -43.09%, #BA9653 -40.36%, #D8B870 -29.45%, #E4C67B -26.73%, #DBB565 -18.55%, #D9B160 -15.82%, #D2A550 -7.64%, #D0A14B -2.18%, #D5A750 6%, #DDB258 14.18%, #E4BD61 22.36%, #F4D576 33.26%, #F8E881 49.63%, #F2DF7B 57.81%, #E7C969 71.44%, #E3C263 79.62%, #F0D35A 95.98%, #F9DF58 106.89%, #EFD052 117.8%, #DBB640 136.88%, #D2AA38 150.52%, #C69930 164.15%, #C1932D 177.79%, #C59833 180.51%, #D2A744 188.69%, #EAC565 194.15%, #DCB755 202.33%, #D5AF4C 207.78%, #CBA542 213.24%)",
@@ -289,11 +298,17 @@ var ToolbarConfig = function (_Component) {
       var scene = props.state.scene;
 
       var type = this.props.data.type;
+      var name = this.props.data.name;
       var acreage = this.state.acreage;
 
       var floor = this.props.state.toJS().arrFloor;
       var nameFloor = Object.values(floor);
       var currentFloor = this.props.state.toJS().currentFloor;
+      var selectedLayer = this.props.state.getIn(["scene", "selectedLayer"]);
+      //TODO change in multi-layer check
+      var selected = this.props.state.getIn(["scene", "layers", selectedLayer, "selected"]);
+      var selectedArea = selected.areas.size === 1;
+      var multiselected = selected.lines.size > 1 || selected.items.size > 1 || selected.holes.size > 1 || selected.lines.size + selected.items.size + selected.holes.size + selected.areas.size > 1;
       if (localStorage.getItem("arrFloor") !== null) {
         var storedArrFloor = localStorage.getItem("arrFloor");
         var arr = JSON.parse(storedArrFloor);
@@ -316,7 +331,7 @@ var ToolbarConfig = function (_Component) {
       };
 
       var layerRenderer = function layerRenderer(layer) {
-        return Seq().concat(layer.lines, layer.holes, layer.areas, layer.items).filter(function (element) {
+        return Seq().concat(layer.areas).filter(function (element) {
           return element.selected;
         }).map(function (element) {
           return componentRenderer(element, layer);
@@ -416,7 +431,7 @@ var ToolbarConfig = function (_Component) {
           "div",
           {
             style: {
-              width: props.width - 10,
+              width: props.width,
               background: "#00000040",
               height: props.heightConfig,
               position: "absolute",
@@ -516,121 +531,139 @@ var ToolbarConfig = function (_Component) {
                   )
                 ) : React.createElement(
                   "div",
-                  {
-                    style: {
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "10px"
-                    }
-                  },
-                  React.createElement(
-                    "div",
-                    { style: InputWrapper },
-                    React.createElement("input", {
-                      style: InputContainer,
-                      placeholder: "",
-                      defaultValue: type,
-                      disabled: true
-                    })
-                  ),
-                  React.createElement(
-                    "div",
-                    { style: { display: "flex", gap: "10px" } },
-                    React.createElement(
-                      "div",
-                      { style: InputWrapper },
-                      React.createElement("input", {
-                        style: InputContainer,
-                        placeholder: "Chi\u1EC1u d\xE0i"
-                      })
-                    ),
-                    React.createElement(
-                      "div",
-                      { style: InputWrapper },
-                      React.createElement("input", {
-                        style: InputContainer,
-                        placeholder: "Chi\u1EC1u r\u1ED9ng"
-                      })
-                    )
-                  ),
+                  { style: { width: "100%", height: "100%" } },
                   React.createElement(
                     "div",
                     {
                       style: {
-                        display: "flex",
-                        gap: "10px",
-                        width: "100%",
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }
-                    },
-                    React.createElement(
-                      "div",
-                      { style: _extends({}, InputWrapper, { width: "50%" }) },
-                      React.createElement("input", {
-                        style: InputContainer,
-                        placeholder: "Chi\u1EC1u cao"
-                      })
-                    ),
-                    React.createElement(
-                      "span",
-                      { style: { width: "50%", fontSize: "14px" } },
-                      "\u0110\u01A1n v\u1ECB: m\xE9t"
-                    )
-                  ),
-                  React.createElement(
-                    "div",
-                    {
-                      style: {
-                        width: "190px",
                         display: "flex",
                         flexDirection: "column",
-                        gap: "5px"
+                        gap: "10px",
+                        width: "100%"
                       }
                     },
+                    state.showName && React.createElement(
+                      "div",
+                      null,
+                      React.createElement(
+                        "span",
+                        { style: TextDefault },
+                        "T\xEAn B\u1EA3n v\u1EBD"
+                      ),
+                      React.createElement(
+                        "div",
+                        { style: InputWrapper },
+                        React.createElement("input", {
+                          style: InputContainer,
+                          placeholder: "",
+                          defaultValue: name,
+                          disabled: true
+                        })
+                      )
+                    ),
                     React.createElement(
                       "div",
-                      {
-                        className: state.showName ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox" : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
-                      },
+                      null,
                       React.createElement(
-                        Checkbox,
-                        {
-                          checked: state.showName,
-                          onChange: this.onChangeShowName
-                        },
-                        "Hi\u1EC3n th\u1ECB t\xEAn"
+                        "span",
+                        { style: TextDefault },
+                        "Lo\u1EA1i b\u1EA3n v\u1EBD"
+                      ),
+                      React.createElement(
+                        "div",
+                        { style: InputWrapper },
+                        React.createElement("input", {
+                          style: InputContainer,
+                          placeholder: "",
+                          defaultValue: type,
+                          disabled: true
+                        })
+                      )
+                    ),
+                    state.showAcreage && React.createElement(
+                      "div",
+                      null,
+                      React.createElement(
+                        "span",
+                        { style: TextDefault },
+                        "Di\u1EC7n t\xEDch"
+                      ),
+                      React.createElement(
+                        "div",
+                        { style: InputWrapper },
+                        React.createElement("input", {
+                          style: InputContainer,
+                          placeholder: "",
+                          defaultValue: acreage ? acreage + " m" + String.fromCharCode(0xb2) : "",
+                          disabled: true
+                        })
+                      ),
+                      React.createElement(
+                        "span",
+                        { style: TextDefault },
+                        "\u0110\u01A1n v\u1ECB: m\xE9t"
                       )
                     ),
                     React.createElement(
                       "div",
                       {
-                        className: state.showAcreage ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox" : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
+                        style: {
+                          width: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "5px"
+                        }
                       },
                       React.createElement(
-                        Checkbox,
+                        "div",
                         {
-                          checked: state.showAcreage,
-                          onChange: this.onChangeShowAcreage
+                          style: { width: "100%", height: "100%" },
+                          className: state.showName ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox" : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
                         },
-                        "Hi\u1EC3n th\u1ECB di\u1EC7n t\xEDch"
-                      )
-                    ),
-                    React.createElement(
-                      "div",
-                      {
-                        className: state.showRuler ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox" : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
-                      },
+                        React.createElement(
+                          Checkbox,
+                          {
+                            checked: state.showName,
+                            onChange: this.onChangeShowName
+                          },
+                          "Hi\u1EC3n th\u1ECB t\xEAn"
+                        )
+                      ),
                       React.createElement(
-                        Checkbox,
+                        "div",
                         {
-                          checked: state.showRuler,
-                          onChange: this.onChangeShowRuler
+                          className: state.showAcreage ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox" : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
                         },
-                        "Hi\u1EC3n th\u1ECB th\u01B0\u1EDBc \u0111o"
+                        React.createElement(
+                          Checkbox,
+                          {
+                            checked: state.showAcreage,
+                            onChange: this.onChangeShowAcreage
+                          },
+                          "Hi\u1EC3n th\u1ECB di\u1EC7n t\xEDch"
+                        )
+                      ),
+                      React.createElement(
+                        "div",
+                        {
+                          className: state.showRuler ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox" : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
+                        },
+                        React.createElement(
+                          Checkbox,
+                          {
+                            checked: state.showRuler,
+                            onChange: this.onChangeShowRuler
+                          },
+                          "Hi\u1EC3n th\u1ECB th\u01B0\u1EDBc \u0111o"
+                        )
                       )
                     )
-                  )
+                  ),
+                  !selectedArea && React.createElement(Sidebar, _extends({
+                    width: 300,
+                    height: 500,
+                    state: this.props.state
+                  }, props))
                 )
               )
             )

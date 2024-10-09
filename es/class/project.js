@@ -9,7 +9,7 @@ import { history } from '../utils/export';
 import { Layer, Group, Line, Hole, Item, HorizontalGuide, VerticalGuide } from '../class/export';
 
 var defaultDrawing = {
-  unit: "cm",
+  unit: "m",
   layers: {
     "layer-1": {
       id: "layer-1",
@@ -59,8 +59,7 @@ var defaultDrawing = {
     horizontal: {},
     vertical: {},
     circular: {}
-  },
-  floor: "Tầng trệt"
+  }
 };
 
 var Project = function () {

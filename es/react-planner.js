@@ -49,7 +49,7 @@ var wrapperStyle = {
   position: "relative"
 };
 var defaultDrawing = {
-  unit: "cm",
+  unit: "m",
   layers: {
     "layer-1": {
       id: "layer-1",
@@ -99,8 +99,7 @@ var defaultDrawing = {
     horizontal: {},
     vertical: {},
     circular: {}
-  },
-  floor: "Tầng trệt"
+  }
 };
 // const userService = new UserService();
 var arr = [];
@@ -254,13 +253,13 @@ var ReactPlanner = function (_Component) {
         "div",
         { style: _extends({}, wrapperStyle, { height: height, width: "100%" }) },
         React.createElement(Users, { state: extractedState, updateState: this.updateState }),
-        React.createElement(ToolbarConfig, {
+        React.createElement(ToolbarConfig, _extends({
           width: width,
           state: extractedState,
           heightConfig: height,
           data: this.state.data,
           updateCurrentFloor: this.updateCurrentFloor
-        }),
+        }, props)),
         React.createElement(ToolView2D, _extends({
           width: 100,
           height: 100,

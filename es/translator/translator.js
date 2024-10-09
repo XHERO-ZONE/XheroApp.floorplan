@@ -7,7 +7,7 @@ import IT from './it';
 import RU from './ru';
 import VN from './vn';
 
-var DEFAULT_LOCALE = 'en';
+var DEFAULT_LOCALE = 'vi'; // Set default locale to Vietnamese
 
 var Translator = function () {
   function Translator() {
@@ -19,22 +19,10 @@ var Translator = function () {
     this.registerTranslation('en', EN);
     this.registerTranslation('it', IT);
     this.registerTranslation('ru', RU);
-    this.registerTranslation('en', EN);
+    this.registerTranslation('vi', VN);
 
-    var locale = null;
-    var languages = Translator.getBrowserLanguages();
-    // let languages = Translator.getBrowserLanguages()
-
-    for (var i = 0; i < languages.length; i++) {
-      var lang = languages[i];
-      if (this.translations.hasOwnProperty(lang)) {
-        locale = lang;
-        break;
-      }
-    }
-    locale = locale ? locale : DEFAULT_LOCALE;
-
-    this.setLocale(locale);
+    // Always set the locale to Vietnamese
+    this.setLocale(DEFAULT_LOCALE);
   }
 
   _createClass(Translator, [{

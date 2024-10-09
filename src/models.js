@@ -209,7 +209,6 @@ export class Scene extends Record({
   height: 2000,
   meta: new Map(),   //additional info
   guides: new Map(),
-  floor:  "Tầng trệt"
 }, 'Scene') {
   constructor(json = {}) {
     let layers = safeLoadMapList(json.layers, Layer, DefaultLayers);

@@ -8,8 +8,8 @@ var STYLE = {
 
 var STYLE_TEXT = {
   textAnchor: "middle",
-  fontSize: "12px",
-  fontFamily: "'Courier New', Courier, monospace",
+  fontSize: "14px",
+  fontFamily: "Playpen Sans",
   pointerEvents: "none",
   fontWeight: "bold",
 
@@ -27,7 +27,7 @@ export default function Ruler(_ref) {
       transform = _ref.transform;
 
 
-  var distanceText = length.toFixed(2) + ' ' + unit;
+  var distanceText = (Number(length) / 100).toFixed(2) + ' ' + unit;
 
   return React.createElement(
     'g',

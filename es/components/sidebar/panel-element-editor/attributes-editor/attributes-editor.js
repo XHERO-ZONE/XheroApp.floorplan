@@ -17,14 +17,15 @@ export default function AttributesEditor(_ref) {
       rest = _objectWithoutProperties(_ref, ['element', 'onUpdate', 'onValid', 'attributeFormData', 'state']);
 
   switch (element.prototype) {
-    case 'items':
-      return React.createElement(ItemAttributesEditor, _extends({
-        element: element,
-        onUpdate: onUpdate,
-        onValid: onValid,
-        attributeFormData: attributeFormData,
-        state: state
-      }, rest));
+    // case 'items':
+    //   return <ItemAttributesEditor
+    //           element={element}
+    //           onUpdate={onUpdate}
+    //           onValid={onValid}
+    //           attributeFormData={attributeFormData}
+    //           state={state}
+    //           {...rest}
+    //         />;
     case 'lines':
       return React.createElement(LineAttributesEditor, _extends({
         element: element,
@@ -33,14 +34,15 @@ export default function AttributesEditor(_ref) {
         attributeFormData: attributeFormData,
         state: state
       }, rest));
-    case 'holes':
-      return React.createElement(HoleAttributesEditor, _extends({
-        element: element,
-        onUpdate: onUpdate,
-        onValid: onValid,
-        attributeFormData: attributeFormData,
-        state: state
-      }, rest));
+    // case 'holes':
+    //   return <HoleAttributesEditor
+    //   element={element}
+    //           onUpdate={onUpdate}
+    //           onValid={onValid}
+    //           attributeFormData={attributeFormData}
+    //           state={state}
+    //           {...rest}
+    //         />;
     case 'areas':
       return null;
 

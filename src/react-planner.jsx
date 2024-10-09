@@ -41,7 +41,7 @@ const wrapperStyle = {
   position: "relative",
 };
 let defaultDrawing = {
-  unit: "cm",
+  unit: "m",
   layers: {
     "layer-1": {
       id: "layer-1",
@@ -92,7 +92,6 @@ let defaultDrawing = {
     vertical: {},
     circular: {},
   },
-  floor: "Tầng trệt",
 };
 // const userService = new UserService();
 let arr = [ ];
@@ -204,6 +203,7 @@ class ReactPlanner extends Component {
           heightConfig={height}
           data={this.state.data}
           updateCurrentFloor={this.updateCurrentFloor}
+          {...props}
         />
         <ToolView2D
           width={100}

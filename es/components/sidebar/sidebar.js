@@ -14,7 +14,7 @@ import If from '../../utils/react-if';
 import { useDevice } from '../responsive';
 
 var STYLE = {
-  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
+  // backgroundColor: SharedStyle.PRIMARY_COLOR.main,
   display: 'block',
   overflowY: 'auto',
   overflowX: 'hidden',
@@ -58,9 +58,12 @@ export default function Sidebar(_ref) {
     return g.get('selected');
   });
 
-  var sorter = [{ index: 0, condition: true, dom: React.createElement(PanelGuides, { state: state }) }, { index: 1, condition: true, dom: React.createElement(PanelLayers, { state: state }) }, { index: 2, condition: true, dom: React.createElement(PanelLayerElements, { mode: state.mode, layers: state.scene.layers, selectedLayer: state.scene.selectedLayer }) }, { index: 3, condition: true, dom: React.createElement(PanelGroups, { mode: state.mode, groups: state.scene.groups, layers: state.scene.layers }) }, { index: 4, condition: !multiselected, dom: React.createElement(PanelElementEditor, { state: state }) },
-  //{ index: 5, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
-  { index: 6, condition: !!selectedGroup, dom: React.createElement(PanelGroupEditor, { state: state, groupID: selectedGroup ? selectedGroup[0] : null }) }];
+  var sorter = [
+  // { index: 0, condition: true, dom: <PanelGuides state={state}/> },
+  // { index: 1, condition: true, dom: <PanelLayers state={state} /> },
+  // { index: 2, condition: true, dom: <PanelLayerElements mode={state.mode} layers={state.scene.layers} selectedLayer={state.scene.selectedLayer} /> },
+  // { index: 3, condition: true, dom: <PanelGroups mode={state.mode} groups={state.scene.groups} layers={state.scene.layers} /> },
+  { index: 4, condition: !multiselected, dom: React.createElement(PanelElementEditor, { state: state }) }];
 
   sorter = sorter.concat(sidebarComponents.map(function (Component, key) {
     return Component.prototype ? //if is a react component
@@ -77,7 +80,7 @@ export default function Sidebar(_ref) {
   return React.createElement(
     'aside',
     {
-      style: _extends({ width: width, height: height }, STYLE),
+      style: _extends({ width: "100%", height: height }, STYLE),
       onKeyDown: function onKeyDown(event) {
         return event.stopPropagation();
       },
