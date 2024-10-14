@@ -73,9 +73,9 @@ catalog.registerCategory("kitchen", "Kitchen", iconKitchen, [
   Items.sink,
   Items.camera,
 ]);
-catalog.registerCategory("bathroom", "BathRoom", iconBathRoom, []);
-catalog.registerCategory("worship", "Worship", iconWorship, []);
-catalog.registerCategory("outside", "OutSide", iconOutside, []);
+// catalog.registerCategory("bathroom", "BathRoom", iconBathRoom, []);
+// catalog.registerCategory("worship", "Worship", iconWorship, []);
+// catalog.registerCategory("outside", "OutSide", iconOutside, []);
 catalog.registerCategory("office", "Office", iconOffice, [
   Items.chairdesk,
   Items.deskoffice,
@@ -83,6 +83,6 @@ catalog.registerCategory("office", "Office", iconOffice, [
   Items.table,
 
 ]);
-catalog.registerCategory("stair", "Stair", iconStair, []);
+// catalog.registerCategory("stair", "Stair", iconStair, []);
 
 export default catalog;

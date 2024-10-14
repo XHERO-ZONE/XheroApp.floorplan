@@ -187,16 +187,20 @@ export default class ToolbarConfig extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     const { scene } = this.props.state;
-    let { layers } = scene;
-
-    // Kiểm tra nếu layers hoặc scene thay đổi thì mới tính lại diện tích
+    const { layers } = scene;
+  
+    // Kiểm tra nếu layers hoặc scene thay đổi mới gọi hàm calculateAcreage
     if (
-      layers !== prevProps.state.scene.layers ||
-      scene !== prevProps.state.scene ||
-      this.state !== prevState
+      layers !== prevProps.state.scene.layers || 
+      scene.selectedLayer !== prevProps.state.scene.selectedLayer
     ) {
       this.calculateAcreage(layers, scene);
     }
+  
+    // Tránh việc gọi calculateAcreage khi state không thực sự thay đổi
+    // if (this.state !== prevState) {
+    //   console.log('State đã thay đổi, nhưng không gọi lại calculateAcreage');
+    // }
   }
   calculateAcreage(layers, scene) {
     let selectedLayer = layers.get(scene.selectedLayer);
@@ -326,7 +330,7 @@ export default class ToolbarConfig extends Component {
                 gap: "3px",
               }}
             >
-              <span style={TextConfig}>{type}:</span>
+              <span style={TextConfig}>{type ? `${type}: `  : ""}</span>
               {this.state.areaSelected ? (
                 <span style={TextAcreage}>
                   {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}
@@ -527,7 +531,6 @@ export default class ToolbarConfig extends Component {
                                 disabled
                               />
                             </div>
-                            <span style={TextDefault}>Đơn vị: mét</span>
                           </div>
                         )}
 

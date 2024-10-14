@@ -13,7 +13,8 @@ import {
   Hole,
   Item,
   HorizontalGuide,
-  VerticalGuide
+  VerticalGuide,
+  Area
 } from '../class/export';
 
 let defaultDrawing = {
@@ -145,14 +146,15 @@ class Project{
     let {
       lines: selectedLines,
       holes: selectedHoles,
-      items: selectedItems
+      items: selectedItems,
+      areas: selectedAreas
     } = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
-
     state = Layer.unselectAll( state, selectedLayer ).updatedState;
-
-    selectedLines.forEach(lineID => { state = Line.remove( state, selectedLayer, lineID ).updatedState; });
+console.log(selectedLines.toJS(),"id")
+    // selectedLines.forEach(lineID => { state = Line.remove( state, selectedLayer, lineID ).updatedState; });
     selectedHoles.forEach(holeID => { state = Hole.remove( state, selectedLayer, holeID ).updatedState; });
     selectedItems.forEach(itemID => { state = Item.remove( state, selectedLayer, itemID ).updatedState; });
+    selectedAreas.forEach(areaID => { state = Layer.detectAndUpdateAreas( state, selectedLayer ).updatedState; });
 
     state = Layer.detectAndUpdateAreas( state, selectedLayer ).updatedState;
 

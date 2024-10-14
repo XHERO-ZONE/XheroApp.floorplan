@@ -111,6 +111,7 @@ class Layer{
     //remove areas
     state.getIn(['scene', 'layers', layerID, 'areas']).forEach(area => {
       let areaInUse = innerCyclesByVerticesID.some(vertices => sameSet(vertices, area.vertices));
+      console.log(areaInUse,"is")
       if (!areaInUse) {
         state = Area.remove( state, layerID, area.id ).updatedState;
       }

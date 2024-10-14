@@ -43,7 +43,9 @@ class Area{
 
   static remove( state, layerID, areaID ) {
 
+    
     let area = state.getIn(['scene', 'layers', layerID, 'areas', areaID]);
+    console.log(area.toJS())
 
     if( area.get('selected') === true ) state = this.unselect( state, layerID, areaID ).updatedState;
 
