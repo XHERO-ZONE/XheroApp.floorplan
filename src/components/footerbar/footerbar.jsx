@@ -114,6 +114,9 @@ class FooterBar extends Component {
         }
       });
     }
+    else {
+      this.setState({ selected: false });
+    }
   }
 
   selectedAll() {
@@ -131,7 +134,7 @@ class FooterBar extends Component {
 
   removeSeleced(state) {
     this.context.projectActions.remove(state);
-    console.log(state.toJS())
+
   }
   handleDone() {
     this.context.projectActions.rollback(this.props.state);

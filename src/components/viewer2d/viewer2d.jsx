@@ -300,6 +300,7 @@ export default function Viewer2D(
             linesActions.updateDrawingLine(x, y, state.snapMask);
             linesActions.endDrawingLine(x, y, state.snapMask);
             linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
             break;
           case "L-frame":
             linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
@@ -336,6 +337,7 @@ export default function Viewer2D(
             linesActions.updateDrawingLine(x, y, state.snapMask);
             linesActions.endDrawingLine(x, y, state.snapMask);
             linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
 
             break;
           case "T-frame":
@@ -389,6 +391,8 @@ export default function Viewer2D(
             linesActions.updateDrawingLine(x, y, state.snapMask);
             linesActions.endDrawingLine(x, y, state.snapMask);
             linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
+
             break;
           case "thap-frame":
             linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
@@ -465,6 +469,8 @@ export default function Viewer2D(
             linesActions.updateDrawingLine(x, y, state.snapMask);
             linesActions.endDrawingLine(x, y, state.snapMask);
             linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
+
             break;
           case "U-frame":
             linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
@@ -507,6 +513,8 @@ export default function Viewer2D(
             linesActions.updateDrawingLine(x, y, state.snapMask);
             linesActions.endDrawingLine(x, y, state.snapMask);
             linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
+            break;
         }
 
         break;

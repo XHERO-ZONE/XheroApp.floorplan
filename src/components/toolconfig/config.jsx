@@ -189,7 +189,7 @@ export default class ToolbarConfig extends Component {
     const { scene } = this.props.state;
     const { layers } = scene;
   
-    // Kiểm tra nếu layers hoặc scene thay đổi mới gọi hàm calculateAcreage
+    // Kiểm tra thay đổi trong props
     if (
       layers !== prevProps.state.scene.layers || 
       scene.selectedLayer !== prevProps.state.scene.selectedLayer
@@ -197,10 +197,10 @@ export default class ToolbarConfig extends Component {
       this.calculateAcreage(layers, scene);
     }
   
-    // Tránh việc gọi calculateAcreage khi state không thực sự thay đổi
-    // if (this.state !== prevState) {
-    //   console.log('State đã thay đổi, nhưng không gọi lại calculateAcreage');
-    // }
+    // Kiểm tra sự thay đổi trong state
+    if (this.props.state !== prevProps.state) {
+      this.calculateAcreage(layers, scene);
+    }
   }
   calculateAcreage(layers, scene) {
     let selectedLayer = layers.get(scene.selectedLayer);
@@ -209,7 +209,6 @@ export default class ToolbarConfig extends Component {
       selectedLayer.areas._root
     );
     const root = newAreas.get("keyArea");
-
     if (root && root.entries) {
       const entries = root.entries;
       entries.forEach((entry) => {
@@ -256,6 +255,9 @@ export default class ToolbarConfig extends Component {
           this.setState({ areaSelected: area.selected });
         }
       });
+    }
+    else {
+      this.setState({areaSelected: null})
     }
   }
 
