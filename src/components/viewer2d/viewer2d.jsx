@@ -13,6 +13,7 @@ import * as constants from "../../constants";
 import State from "./state";
 import * as SharedStyle from "../../shared-style";
 import { RulerX, RulerY } from "./export";
+import Line from "../../class/line";
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -179,8 +180,8 @@ export default function Viewer2D(
 
     if (mode === constants.MODE_IDLE) {
       let elementData = extractElementData(event.target);
-      if (!elementData || !elementData.selected) return;
 
+      if (!elementData || !elementData.selected) return;
       switch (elementData.prototype) {
         case "lines":
           linesActions.beginDraggingLine(
@@ -245,18 +246,14 @@ export default function Viewer2D(
   };
 
   let onMouseUp = (viewerEvent) => {
-
     let event = viewerEvent.originalEvent;
-
     let evt = new Event("mouseup-planner-event");
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
-
     let { x, y } = mapCursorPosition(viewerEvent);
     switch (mode) {
       case constants.MODE_IDLE:
         let elementData = extractElementData(event.target);
-
         if (elementData && elementData.selected) return;
 
         switch (elementData ? elementData.prototype : "none") {
@@ -265,12 +262,10 @@ export default function Viewer2D(
             break;
 
           case "lines":
-
             linesActions.selectLine(elementData.layer, elementData.id);
             break;
 
           case "holes":
-
             holesActions.selectHole(elementData.layer, elementData.id);
             break;
 
@@ -284,19 +279,243 @@ export default function Viewer2D(
         }
         break;
       case constants.MODE_WAITING_DRAWING_TEXTURE:
-        linesActions.beginDrawingLine(layerID, 200, 1500, state.snapMask);
-        linesActions.updateDrawingLine(500, 1500, state.snapMask);
-        linesActions.endDrawingLine(500, 1500, state.snapMask);
-        linesActions.beginDrawingLine(layerID, 500, 1500, state.snapMask);
-        linesActions.updateDrawingLine(500, 1300, state.snapMask);
-        linesActions.endDrawingLine(500, 1300, state.snapMask);
-        linesActions.beginDrawingLine(layerID, 500, 1300, state.snapMask);
-        linesActions.updateDrawingLine(200, 1300, state.snapMask);
-        linesActions.endDrawingLine(200, 1300, state.snapMask);
-        linesActions.beginDrawingLine(layerID, 200, 1300, state.snapMask);
-        linesActions.updateDrawingLine(200, 1500, state.snapMask);
-        linesActions.endDrawingLine(200, 1500, state.snapMask);
-        linesActions.beginDrawingLine(layerID, 200, 1500, state.snapMask);
+        const type = state.toJS().drawingSupport.type;
+        switch (type) {
+          case "square-frame":
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 500, y, state.snapMask);
+            linesActions.endDrawingLine(x + 500, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x + 500, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 500, y - 500, state.snapMask);
+            linesActions.endDrawingLine(x + 500, y - 500, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 500,
+              y - 500,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x, y - 500, state.snapMask);
+            linesActions.endDrawingLine(x, y - 500, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y - 500, state.snapMask);
+            linesActions.updateDrawingLine(x, y, state.snapMask);
+            linesActions.endDrawingLine(x, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
+            break;
+          case "L-frame":
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 600, y, state.snapMask);
+            linesActions.endDrawingLine(x + 600, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x + 600, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 600, y - 300, state.snapMask);
+            linesActions.endDrawingLine(x + 600, y - 300, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 600,
+              y - 300,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 300, y - 300, state.snapMask);
+            linesActions.endDrawingLine(x + 300, y - 300, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 300,
+              y - 300,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 300, y - 600, state.snapMask);
+            linesActions.endDrawingLine(x + 300, y - 600, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 300,
+              y - 600,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x, y - 600, state.snapMask);
+            linesActions.endDrawingLine(x, y - 600, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y - 600, state.snapMask);
+            linesActions.updateDrawingLine(x, y, state.snapMask);
+            linesActions.endDrawingLine(x, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
+
+            break;
+          case "T-frame":
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 600, y, state.snapMask);
+            linesActions.endDrawingLine(x + 600, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x + 600, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 600, y - 200, state.snapMask);
+            linesActions.endDrawingLine(x + 600, y - 200, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 600,
+              y - 200,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 400, y - 200, state.snapMask);
+            linesActions.endDrawingLine(x + 400, y - 200, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 400,
+              y - 200,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 400, y - 600, state.snapMask);
+            linesActions.endDrawingLine(x + 400, y - 600, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 400,
+              y - 600,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 200, y - 600, state.snapMask);
+            linesActions.endDrawingLine(x + 200, y - 600, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 200,
+              y - 600,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 200, y - 200, state.snapMask);
+            linesActions.endDrawingLine(x + 200, y - 200, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 200,
+              y - 200,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x, y - 200, state.snapMask);
+            linesActions.endDrawingLine(x, y - 200, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y - 200, state.snapMask);
+            linesActions.updateDrawingLine(x, y, state.snapMask);
+            linesActions.endDrawingLine(x, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
+
+            break;
+          case "thap-frame":
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 200, y, state.snapMask);
+            linesActions.endDrawingLine(x + 200, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x + 200, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 200, y - 200, state.snapMask);
+            linesActions.endDrawingLine(x + 200, y - 200, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 200,
+              y - 200,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 400, y - 200, state.snapMask);
+            linesActions.endDrawingLine(x + 400, y - 200, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 400,
+              y - 200,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 400, y - 400, state.snapMask);
+            linesActions.endDrawingLine(x + 400, y - 400, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 400,
+              y - 400,
+              state.snapMask
+            );
+
+            linesActions.updateDrawingLine(x + 200, y - 400, state.snapMask);
+            linesActions.endDrawingLine(x + 200, y - 400, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 200,
+              y - 400,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 200, y - 600, state.snapMask);
+            linesActions.endDrawingLine(x + 200, y - 600, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 200,
+              y - 600,
+              state.snapMask
+            );
+
+            linesActions.updateDrawingLine(x, y - 600, state.snapMask);
+            linesActions.endDrawingLine(x, y - 600, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y - 600, state.snapMask);
+            linesActions.updateDrawingLine(x, y - 400, state.snapMask);
+            linesActions.endDrawingLine(x, y - 400, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y - 400, state.snapMask);
+            linesActions.updateDrawingLine(x - 200, y - 400, state.snapMask);
+            linesActions.endDrawingLine(x - 200, y - 400, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x - 200,
+              y - 400,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x - 200, y - 200, state.snapMask);
+            linesActions.endDrawingLine(x - 200, y - 200, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x - 200,
+              y - 200,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x, y - 200, state.snapMask);
+            linesActions.endDrawingLine(x, y - 200, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y - 200, state.snapMask);
+            linesActions.updateDrawingLine(x, y, state.snapMask);
+            linesActions.endDrawingLine(x, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
+
+            break;
+          case "U-frame":
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 200, y, state.snapMask);
+            linesActions.endDrawingLine(x + 200, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x + 200, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 200, y - 400, state.snapMask);
+            linesActions.endDrawingLine(x + 200, y - 400, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 200,
+              y - 400,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 400, y - 400, state.snapMask);
+            linesActions.endDrawingLine(x + 400, y - 400, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 400,
+              y - 400,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x + 400, y, state.snapMask);
+            linesActions.endDrawingLine(x + 400, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x + 400, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 600, y, state.snapMask);
+            linesActions.endDrawingLine(x + 600, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x + 600, y, state.snapMask);
+            linesActions.updateDrawingLine(x + 600, y - 600, state.snapMask);
+            linesActions.endDrawingLine(x + 600, y - 600, state.snapMask);
+            linesActions.beginDrawingLine(
+              layerID,
+              x + 600,
+              y - 600,
+              state.snapMask
+            );
+            linesActions.updateDrawingLine(x, y - 600, state.snapMask);
+            linesActions.endDrawingLine(x, y - 600, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y - 600, state.snapMask);
+            linesActions.updateDrawingLine(x, y, state.snapMask);
+            linesActions.endDrawingLine(x, y, state.snapMask);
+            linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
+            projectActions.rollback(state);
+            break;
+        }
 
         break;
       case constants.MODE_WAITING_DRAWING_LINE:

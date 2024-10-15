@@ -187,14 +187,18 @@ export default class ToolbarConfig extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     const { scene } = this.props.state;
-    let { layers } = scene;
-
-    // Kiểm tra nếu layers hoặc scene thay đổi thì mới tính lại diện tích
+    const { layers } = scene;
+  
+    // Kiểm tra thay đổi trong props
     if (
-      layers !== prevProps.state.scene.layers ||
-      scene !== prevProps.state.scene ||
-      this.state !== prevState
+      layers !== prevProps.state.scene.layers || 
+      scene.selectedLayer !== prevProps.state.scene.selectedLayer
     ) {
+      this.calculateAcreage(layers, scene);
+    }
+  
+    // Kiểm tra sự thay đổi trong state
+    if (this.props.state !== prevProps.state) {
       this.calculateAcreage(layers, scene);
     }
   }
@@ -205,7 +209,6 @@ export default class ToolbarConfig extends Component {
       selectedLayer.areas._root
     );
     const root = newAreas.get("keyArea");
-
     if (root && root.entries) {
       const entries = root.entries;
       entries.forEach((entry) => {
@@ -252,6 +255,9 @@ export default class ToolbarConfig extends Component {
           this.setState({ areaSelected: area.selected });
         }
       });
+    }
+    else {
+      this.setState({areaSelected: null})
     }
   }
 
@@ -326,7 +332,7 @@ export default class ToolbarConfig extends Component {
                 gap: "3px",
               }}
             >
-              <span style={TextConfig}>{type}:</span>
+              <span style={TextConfig}>{type ? `${type}: `  : ""}</span>
               {this.state.areaSelected ? (
                 <span style={TextAcreage}>
                   {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}
@@ -527,7 +533,6 @@ export default class ToolbarConfig extends Component {
                                 disabled
                               />
                             </div>
-                            <span style={TextDefault}>Đơn vị: mét</span>
                           </div>
                         )}
 

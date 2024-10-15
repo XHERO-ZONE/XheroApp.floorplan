@@ -17,7 +17,7 @@ import { VERSION } from "../../version";
 import { isDesktop, isMobile, isTablet } from "react-device-detect";
 import { useDevice } from "../responsive";
 import ToolbarSaveButton from "../toolbar/toolbar-save-button";
-
+import Line from "../../class/line";
 const footerBarStyle = {
   position: "absolute",
   bottom: 0,
@@ -70,21 +70,31 @@ class FooterBar extends Component {
     super(props, context);
     this.state = {
       selected: false,
+      isSelectedAll: false,
+      showSave: false,
     };
+    this.removeSeleced = this.removeSeleced.bind(this);
   }
-
-
 
   componentDidUpdate(prevProps, prevState) {
     const { scene } = this.props.state;
     let { layers } = scene;
-    // Kiểm tra nếu props hoặc state thay đổi thì mới tính lại diện tích
+
+    // Kiểm tra props và state có thực sự thay đổi trước khi tính toán lại
     if (
       layers !== prevProps.state.scene.layers ||
-      scene !== prevProps.state.scene ||
-      this.state !== prevState
+      scene.selectedLayer !== prevProps.state.scene.selectedLayer
     ) {
       this.slectedArea(layers, scene);
+    }
+
+    // So sánh selected của layer hiện tại
+    const selected = this.props.state.toJS().scene.layers["layer-1"].selected;
+    const prevSelected =
+      prevProps.state.toJS().scene.layers["layer-1"].selected;
+
+    if (selected !== prevSelected) {
+      this.selectedAll();
     }
   }
   slectedArea(layers, scene) {
@@ -104,8 +114,32 @@ class FooterBar extends Component {
         }
       });
     }
+    else {
+      this.setState({ selected: false });
+    }
   }
-  
+
+  selectedAll() {
+    const selected = this.props.state.toJS().scene.layers["layer-1"].selected;
+    const lines = selected.lines.length > 0;
+    const items = selected.items.length > 0;
+    const holes = selected.holes.length > 0;
+
+    const shouldSelectAll = items || holes || lines;
+    // Chỉ gọi setState nếu isSelectedAll thay đổi
+    if (shouldSelectAll !== this.state.isSelectedAll) {
+      this.setState({ isSelectedAll: shouldSelectAll });
+    }
+  }
+
+  removeSeleced(state) {
+    this.context.projectActions.remove(state);
+
+  }
+  handleDone() {
+    this.context.projectActions.rollback(this.props.state);
+    this.setState({ showSave: true });
+  }
 
   render() {
     let { state: globalState, width, height, device } = this.props;
@@ -113,7 +147,6 @@ class FooterBar extends Component {
     let { x, y } = globalState.get("mouse").toJS();
     let zoom = globalState.get("zoom");
     let mode = globalState.get("mode");
-
     let errors = globalState.get("errors").toArray();
     let errorsJsx = errors.map((err, ind) => (
       <div key={ind} style={appMessageStyle}>
@@ -150,6 +183,7 @@ class FooterBar extends Component {
     let iconTurn = require("../../../public/images/iconTurn.png");
     let iconLock = require("../../../public/images/iconLock.png");
     let iconDeleted = require("../../../public/images/iconDeleted.png");
+    let iconDone = require("../../../public/images/iconDone.png");
 
     return (
       <div
@@ -205,23 +239,55 @@ class FooterBar extends Component {
           <img src={iconFloor} width={36} height={36} />
           <span style={textFooter}>Tầng</span>
         </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+          onClick={() => this.context.projectActions.rollback(this.props.state)}
+        >
+          <img src={iconDone} width={36} height={36} />
+          <span style={textFooter}>Hoàn thành</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+        >
+          <ToolbarSaveButton state={this.props.state} data={this.props.data} />
+          <span style={textFooter}>Lưu</span>
+        </div>
         {this.state.selected === false ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <ToolbarSaveButton state={this.props.state} data={this.props.data} />
-            <span style={textFooter}>Lưu</span>
+          <div style={{ display: "flex", gap: "15px" }}>
+            {this.state.isSelectedAll && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => this.removeSeleced(this.props.state)}
+              >
+                <img src={iconDeleted} width={36} height={36} />
+                <span style={textFooter}>Xóa</span>
+              </div>
+            )}
           </div>
         ) : (
           <div style={{ display: "flex", gap: "15px" }}>
-            <div
+            {/* <div
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -233,8 +299,8 @@ class FooterBar extends Component {
             >
               <img src={iconTurn} width={36} height={36} />
               <span style={textFooter}>Lật</span>
-            </div>
-            <div
+            </div> */}
+            {/* <div
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -246,7 +312,7 @@ class FooterBar extends Component {
             >
               <img src={iconLock} width={36} height={36} />
               <span style={textFooter}>Khóa</span>
-            </div>
+            </div> */}
             <div
               style={{
                 display: "flex",
@@ -256,6 +322,7 @@ class FooterBar extends Component {
                 alignItems: "center",
                 cursor: "pointer",
               }}
+              onClick={() => this.removeSeleced(this.props.state)}
             >
               <img src={iconDeleted} width={36} height={36} />
               <span style={textFooter}>Xóa</span>

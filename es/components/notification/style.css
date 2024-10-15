@@ -1,0 +1,64 @@
+.custom-notification-success {
+    background-color: #f0f2f5;
+    border-left: 5px solid #00CC00;
+    padding: 16px;
+    z-index: 9995;
+    @media screen and (max-width: 575px) {
+        width: 250px !important;     
+        padding: 10px 10px !important;   
+    }
+    .ant-notification-notice-message {
+        font-size: 18px !important;
+        color: #00CC00  !important;
+        font-weight: 700;
+    }
+    .ant-notification-notice-description {
+        font-size: 16px !important;
+        font-weight: 500;
+    }
+}
+.custom-notification-error {
+    background-color: #f0f2f5;
+    border-left: 5px solid #FF3333;
+    padding: 16px;
+    z-index: 9995;
+    @media screen and (max-width: 575px) {
+        width: 250px !important;     
+        padding: 10px 10px !important;   
+    }
+    .ant-notification-notice-message {
+        font-size: 18px !important;
+        color: #FF3333  !important;
+        font-weight: 700;
+    }
+    .ant-notification-notice-description {
+        font-size: 16px !important;
+        font-weight: 500;
+    }
+}
+.custom-notification-info {
+    background-color: #f0f2f5;
+    border-left: 5px solid #0099FF;
+    padding: 16px;
+    @media screen and (max-width: 575px) {
+        width: 250px !important;     
+        padding: 10px 10px !important;   
+    }
+    .ant-notification-notice-message {
+        font-size: 18px !important;
+        color: #0099FF  !important;
+        font-weight: 700;
+    }
+    .ant-notification-notice-description {
+        font-size: 16px !important;
+        font-weight: 500;
+    }
+}
+
+.ant-notification-notice-close {
+    font-size: 18px;
+    @media screen and (max-width: 575px) {
+        top: 12px !important;
+        right: 0 !important;
+    }
+}

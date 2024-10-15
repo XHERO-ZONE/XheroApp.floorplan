@@ -200,7 +200,7 @@ export const DefaultLayers = new Map({
 
 
 export class Scene extends Record({
-  unit: 'cm',
+  unit: 'm',
   layers: new Map(),
   grids: new Map(),
   selectedLayer: null,

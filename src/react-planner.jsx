@@ -142,7 +142,6 @@ class ReactPlanner extends Component {
     } else {
       arr[0] = state.scene.toJS();
       arr.push(defaultDrawing);
-      console.log(arr)
       localStorage.setItem("react-planner_v0", JSON.stringify(arr));
     }
   }
