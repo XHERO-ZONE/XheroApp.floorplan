@@ -24,7 +24,7 @@ const name = area.name
 
   let renderedAreaSize = null;
 
-  if (area.selected) {
+
     let polygon = area.vertices.toArray().map(vertexID => {
       let {x, y} = layer.vertices.get(vertexID);
       return [x, y];
@@ -60,7 +60,7 @@ const name = area.name
         {(areaSize / 10000).toFixed(2)} m{String.fromCharCode(0xb2)}
       </text>
     )
-  }
+  
 
   return (
     <g

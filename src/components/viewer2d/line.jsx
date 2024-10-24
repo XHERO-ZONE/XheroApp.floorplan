@@ -17,8 +17,8 @@ const name = ""
     ({x: x1, y: y1} = vertex1);
     ({x: x2, y: y2} = vertex0);
   }
-
   let length = GeometryUtils.pointsDistance(x1, y1, x2, y2);
+  console.log(length)
   let angle = GeometryUtils.angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2);
 
   let renderedHoles = line.holes.map(holeID => {
@@ -45,8 +45,8 @@ const name = ""
   let half_thickness = thickness / 2;
 
   let renderedLine = catalog.getElement(line.type).render2D(name,line, layer);
-  let renderedRuler = line.selected ?
-    <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/> : null;
+  let renderedRuler = 
+    <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/> ;
 
   return (
     <g

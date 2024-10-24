@@ -157,7 +157,6 @@ export default class ToolbarConfig extends Component {
       openHexColor: false,
       rgbaColor: { r: 170, g: 187, b: 204, a: 1 },
       acreage: null,
-      // type: this.props.data.type,
       areaSelected: false,
     };
     this.onChangeShowName = this.onChangeShowName.bind(this);
@@ -188,75 +187,58 @@ export default class ToolbarConfig extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { scene } = this.props.state;
     const { layers } = scene;
-  
+    let selectedLayer = layers.get(scene.selectedLayer).toJS();
     // Kiểm tra thay đổi trong props
     if (
-      layers !== prevProps.state.scene.layers || 
+      layers !== prevProps.state.scene.layers ||
       scene.selectedLayer !== prevProps.state.scene.selectedLayer
     ) {
       this.calculateAcreage(layers, scene);
     }
-  
+
     // Kiểm tra sự thay đổi trong state
-    if (this.props.state !== prevProps.state) {
+    if (
+      this.props.state !== prevProps.state &&
+      selectedLayer.selected.length > 0
+    ) {
       this.calculateAcreage(layers, scene);
     }
   }
   calculateAcreage(layers, scene) {
-    let selectedLayer = layers.get(scene.selectedLayer);
-    const newAreas = selectedLayer.areas.set(
-      "keyArea",
-      selectedLayer.areas._root
-    );
-    const root = newAreas.get("keyArea");
-    if (root && root.entries) {
-      const entries = root.entries;
-      entries.forEach((entry) => {
-        const area = entry[1];
-        if (area.selected) {
-          let polygon = area.vertices.toArray().map((vertexID) => {
+    let selectedLayer = layers.get(scene.selectedLayer).toJS();
+    this.setState({areaSelected: selectedLayer.selected.areas.length > 0})
+    if (selectedLayer.selected.areas.length > 0) {
+      const id = selectedLayer.selected.areas[0];
+      const area = selectedLayer.areas[id];
+      let polygon = area.vertices.map((vertexID) => {
+        let { x, y } = selectedLayer.vertices[vertexID];
+        return [x, y];
+      });
+      let polygonWithHoles = polygon;
+      area.holes.forEach((holeID) => {
+        let polygonHole = selectedLayer.areas[id].holes[holeID]
+          .map((vertexID) => {
             let { x, y } = selectedLayer.vertices.get(vertexID);
             return [x, y];
           });
+        polygonWithHoles = polygonWithHoles.concat(polygonHole.reverse());
+      });
+      let areaSize = areaPolygon(polygon, false);
 
-          let polygonWithHoles = polygon;
-
-          area.holes.forEach((holeID) => {
-            let polygonHole = selectedLayer.areas
-              .get(holeID)
-              .vertices.toArray()
-              .map((vertexID) => {
-                let { x, y } = selectedLayer.vertices.get(vertexID);
-                return [x, y];
-              });
-
-            polygonWithHoles = polygonWithHoles.concat(polygonHole.reverse());
-          });
-
-          let areaSize = areaPolygon(polygon, false);
-
-          // Trừ diện tích của các lỗ
-          area.holes.forEach((areaID) => {
-            let hole = selectedLayer.areas.get(areaID);
-            let holePolygon = hole.vertices.toArray().map((vertexID) => {
-              let { x, y } = selectedLayer.vertices.get(vertexID);
-              return [x, y];
-            });
-            areaSize -= areaPolygon(holePolygon, false);
-          });
-
-          // So sánh acreage hiện tại với giá trị mới trước khi cập nhật state
-          const newAcreage = (areaSize / 10000).toFixed(2);
+      area.holes.forEach((areaID) => {
+        let hole = selectedLayer.areas[id];
+        let holePolygon = hole.vertices.map((vertexID) => {
+          let { x, y } = selectedLayer.vertices[vertexID];
+          return [x, y];
+        });
+        areaSize -= areaPolygon(holePolygon, false);
+      });
+      const newAcreage = (areaSize / 10000).toFixed(2);
           if (this.state.acreage !== newAcreage) {
             this.setState({ acreage: newAcreage });
           }
-        }
-        if (area.selected !== this.state.areaSelected) {
-          this.setState({ areaSelected: area.selected });
-        }
-      });
     }
-    else {
+        else {
       this.setState({areaSelected: null})
     }
   }
@@ -332,7 +314,7 @@ export default class ToolbarConfig extends Component {
                 gap: "3px",
               }}
             >
-              <span style={TextConfig}>{type ? `${type}: `  : ""}</span>
+              <span style={TextConfig}>{type ? `${type}: ` : ""}</span>
               {this.state.areaSelected ? (
                 <span style={TextAcreage}>
                   {acreage ? `${acreage} m${String.fromCharCode(0xb2)}` : ""}

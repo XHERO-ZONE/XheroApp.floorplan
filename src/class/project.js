@@ -61,8 +61,8 @@ let defaultDrawing = {
   },
   selectedLayer: "layer-1",
   groups: {},
-  width: 3000,
-  height: 2000,
+  width: 8000,
+  height: 8000,
   meta: {},
   guides: {
     horizontal: {},

@@ -559,18 +559,18 @@ export default function Viewer2D(
     event.stopPropagation();
   };
   let defaultValue = {
-    a: 0.6650571136223359,
+    a: 0.526787525391618,
     b: 0,
-    SVGWidth: 3000,
+    SVGWidth: 8000,
     c: 0,
     mode: "idle",
-    d: 0.6650571136223359,
-    e: -44.70989917234498,
-    f: -17.51654050009821,
+    d: 0.526787525391618,
+    e: -379.65190488448775,
+    f: -696.6046286314541,
     miniatureOpen: true,
-    SVGHeight: 2000,
+    SVGHeight: 8000,
     pinchPointDistance: null,
-    lastAction: "pan",
+    lastAction: "zoom",
     viewerWidth: 360,
     startX: null,
     startY: null,
@@ -583,8 +583,13 @@ export default function Viewer2D(
   };
   let onChangeValue = (value) => {
     if (value.a !== 1) {
-      projectActions.updateZoomScale(value.a);
-      return viewer2DActions.updateCameraView(value);
+      if (value.a <= 0.235) {
+        projectActions.updateZoomScale(0.5);
+        return;
+      } else {
+        projectActions.updateZoomScale(value.a);
+        return viewer2DActions.updateCameraView(value);
+      }
     } else {
       projectActions.updateZoomScale(defaultValue.a);
       return viewer2DActions.updateCameraView(defaultValue);

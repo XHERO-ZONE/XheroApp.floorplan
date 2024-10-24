@@ -75,7 +75,6 @@ export default function WallFactory(name, info, textures) {
     for (let textureName in textures) {
       textureValues[textureName] = textures[textureName].name;
     }
-
     wallElement.properties.textureA = {
       label: translator.t('texture') + ' A',
       type: 'enum',
