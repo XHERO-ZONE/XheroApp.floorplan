@@ -45,7 +45,6 @@ class Area {
     let area = state.getIn(["scene", "layers", layerID, "areas", areaID]);
     // if( area.get('selected') === true ) state = this.unselect( state, layerID, areaID ).updatedState;
     if (area) {
-      console.log("area")
       area.vertices.forEach((vertexID) => {
         state = Vertex.remove(
           state,

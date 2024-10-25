@@ -79,7 +79,7 @@ const TextAcreage = {
 const ContainerConfig = {
   display: "flex",
   backgroundClip: "padding-box",
-  borderRadius: "6px",
+  borderRadius: "8px",
   background: SharedStyle.COLORS.lightBrown,
   fontSize: "12px",
   fontWeight: "500",
@@ -384,26 +384,6 @@ export default class ToolbarConfig extends Component {
                 height: props.heightConfig,
               }}
             >
-              {/* {state.openHexColor && (
-                <section
-                  className="custom-layout example"
-                  style={{ width: 200, height: props.heightConfig }}
-                >
-                  <RgbaColorPicker
-                    color={this.state.hexColor}
-                    onChange={this.onChangeColor}
-                  />
-                  <CloseOutlined
-                    style={{
-                      position: "absolute",
-                      top: "21%",
-                      zIndex: 10003,
-                      right: "2%",
-                    }}
-                    onClick={this.handleOpenChangeColor}
-                  />
-                </section>
-              )} */}
 
               <div style={{ ...ConfigStyle, height: props.heightConfig }}>
                 <div
@@ -436,7 +416,7 @@ export default class ToolbarConfig extends Component {
                         alignItems: "center",
                         borderRadius: "4px",
                         width: "100%",
-                        padding: "2px",
+                        padding: "4px",
                       }}
                     >
                       <span

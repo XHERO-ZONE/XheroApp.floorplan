@@ -193,6 +193,7 @@ class ReactPlanner extends Component {
     let contentH = height - footerBarH;
     let sidebarH = height - footerBarH;
     let extractedState = stateExtractor(state);
+    let catalogH = height - footerBarH + 12
     return (
       <div style={{ ...wrapperStyle, height, width: "100%" }}>
         <Users state={extractedState} updateState={this.updateState} />
@@ -222,7 +223,7 @@ class ReactPlanner extends Component {
           page={"root"}
           state={state}
           width={catalogWidth}
-          height={height}
+          height={catalogH}
         />
 
         <FooterBar

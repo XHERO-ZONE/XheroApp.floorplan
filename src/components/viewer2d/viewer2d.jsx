@@ -14,7 +14,7 @@ import State from "./state";
 import * as SharedStyle from "../../shared-style";
 import { RulerX, RulerY } from "./export";
 import Line from "../../class/line";
-
+import { isMobile } from "react-device-detect";
 function mode2Tool(mode) {
   switch (mode) {
     case constants.MODE_2D_PAN:
@@ -39,7 +39,8 @@ function mode2PointerEvents(mode) {
     case constants.MODE_DRAGGING_ITEM:
     case constants.MODE_DRAGGING_LINE:
     case constants.MODE_DRAGGING_VERTEX:
-      return { pointerEvents: "none" };
+    case constants.MODE_WAITING_DRAWING_TEXTURE:
+      return {};
 
     default:
       return {};
@@ -124,6 +125,7 @@ export default function Viewer2D(
 
   let onMouseMove = (viewerEvent) => {
     //workaround that allow imageful component to work
+    console.log("new", viewerEvent)
     let evt = new Event("mousemove-planner-event");
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
@@ -170,6 +172,7 @@ export default function Viewer2D(
   };
 
   let onMouseDown = (viewerEvent) => {
+    console.log("mode", mode)
     let event = viewerEvent.originalEvent;
     //workaround that allow imageful component to work
     let evt = new Event("mousedown-planner-event");
@@ -250,7 +253,8 @@ export default function Viewer2D(
     let evt = new Event("mouseup-planner-event");
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
-    let { x, y } = mapCursorPosition(viewerEvent);
+     let { x, y } =  mapCursorPosition(viewerEvent);
+     console.log(mode)
     switch (mode) {
       case constants.MODE_IDLE:
         let elementData = extractElementData(event.target);
@@ -615,6 +619,18 @@ export default function Viewer2D(
     }
   };
 
+  let onTouchStart = (viewerEvent) => {
+    onMouseDown(viewerEvent);
+  };
+  
+  let onTouchMove = () => {
+    onMouseMove(viewerEvent);
+  };
+  
+  let onTouchEnd = (viewerEvent) => {
+    onMouseUp(viewerEvent);
+  };
+
   let { e, f, SVGWidth, SVGHeight } = state.get("viewer2D").toJS();
 
   let rulerSize = 15; //px
@@ -692,6 +708,9 @@ export default function Viewer2D(
         ) : null}
       </div>
       <ReactSVGPanZoom
+        onTouchStart={onMouseDown}
+        onTouchMove={onMouseMove}
+        onTouchEnd={mode === "MODE_IDLE" && onTouchEnd}
         style={{ gridColumn: 2, gridRow: 2 }}
         width={width - rulerSize}
         height={height - rulerSize}
@@ -702,9 +721,10 @@ export default function Viewer2D(
         detectAutoPan={mode2DetectAutopan(mode)}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
+        onMouseUp={mode === "MODE_IDLE" && isMobile ? onTouchEnd : onMouseUp}
         miniaturePosition="none"
         toolbarPosition="none"
+        onClick={(e) => console.log(e)}
       >
         <svg width={scene.width} height={scene.height}>
           <defs>

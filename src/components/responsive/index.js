@@ -7,7 +7,7 @@ const DeviceContext = createContext();
 export const DeviceProvider = ({ children }) => {
   const isDesktop = useMediaQuery({ minWidth: '1224px' });
   const isTablet = useMediaQuery({minWidth: '600px' , maxWidth: '1000px' });
-  const isMobile = useMediaQuery({ minWidth: '375px', maxWidth: '575px' });
+  const isMobile = useMediaQuery({ minWidth: '320px', maxWidth: '575px' });
   return (
     <DeviceContext.Provider value={{ isDesktop, isTablet, isMobile }}>
       {children}

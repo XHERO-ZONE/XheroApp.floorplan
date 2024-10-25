@@ -17,7 +17,7 @@ export default class Scene extends Component {
       <g>
         <Grids scene={scene}/>
 
-        <g style={{pointerEvents: 'none'}}>
+        <g style={{}}>
           {
             layers
             .entrySeq()

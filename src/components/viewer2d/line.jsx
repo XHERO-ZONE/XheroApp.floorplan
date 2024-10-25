@@ -18,7 +18,6 @@ const name = ""
     ({x: x2, y: y2} = vertex0);
   }
   let length = GeometryUtils.pointsDistance(x1, y1, x2, y2);
-  console.log(length)
   let angle = GeometryUtils.angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2);
 
   let renderedHoles = line.holes.map(holeID => {

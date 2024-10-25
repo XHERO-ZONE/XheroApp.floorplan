@@ -15,7 +15,6 @@ let translator = new Translator();
 const containerStyle = {
   position: "fixed",
   // width:'calc( 100% - 51px)',
-  height: "calc( 100% - 20px)",
   backgroundImage: `url(${bgToolBar}`,
   right: 0,
   // overflowY: "auto",
@@ -103,7 +102,7 @@ const styleToolBar = {
   display: "flex",
   flexDirection: "column",
   gap: "10px",
-  zIndex: "10004"
+  zIndex: "9999"
 };
 
 export default class CatalogList extends Component {
@@ -209,39 +208,14 @@ export default class CatalogList extends Component {
     let breadcrumbComponent = null;
     let iconToolBar = require("../../../public/images/iconToolBar.png");
     let iconClose = require("../../../public/images/iconCloseToolBar.png");
-    // if (page !== 'root') {
-
-    //   let breadcrumbsNames = [];
-
-    //   this.props.state.catalog.path.forEach(pathName => {
-    //     breadcrumbsNames.push({
-    //       name: this.context.catalog.getCategory(pathName).label,
-    //       action: () => projectActions.goBackToCatalogPage(pathName)
-    //     });
-    //   });
-
-    //   breadcrumbsNames.push({name: currentCategory.label, action: ''});
-
-    //   breadcrumbComponent = (<CatalogBreadcrumb names={breadcrumbsNames}/>);
-    // }
-
-    // let pathSize = this.props.state.catalog.path.size;
-    // console.log(this.props.state.catalog.path.size)
-
-    // let turnBackButton = pathSize > 0 ? (
-    //   <CatalogTurnBackPageItem key={pathSize} page={this.context.catalog.categories[this.props.state.catalog.path.get(pathSize - 1)]}/>) : null;
-
-    // let selectedHistory = this.props.state.get('selectedElementsHistory');
-    // let selectedHistoryElements = selectedHistory.map( ( el, ind ) =>
-    //   <div key={ind} style={historyElementStyle} title={el.name} onClick={() => this.select(el) }>{el.name}</div>
-    // );
-
     return (
       <div>
         <ContentContainer
           width={this.props.width}
           height={this.props.height}
-          style={{ ...containerStyle, ...this.props.style }}
+          style={{ ...containerStyle, ...this.props.style, height: this.props.height
+
+           }}
         >
           <div onClick={this.handleOpenCatolog}>
             {this.state.openCatlog === true ? (

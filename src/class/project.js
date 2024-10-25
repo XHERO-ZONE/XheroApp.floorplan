@@ -197,8 +197,6 @@ class Project {
       const lineVertex = Object.values(
         state.toJS().scene.layers[selectedLayer].lines
       ).map((items) => [{ id: items.id, arr: items.vertices }]);
-      console.log(area.vertices)
-      console.log(lineVertex)
       const matchingIds = [];
 
       lineVertex.forEach((element) => {

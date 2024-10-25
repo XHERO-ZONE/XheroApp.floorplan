@@ -239,20 +239,7 @@ class FooterBar extends Component {
           <img src={iconFloor} width={36} height={36} />
           <span style={textFooter}>Tầng</span>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer",
-          }}
-          onClick={() => this.context.projectActions.rollback(this.props.state)}
-        >
-          <img src={iconDone} width={36} height={36} />
-          <span style={textFooter}>Hoàn thành</span>
-        </div>
+
         <div
           style={{
             display: "flex",
@@ -267,24 +254,20 @@ class FooterBar extends Component {
           <span style={textFooter}>Lưu</span>
         </div>
         {this.state.selected === false ? (
-          <div style={{ display: "flex", gap: "15px" }}>
-            {this.state.isSelectedAll && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-                onClick={() => this.removeSeleced(this.props.state)}
-              >
-                <img src={iconDeleted} width={36} height={36} />
-                <span style={textFooter}>Xóa</span>
-              </div>
-            )}
-          </div>
+                  <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => this.context.projectActions.rollback(this.props.state)}
+                >
+                  <img src={iconDone} width={36} height={36} />
+                  <span style={textFooter}>Hoàn thành</span>
+                </div>
         ) : (
           <div style={{ display: "flex", gap: "15px" }}>
             {/* <div

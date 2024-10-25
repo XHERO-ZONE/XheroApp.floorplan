@@ -10,7 +10,6 @@ const STYLE_TEXT = {
   textAnchor: "middle",
   fontSize: "14px",
   fontFamily: "Playpen Sans",
-  pointerEvents: "none",
   fontWeight: "bold",
 
   //http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css
