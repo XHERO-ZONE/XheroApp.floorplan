@@ -253,7 +253,7 @@ class FooterBar extends Component {
           <ToolbarSaveButton state={this.props.state} data={this.props.data} />
           <span style={textFooter}>Lưu</span>
         </div>
-        {this.state.selected === false ? (
+        {this.state.selected === false && this.state.isSelectedAll === false ? (
                   <div
                   style={{
                     display: "flex",

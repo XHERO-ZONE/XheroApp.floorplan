@@ -11,6 +11,7 @@ export default function Vertex({vertex, layer}) {
 
   let {x, y} = vertex;
 
+
   return (
     <g
       transform={`translate(${x}, ${y})`}

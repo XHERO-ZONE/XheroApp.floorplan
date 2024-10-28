@@ -1,64 +1,49 @@
-.custom-notification-success {
-    background-color: #f0f2f5;
-    border-left: 5px solid #00CC00;
-    padding: 16px;
-    z-index: 9995;
-    @media screen and (max-width: 575px) {
-        width: 250px !important;     
-        padding: 10px 10px !important;   
-    }
-    .ant-notification-notice-message {
-        font-size: 18px !important;
-        color: #00CC00  !important;
-        font-weight: 700;
-    }
-    .ant-notification-notice-description {
-        font-size: 16px !important;
-        font-weight: 500;
-    }
-}
-.custom-notification-error {
-    background-color: #f0f2f5;
-    border-left: 5px solid #FF3333;
-    padding: 16px;
-    z-index: 9995;
-    @media screen and (max-width: 575px) {
-        width: 250px !important;     
-        padding: 10px 10px !important;   
-    }
-    .ant-notification-notice-message {
-        font-size: 18px !important;
-        color: #FF3333  !important;
-        font-weight: 700;
-    }
-    .ant-notification-notice-description {
-        font-size: 16px !important;
-        font-weight: 500;
-    }
-}
-.custom-notification-info {
-    background-color: #f0f2f5;
-    border-left: 5px solid #0099FF;
-    padding: 16px;
-    @media screen and (max-width: 575px) {
-        width: 250px !important;     
-        padding: 10px 10px !important;   
-    }
-    .ant-notification-notice-message {
-        font-size: 18px !important;
-        color: #0099FF  !important;
-        font-weight: 700;
-    }
-    .ant-notification-notice-description {
-        font-size: 16px !important;
-        font-weight: 500;
-    }
+/* style.css */
+.custom-notification {
+  position: fixed; /* Đặt vị trí cố định để thông báo không cuộn cùng trang */
+  top: 35%; /* Căn giữa theo chiều dọc */
+  left: 45%; /* Căn giữa theo chiều ngang */
+  transform: translate(-50%, -50%); /* Đẩy thông báo về giữa */
+  width: 330px; /* Chiều rộng của thông báo */
+  padding: 16px; /* Padding bên trong */
+  border-radius: 8px; /* Bo tròn các góc */
+  z-index: 9999; /* Đảm bảo thông báo nằm trên các phần tử khác */
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.ant-notification-notice-close {
-    font-size: 18px;
-    @media screen and (max-width: 575px) {
-        top: 12px !important;
-        right: 0 !important;
-    }
+.custom-notification-success {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.custom-notification-error {
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.custom-notification-info {
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.custom-notification strong {
+  display: block; /* Đặt tiêu đề thông báo thành một khối */
+  font-size: 18px; /* Kích thước chữ cho tiêu đề */
+  margin-bottom: 8px; /* Khoảng cách giữa tiêu đề và mô tả */
+}
+
+.custom-notification p {
+  background: linear-gradient(180deg, #cc8502 0%, #664301 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: Playpen Sans;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  text-align: center;
+  width: 80%;
 }

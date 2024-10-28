@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
 import {
@@ -82,6 +82,8 @@ function mode2DetectAutopan(mode) {
   }
 }
 
+
+
 function extractElementData(node) {
   while (
     !node.attributes.getNamedItem("data-element-root") &&
@@ -119,13 +121,16 @@ export default function Viewer2D(
 
   let layerID = scene.selectedLayer;
 
+
+
+let areasID = scene.toJS().layers[layerID].selected.areas[0]
+  
   let mapCursorPosition = ({ x, y }) => {
     return { x, y: -y + scene.height };
   };
 
   let onMouseMove = (viewerEvent) => {
     //workaround that allow imageful component to work
-    console.log("new", viewerEvent)
     let evt = new Event("mousemove-planner-event");
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
@@ -172,7 +177,6 @@ export default function Viewer2D(
   };
 
   let onMouseDown = (viewerEvent) => {
-    console.log("mode", mode)
     let event = viewerEvent.originalEvent;
     //workaround that allow imageful component to work
     let evt = new Event("mousedown-planner-event");
@@ -254,7 +258,6 @@ export default function Viewer2D(
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
      let { x, y } =  mapCursorPosition(viewerEvent);
-     console.log(mode)
     switch (mode) {
       case constants.MODE_IDLE:
         let elementData = extractElementData(event.target);
@@ -525,7 +528,9 @@ export default function Viewer2D(
       case constants.MODE_WAITING_DRAWING_LINE:
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
         break;
-
+        // case constants.MODE_MOVE_DRAWING_AREA:
+        //   areaActions.beginDraggingArea(layerID, x, y, state.snapMask);
+        //   break;
       case constants.MODE_DRAWING_LINE:
         linesActions.endDrawingLine(x, y, state.snapMask);
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
@@ -632,7 +637,6 @@ export default function Viewer2D(
   };
 
   let { e, f, SVGWidth, SVGHeight } = state.get("viewer2D").toJS();
-
   let rulerSize = 15; //px
   let rulerUnitPixelSize = 100;
   let rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
@@ -710,7 +714,7 @@ export default function Viewer2D(
       <ReactSVGPanZoom
         onTouchStart={onMouseDown}
         onTouchMove={onMouseMove}
-        onTouchEnd={mode === "MODE_IDLE" && onTouchEnd}
+        onTouchEnd={onMouseUp}
         style={{ gridColumn: 2, gridRow: 2 }}
         width={width - rulerSize}
         height={height - rulerSize}
@@ -724,7 +728,6 @@ export default function Viewer2D(
         onMouseUp={mode === "MODE_IDLE" && isMobile ? onTouchEnd : onMouseUp}
         miniaturePosition="none"
         toolbarPosition="none"
-        onClick={(e) => console.log(e)}
       >
         <svg width={scene.width} height={scene.height}>
           <defs>

@@ -1,6 +1,7 @@
 import { fromJS } from "immutable";
 import { Layer, Vertex, Group } from "./export";
 import { IDBroker, NameGenerator } from "../utils/export";
+import { MODE_MOVE_DRAWING_AREA } from "../constants";
 
 class Area {
   static add(state, layerID, type, verticesCoords, catalog) {
@@ -37,7 +38,9 @@ class Area {
   static select(state, layerID, areaID) {
     state = Layer.select(state, layerID).updatedState;
     state = Layer.selectElement(state, layerID, "areas", areaID).updatedState;
-
+    // state = state.merge({
+    //   mode: MODE_MOVE_DRAWING_AREA,
+    // });
     return { updatedState: state };
   }
 
@@ -118,6 +121,43 @@ class Area {
   }
 
   static setAttributes(state) {
+    return { updatedState: state };
+  }
+  static beginDraggingArea(state, layerID, areaID, x, y) {
+    // Lưu trữ vị trí bắt đầu và ID của khu vực
+    state = state.setIn(["scene", "drawingSupport", "areaID"], areaID);
+    state = state.setIn(["scene", "drawingSupport", "startX"], x);
+    state = state.setIn(["scene", "drawingSupport", "startY"], y);
+    return { updatedState: state };
+  }
+
+  static updateDraggingArea(state, x, y) {
+    const areaID = state.getIn(["scene", "drawingSupport", "areaID"]);
+    const startX = state.getIn(["scene", "drawingSupport", "startX"]);
+    const startY = state.getIn(["scene", "drawingSupport", "startY"]);
+    
+    if (areaID) {
+      // Tính toán độ dịch chuyển
+      const dx = x - startX;
+      const dy = y - startY;
+
+      // Cập nhật vị trí của các đỉnh (vertices) trong khu vực
+      state = state.updateIn(
+        ["scene", "layers", layerID, "areas", areaID, "vertices"],
+        (vertices) => vertices.map(vertexID => {
+          const vertex = state.getIn(["scene", "layers", layerID, "vertices", vertexID]);
+          return vertex.update("x", x => x + dx).update("y", y => y + dy);
+        })
+      );
+    }
+
+    return { updatedState: state };
+  }
+
+  static endDraggingArea(state) {
+    // Xóa thông tin kéo
+    state = state.deleteIn(["scene", "dragging"]);
+    
     return { updatedState: state };
   }
 }

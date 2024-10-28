@@ -68,6 +68,7 @@ const name = area.name
       data-id={area.id}
       data-selected={area.selected}
       data-layer={layer.id}
+      style={{cursor: "move"}}
     >
       {rendered}
       {renderedAreaSize}
