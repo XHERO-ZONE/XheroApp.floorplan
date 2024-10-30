@@ -38,7 +38,7 @@ const NotificationComponent = ({ type, message, description }) => {
   useEffect(() => {
     setTimeout(() => {
       setVisible(false);
-    }, 3000);
+    }, 1000);
     clearTimeout();
   }, []);
 
@@ -47,7 +47,7 @@ const NotificationComponent = ({ type, message, description }) => {
       className={className}
       style={{
         opacity: visible ? 1 : 0,
-        transition: "opacity 3s ease-out",
+        transition: "opacity 1s ease-out",
         backgroundImage: `url(${background})`,
       }}
     >

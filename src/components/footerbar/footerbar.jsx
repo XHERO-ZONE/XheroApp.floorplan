@@ -10,7 +10,7 @@ import {
   SNAP_GRID,
   SNAP_GUIDE,
 } from "../../utils/snap";
-import { MODE_SNAPPING } from "../../constants";
+import { MODE_IDLE, MODE_SNAPPING } from "../../constants";
 import * as SharedStyle from "../../shared-style";
 import { MdAddCircle, MdWarning } from "react-icons/md";
 import { VERSION } from "../../version";
@@ -113,8 +113,7 @@ class FooterBar extends Component {
           this.setState({ selected: area.selected });
         }
       });
-    }
-    else {
+    } else {
       this.setState({ selected: false });
     }
   }
@@ -134,7 +133,6 @@ class FooterBar extends Component {
 
   removeSeleced(state) {
     this.context.projectActions.remove(state);
-
   }
   handleDone() {
     this.context.projectActions.rollback(this.props.state);
@@ -184,7 +182,6 @@ class FooterBar extends Component {
     let iconLock = require("../../../public/images/iconLock.png");
     let iconDeleted = require("../../../public/images/iconDeleted.png");
     let iconDone = require("../../../public/images/iconDone.png");
-
     return (
       <div
         style={{
@@ -253,24 +250,32 @@ class FooterBar extends Component {
           <ToolbarSaveButton state={this.props.state} data={this.props.data} />
           <span style={textFooter}>Lưu</span>
         </div>
-        {this.state.selected === false && this.state.isSelectedAll === false ? (
-                  <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => this.context.projectActions.rollback(this.props.state)}
-                >
-                  <img src={iconDone} width={36} height={36} />
-                  <span style={textFooter}>Hoàn thành</span>
-                </div>
-        ) : (
-          <div style={{ display: "flex", gap: "15px" }}>
-            {/* <div
+
+        {this.state.selected === false &&
+          this.state.isSelectedAll === false &&
+          mode !== MODE_IDLE && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                this.context.projectActions.rollback(this.props.state)
+              }
+            >
+              <img src={iconDone} width={36} height={36} />
+              <span style={textFooter}>Hoàn thành</span>
+            </div>
+          )}
+
+        {this.state.selected ||
+          this.state.isSelectedAll &&(
+            <div style={{ display: "flex", gap: "15px" }}>
+              {/* <div
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -283,7 +288,7 @@ class FooterBar extends Component {
               <img src={iconTurn} width={36} height={36} />
               <span style={textFooter}>Lật</span>
             </div> */}
-            {/* <div
+              {/* <div
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -296,22 +301,22 @@ class FooterBar extends Component {
               <img src={iconLock} width={36} height={36} />
               <span style={textFooter}>Khóa</span>
             </div> */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-              onClick={() => this.removeSeleced(this.props.state)}
-            >
-              <img src={iconDeleted} width={36} height={36} />
-              <span style={textFooter}>Xóa</span>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => this.removeSeleced(this.props.state)}
+              >
+                <img src={iconDeleted} width={36} height={36} />
+                <span style={textFooter}>Xóa</span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import {
@@ -82,8 +82,6 @@ function mode2DetectAutopan(mode) {
   }
 }
 
-
-
 function extractElementData(node) {
   while (
     !node.attributes.getNamedItem("data-element-root") &&
@@ -121,10 +119,6 @@ export default function Viewer2D(
 
   let layerID = scene.selectedLayer;
 
-
-
-let areasID = scene.toJS().layers[layerID].selected.areas[0]
-  
   let mapCursorPosition = ({ x, y }) => {
     return { x, y: -y + scene.height };
   };
@@ -528,9 +522,7 @@ let areasID = scene.toJS().layers[layerID].selected.areas[0]
       case constants.MODE_WAITING_DRAWING_LINE:
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
         break;
-        // case constants.MODE_MOVE_DRAWING_AREA:
-        //   areaActions.beginDraggingArea(layerID, x, y, state.snapMask);
-        //   break;
+
       case constants.MODE_DRAWING_LINE:
         linesActions.endDrawingLine(x, y, state.snapMask);
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
@@ -637,6 +629,7 @@ let areasID = scene.toJS().layers[layerID].selected.areas[0]
   };
 
   let { e, f, SVGWidth, SVGHeight } = state.get("viewer2D").toJS();
+
   let rulerSize = 15; //px
   let rulerUnitPixelSize = 100;
   let rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
@@ -714,7 +707,7 @@ let areasID = scene.toJS().layers[layerID].selected.areas[0]
       <ReactSVGPanZoom
         onTouchStart={onMouseDown}
         onTouchMove={onMouseMove}
-        onTouchEnd={onMouseUp}
+        onTouchEnd={mode === "MODE_IDLE" && onTouchEnd}
         style={{ gridColumn: 2, gridRow: 2 }}
         width={width - rulerSize}
         height={height - rulerSize}
