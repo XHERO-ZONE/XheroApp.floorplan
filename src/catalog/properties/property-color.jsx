@@ -17,12 +17,12 @@ export default function PropertyColor({value, onUpdate, configs, sourceElement, 
   };
 
   return (
-    <table className="PropertyColor" style={PropertyStyle.tableStyle}>
+    <table className="PropertyColor" style={{...PropertyStyle.tableStyle, height: 0, width: "auto", marginBottom: 0}}>
       <tbody>
       <tr>
-        <td style={PropertyStyle.firstTdStyle}>
+        {/* <td style={PropertyStyle.firstTdStyle}>
           <FormLabel>{configs.label}</FormLabel>
-        </td>
+        </td> */}
         <td>
           <FormColorInput value={value} onChange={event => update(event.target.value)}/>
         </td>

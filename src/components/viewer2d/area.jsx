@@ -5,11 +5,9 @@ import areapolygon from 'area-polygon';
 
 const STYLE_TEXT = {
   textAnchor: 'middle',
-  fontSize: '12px',
-  fontFamily: '"Courier New", Courier, monospace',
-  pointerEvents: 'none',
+  fontSize: '20px',
   fontWeight: 'bold',
-
+  fontFamily: "Playpen Sans",
   //http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css
   WebkitTouchCallout: 'none', /* iOS Safari */
   WebkitUserSelect: 'none', /* Chrome/Safari/Opera */
@@ -25,7 +23,7 @@ const name = area.name
 
   let renderedAreaSize = null;
 
-  if (area.selected) {
+
     let polygon = area.vertices.toArray().map(vertexID => {
       let {x, y} = layer.vertices.get(vertexID);
       return [x, y];
@@ -61,7 +59,7 @@ const name = area.name
         {(areaSize / 10000).toFixed(2)} m{String.fromCharCode(0xb2)}
       </text>
     )
-  }
+  
 
   return (
     <g
@@ -70,6 +68,7 @@ const name = area.name
       data-id={area.id}
       data-selected={area.selected}
       data-layer={layer.id}
+      style={{cursor: "move"}}
     >
       {rendered}
       {renderedAreaSize}

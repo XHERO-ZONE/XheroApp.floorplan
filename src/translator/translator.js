@@ -3,7 +3,7 @@ import IT from './it'
 import RU from './ru'
 import VN from './vn'
 
-const DEFAULT_LOCALE = 'en'
+const DEFAULT_LOCALE = 'vi' // Set default locale to Vietnamese
 
 export default class Translator {
   constructor() {
@@ -15,18 +15,8 @@ export default class Translator {
     this.registerTranslation('ru', RU)
     this.registerTranslation('vi', VN)
 
-    let locale = null
-    let languages = Translator.getBrowserLanguages()
-    for (let i = 0; i < languages.length; i++) {
-      let lang = languages[i]
-      if (this.translations.hasOwnProperty(lang)) {
-        locale = lang
-        break
-      }
-    }
-    locale = locale ? locale : DEFAULT_LOCALE
-
-    this.setLocale(locale)
+    // Always set the locale to Vietnamese
+    this.setLocale(DEFAULT_LOCALE)
   }
 
   t(phrase, ...params) {

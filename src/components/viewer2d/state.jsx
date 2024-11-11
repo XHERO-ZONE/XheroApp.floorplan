@@ -14,6 +14,7 @@ export default function State({state, catalog}) {
   let {activeSnapElement, snapElements, scene} = state;
   let {width, height} = scene;
 
+
   activeSnapElement = activeSnapElement ?
     <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
 // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
@@ -23,7 +24,7 @@ export default function State({state, catalog}) {
       <rect x="0" y="0" width={width} height={height} fill={SharedStyle.COLORS.white}/>
       <g transform={`translate(0, ${scene.height}) scale(1, -1)`} id="svg-drawing-paper">
 
-        <Scene scene={scene} catalog={catalog}/>
+        <Scene state={state} scene={scene} catalog={catalog}/>
         {scene.getIn(['guides','horizontal']).entrySeq().map( ([ hgKey, hgVal ]) => <line id={'hGuide' + hgKey} key={hgKey} x1={0} y1={hgVal} x2={width} y2={hgVal} style={guideStyle}/> )}
         {scene.getIn(['guides','vertical']).entrySeq().map( ([ vgKey, vgVal ]) => <line key={vgKey} x1={vgVal} y1={0} x2={vgVal} y2={height} style={guideStyle}/> )}
         {activeSnapElement}

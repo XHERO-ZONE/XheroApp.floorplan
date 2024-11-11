@@ -4,3 +4,8 @@ node_modules
 dist/*
 !dist/index.html
 .vscode
+.env
+.yarn.lock
+.package-lock.json
+/es
+/lib

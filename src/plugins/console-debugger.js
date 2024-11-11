@@ -27,11 +27,5 @@ export default function consoleDebugger() {
         setTimeout(dispatchAction, 0);
       }
     };
-
-    console.groupCollapsed("ReactPlanner");
-    console.info("ReactPlanner is ready");
-    console.info("console.log(ReactPlanner)");
-    console.log(window.ReactPlanner);
-    console.groupEnd();
   }
 }

@@ -1,7 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
-
+const dotenv = require('dotenv').config({ path: './.env' });
 const PAGE_TITLE = 'Xhero';
 const VENDORS_LIBRARIES = ['immutable', 'react', 'react-dom', 'react-redux', 'redux', 'three'];
 
@@ -80,7 +80,10 @@ module.exports = (env, self) => {
         filename: 'index.html',
         inject: 'body',
         production: isProduction
-      })
+      }),
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify(dotenv.parsed),
+      }),
     ],
     optimization: {
       minimize: isProduction,

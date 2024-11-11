@@ -1,0 +1,22 @@
+.custom-antd-modal {
+  .ant-modal-content {
+    background: none;
+    box-shadow: none;
+    border-radius: 0px;
+    width: 100%;
+    height: 100%;
+  }
+  .ant-modal-close {
+    display: none;
+  }
+}
+.modal-title {
+  background: linear-gradient(180deg, #5c3d2b 0%, #331f15 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Playpen Sans";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  text-align: center;
+}

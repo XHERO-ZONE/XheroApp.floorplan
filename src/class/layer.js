@@ -34,7 +34,6 @@ class Layer{
   static selectElement( state, layerID, elementPrototype, elementID ){
     state = state.setIn(['scene', 'layers', layerID, elementPrototype, elementID, 'selected'], true);
     state = state.updateIn(['scene', 'layers', layerID, 'selected', elementPrototype], elems => elems.push(elementID));
-
     return { updatedState: state };
   }
 

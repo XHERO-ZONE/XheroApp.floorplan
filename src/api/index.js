@@ -1,5 +1,5 @@
-import UserService from "./users";
-
-export {
-    UserService
+const API = {
+    postDrawings: "/FengShui/drawings",
+    getMe: "/me"
 }
+export default API

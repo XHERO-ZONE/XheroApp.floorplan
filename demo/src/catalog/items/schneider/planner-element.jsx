@@ -265,7 +265,7 @@ export default {
     return (
       <g transform={`translate(${-width / 2},${-depth / 2})`}>
         <rect key="1" x="0" y="0" width={width} height={depth}
-              style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: fillValue}}/>
+              style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: fillalue}}/>
         <text key="2" x="0" y="0"
               transform={`translate(${width / 2}, ${depth / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>

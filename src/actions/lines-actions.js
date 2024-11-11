@@ -6,7 +6,10 @@ import {
   END_DRAWING_LINE,
   BEGIN_DRAGGING_LINE,
   UPDATE_DRAGGING_LINE,
-  END_DRAGGING_LINE
+  END_DRAGGING_LINE,
+  SELECT_TOOL_DRAWING_TEXTURE,
+  UNSELECT_LINE,
+  SELECT_LINE_TO_MOVE
 } from '../constants';
 
 export function selectLine(layerID, lineID) {
@@ -17,9 +20,31 @@ export function selectLine(layerID, lineID) {
   }
 }
 
+export function selectLineToMove(layerID, lineID) {
+  return {
+    type: SELECT_LINE_TO_MOVE,
+    layerID,
+    lineID
+  }
+}
+
+export function unSelectLine(layerID, lineID) {
+  return {
+    type: UNSELECT_LINE,
+    layerID,
+    lineID
+  }
+}
+
 export function selectToolDrawingLine(sceneComponentType) {
   return {
     type: SELECT_TOOL_DRAWING_LINE,
+    sceneComponentType
+  }
+}
+export function selectToolDrawingTexture(sceneComponentType) {
+  return {
+    type: SELECT_TOOL_DRAWING_TEXTURE,
     sceneComponentType
   }
 }
@@ -65,3 +90,4 @@ export function endDraggingLine(x, y, snapMask) {
     x, y, snapMask
   }
 }
+

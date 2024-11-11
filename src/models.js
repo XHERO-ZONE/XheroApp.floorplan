@@ -205,10 +205,10 @@ export class Scene extends Record({
   grids: new Map(),
   selectedLayer: null,
   groups: new Map(),
-  width: 3000,
-  height: 2000,
+  width: 8000,
+  height: 8000,
   meta: new Map(),   //additional info
-  guides: new Map()
+  guides: new Map(),
 }, 'Scene') {
   constructor(json = {}) {
     let layers = safeLoadMapList(json.layers, Layer, DefaultLayers);
@@ -261,11 +261,11 @@ export class Catalog extends Record({
 
     let element = this.elements.get(type);
     let properties = element.properties.map((value, key) => initialProperties && initialProperties.has(key) ? initialProperties.get(key) : value.get('defaultValue'));
-
     switch (element.prototype) {
       case 'lines':
         return new Line(options).merge({properties});
-
+        case 'texture':
+          return new Line(options).merge({properties});
       case 'holes':
         return new Hole(options).merge({properties});
 
@@ -314,7 +314,9 @@ export class State extends Record({
   clipboardProperties: new Map(),
   selectedElementsHistory: new List(),
   misc: new Map(),   //additional info
-  alterate: false
+  alterate: false,
+  currentFloor:  0,
+  arrFloor: new Map({0: "Tầng trệt"})
 }, 'State') {
   constructor(json = {}) {
     super({

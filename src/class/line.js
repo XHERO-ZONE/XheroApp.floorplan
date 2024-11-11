@@ -16,13 +16,13 @@ import {
   MODE_IDLE,
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
-  MODE_DRAGGING_LINE
+  MODE_DRAGGING_LINE,
+  MODE_WAITING_DRAWING_TEXTURE
 } from '../constants';
 
 class Line{
 
   static create( state, layerID, type, x0, y0, x1, y1, properties ) {
-
     let lineID = IDBroker.acquireID();
 
     let { updatedState: stateV0, vertex: v0 } = Vertex.add( state  , layerID, x0, y0, 'lines', lineID );
@@ -42,16 +42,27 @@ class Line{
   }
 
   static select( state, layerID, lineID ){
+    localStorage.removeItem("lineToMove")
     state = Layer.select( state, layerID ).updatedState;
-
     let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
-
     state = Layer.selectElement( state, layerID, 'lines', lineID ).updatedState;
     state = Layer.selectElement( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
     state = Layer.selectElement( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
 
     return {updatedState: state};
   }
+
+  static selectToMove( state, layerID, lineID ){
+    localStorage.setItem("lineToMove", lineID )
+    state = Layer.select( state, layerID ).updatedState;
+    let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
+    state = Layer.selectElement( state, layerID, 'lines', lineID ).updatedState;
+    state = Layer.selectElement( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
+    state = Layer.selectElement( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
+
+    return {updatedState: state};
+  }
+
 
   static remove( state, layerID, lineID ) {
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
@@ -71,7 +82,6 @@ class Line{
 
   static unselect( state, layerID, lineID ) {
     let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
-
     if( line ) {
       state = Layer.unselect( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
       state = Layer.unselect( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
@@ -239,9 +249,19 @@ class Line{
         type: sceneComponentType
       })
     });
-
     return { updatedState: state };
   }
+
+  static selectToolDrawingTexture(state, sceneComponentType) {
+    state = state.merge({
+      mode: MODE_WAITING_DRAWING_TEXTURE,
+      drawingSupport: new Map({
+        type: sceneComponentType
+      })
+    });
+    return { updatedState: state };
+  }
+
 
   static beginDrawingLine(state, layerID, x, y) {
     let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
