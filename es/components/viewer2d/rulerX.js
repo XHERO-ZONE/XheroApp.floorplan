@@ -26,7 +26,6 @@ var RulerX = function (_Component) {
     value: function render() {
 
       var elementW = this.props.unitPixelSize * this.props.zoom;
-
       var elementStyle = {
         display: 'inline-block',
         width: elementW,
@@ -86,7 +85,6 @@ var RulerX = function (_Component) {
       });
 
       var positiveDomElements = [];
-
       if (elementW <= 200) {
         for (var x = 0; x < this.props.positiveUnitsNumber; x++) {
           positiveDomElements.push(React.createElement(

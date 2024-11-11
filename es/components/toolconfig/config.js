@@ -25,6 +25,9 @@ import { Seq } from "immutable";
 import Panel from "../sidebar/panel";
 import ElementEditor from "../sidebar/panel-element-editor/element-editor";
 import Sidebar from "../sidebar/sidebar";
+import { Layer, Line } from "../../class/export";
+import { linesActions } from "../../actions/export";
+import PropTypes from "prop-types";
 var bgToolBar = require("../../../public/images/newBg.png");
 var iconConfig = require("../../../public/images/icon-config.png");
 var bgButton = require("../../../public/images/bgButton.png");
@@ -157,10 +160,10 @@ var TextDisabled = {
 var ToolbarConfig = function (_Component) {
   _inherits(ToolbarConfig, _Component);
 
-  function ToolbarConfig(props) {
+  function ToolbarConfig(props, context) {
     _classCallCheck(this, ToolbarConfig);
 
-    var _this = _possibleConstructorReturn(this, (ToolbarConfig.__proto__ || Object.getPrototypeOf(ToolbarConfig)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (ToolbarConfig.__proto__ || Object.getPrototypeOf(ToolbarConfig)).call(this, props, context));
 
     _this.state = {
       openConfig: false,
@@ -179,6 +182,7 @@ var ToolbarConfig = function (_Component) {
     _this.onChangeColor = _this.onChangeColor.bind(_this);
     _this.handleOpenChangeColor = _this.handleOpenChangeColor.bind(_this);
     _this.handleOpenConfig = _this.handleOpenConfig.bind(_this);
+    _this.handleCloseConfig = _this.handleCloseConfig.bind(_this);
     return _this;
   }
 
@@ -210,7 +214,16 @@ var ToolbarConfig = function (_Component) {
   }, {
     key: "handleOpenConfig",
     value: function handleOpenConfig() {
-      this.setState({ openConfig: !this.state.openConfig });
+      this.setState({ openConfig: true });
+    }
+  }, {
+    key: "handleCloseConfig",
+    value: function handleCloseConfig() {
+      var selectedLayer = this.props.state.getIn(["scene", "selectedLayer"]);
+
+      var selected = this.props.state.getIn(["scene", "layers", selectedLayer, "selected"]);
+      this.setState({ openConfig: false });
+      return this.context.linesActions.unSelectLine(selectedLayer, selected.toJS().lines[0]);
     }
   }, {
     key: "componentDidUpdate",
@@ -219,6 +232,7 @@ var ToolbarConfig = function (_Component) {
       var layers = scene.layers;
 
       var selectedLayer = layers.get(scene.selectedLayer).toJS();
+      var isMove = localStorage.getItem("lineToMove");
       // Kiểm tra thay đổi trong props
       if (layers !== prevProps.state.scene.layers || scene.selectedLayer !== prevProps.state.scene.selectedLayer) {
         this.calculateAcreage(layers, scene);
@@ -227,6 +241,12 @@ var ToolbarConfig = function (_Component) {
       // Kiểm tra sự thay đổi trong state
       if (this.props.state !== prevProps.state && selectedLayer.selected.length > 0) {
         this.calculateAcreage(layers, scene);
+      }
+      if (this.props.state !== prevProps.state && selectedLayer.selected.lines.length > 0 && !isMove) {
+        this.setState({ openConfig: true });
+        return;
+      } else if (this.props.state !== prevProps.state && selectedLayer.selected.lines.length === 0) {
+        this.setState({ openConfig: false });
       }
     }
   }, {
@@ -317,7 +337,6 @@ var ToolbarConfig = function (_Component) {
           })
         );
       };
-
       var layerRenderer = function layerRenderer(layer) {
         return Seq().concat(layer.areas).filter(function (element) {
           return element.selected;
@@ -455,7 +474,7 @@ var ToolbarConfig = function (_Component) {
                   { style: TextConfig },
                   "C\u1EA5u h\xECnh"
                 ),
-                React.createElement(CloseOutlined, { onClick: this.handleOpenConfig })
+                React.createElement(CloseOutlined, { onClick: this.handleCloseConfig })
               ),
               React.createElement(
                 "div",
@@ -567,7 +586,7 @@ var ToolbarConfig = function (_Component) {
                         })
                       )
                     ),
-                    state.showAcreage && React.createElement(
+                    state.showAcreage && selectedArea && React.createElement(
                       "div",
                       null,
                       React.createElement(
@@ -611,7 +630,7 @@ var ToolbarConfig = function (_Component) {
                           "Hi\u1EC3n th\u1ECB t\xEAn"
                         )
                       ),
-                      React.createElement(
+                      selectedArea && React.createElement(
                         "div",
                         {
                           className: state.showAcreage ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox" : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
@@ -659,3 +678,7 @@ var ToolbarConfig = function (_Component) {
 }(Component);
 
 export default ToolbarConfig;
+
+ToolbarConfig.contextTypes = {
+  linesActions: PropTypes.object.isRequired
+};

@@ -52,60 +52,15 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
   };
 
   return React.createElement(
-    "table",
-    { className: "PropertyLengthMeasure", style: PropertyStyle.tableStyle },
-    React.createElement(
-      "tbody",
-      null,
-      React.createElement(
-        "tr",
-        null,
-        React.createElement(
-          "td",
-          { style: TextDefault },
-          React.createElement(
-            FormLabel,
-            null,
-            label
-          )
-        )
-      ),
-      React.createElement(
-        "tr",
-        null,
-        React.createElement(
-          "td",
-          { style: secondTdStyle },
-          React.createElement(
-            "table",
-            { style: internalTableStyle },
-            React.createElement(
-              "tbody",
-              null,
-              React.createElement(
-                "tr",
-                null,
-                React.createElement(
-                  "td",
-                  null,
-                  React.createElement(
-                    "div",
-                    { style: InputWrapper },
-                    React.createElement(FormNumberInput, _extends({
-                      value: (Number(_length) / 100).toFixed(0),
-                      onChange: function onChange(event) {
-                        return update(event.target.value, _unit);
-                      },
-                      onValid: onValid
-                    }, configRest))
-                  )
-                )
-              )
-            )
-          )
-        )
-      )
-    )
+    "div",
+    { style: InputWrapper },
+    React.createElement(FormNumberInput, _extends({
+      value: (Number(_length) / 100).toFixed(0),
+      onChange: function onChange(event) {
+        return update(event.target.value, _unit);
+      },
+      onValid: onValid
+    }, configRest))
   );
 }
 

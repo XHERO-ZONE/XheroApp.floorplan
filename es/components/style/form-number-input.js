@@ -104,10 +104,14 @@ var FormNumberInput = function (_Component) {
           onChange({ target: { value: savedValue } });
         }
       };
-
+      var removeSeleced = function removeSeleced() {
+        _this2.context.projectActions.remove(_this2.props.state);
+      };
       return React.createElement(
         "div",
-        { style: { position: "relative", width: "100%", height: "100%" } },
+        {
+          style: { position: "relative", width: "100%", height: "100%", left: 0 }
+        },
         React.createElement("input", {
           type: "text",
           value: currValue,
@@ -142,21 +146,62 @@ var FormNumberInput = function (_Component) {
           "div",
           {
             style: {
-              backgroundImage: "url(" + bgButton + ")",
-              padding: "6px 20px",
-              backgroundSize: "100% 100%",
-              backgroundRepeat: "no-repeat",
-              whiteSpace: "nowrap",
-              cursor: "pointer",
-              marginTop: "40px"
+              width: "100%",
+              height: "30px",
+              display: "flex",
+              marginTop: "40px",
+              justifyContent: "space-between"
+              // flexDirection: "column",
+              // alignItems: "flex-end"
             }
           },
           React.createElement(
-            "span",
-            { onClick: function onClick(e) {
-                return saveFn(e);
-              }, style: TextFloor },
-            "X\xE1c nh\u1EADn"
+            "div",
+            {
+              style: {
+                backgroundImage: "url(" + bgButton + ")",
+                backgroundSize: "100% 100%",
+                backgroundRepeat: "no-repeat",
+                whiteSpace: "nowrap",
+                cursor: "pointer",
+                padding: "10px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "45%"
+              }
+            },
+            React.createElement(
+              "span",
+              { onClick: function onClick() {
+                  return removeSeleced();
+                }, style: TextFloor },
+              "X\xF3a"
+            )
+          ),
+          React.createElement(
+            "div",
+            {
+              style: {
+                backgroundImage: "url(" + bgButton + ")",
+                backgroundSize: "100% 100%",
+                backgroundRepeat: "no-repeat",
+                whiteSpace: "nowrap",
+                cursor: "pointer",
+                padding: "10px",
+                width: "45%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }
+            },
+            React.createElement(
+              "span",
+              { onClick: function onClick(e) {
+                  return saveFn(e);
+                }, style: TextFloor },
+              "X\xE1c nh\u1EADn"
+            )
           )
         )
       );
@@ -182,7 +227,8 @@ FormNumberInput.propTypes = {
 };
 
 FormNumberInput.contextTypes = {
-  translator: PropTypes.object.isRequired
+  translator: PropTypes.object.isRequired,
+  projectActions: PropTypes.object.isRequired
 };
 
 FormNumberInput.defaultProps = {

@@ -1,44 +1,69 @@
-import { CheckOutlined, SmileOutlined, StopOutlined } from '@ant-design/icons';
-import React, { useEffect, useMemo } from 'react';
-import './style.css';
-var Notification = function Notification(type, description) {
-  if (type === 'success') {
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-    return {
-      duration: 50000,
-      message: "Success",
-      description: description,
-      icon: React.createElement(CheckOutlined, {
-        style: {
-          color: '#00CC00'
-        }
-      }),
-      className: 'custom-notification-success'
+import React, { useEffect } from "react";
+import { CheckOutlined, StopOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import "./style.css"; // Đảm bảo bạn đã nhập tệp CSS
+var bgSuccess = require("../../../public/images/Success.png");
+var bgEror = require("../../../public/images/Error.png");
+var bgInfo = require("../../../public/images/Info.png");
 
-    };
-  }if (type === 'error') {
-    return {
-      message: "Error",
-      description: description,
-      icon: React.createElement(StopOutlined, {
-        style: {
-          color: '#FF3333'
-        }
-      }),
-      className: 'custom-notification-error'
+var NotificationComponent = function NotificationComponent(_ref) {
+  var type = _ref.type,
+      message = _ref.message,
+      description = _ref.description;
 
-    };
-  }if (type === 'info') {
-    return {
-      message: "Info",
-      description: description,
-      icon: React.createElement(StopOutlined, {
-        style: {
-          color: '#0099FF'
-        }
-      }),
-      className: 'custom-notification-info'
-    };
+  var icon = void 0;
+  var background = void 0;
+  var className = "custom-notification";
+
+  var _React$useState = React.useState(true),
+      _React$useState2 = _slicedToArray(_React$useState, 2),
+      visible = _React$useState2[0],
+      setVisible = _React$useState2[1];
+
+  switch (type) {
+    case "success":
+      icon = React.createElement(CheckOutlined, { style: { color: "#00CC00" } });
+      className += " custom-notification-success";
+      background = bgSuccess;
+
+      break;
+    case "error":
+      icon = React.createElement(StopOutlined, { style: { color: "#FF3333" } });
+      className += " custom-notification-error";
+      background = bgEror;
+      break;
+    case "info":
+      icon = React.createElement(InfoCircleOutlined, { style: { color: "#0099FF" } });
+      className += " custom-notification-info";
+      background = bgInfo;
+      break;
+    default:
+      icon = null;
   }
+  useEffect(function () {
+    setTimeout(function () {
+      setVisible(false);
+    }, 1000);
+    clearTimeout();
+  }, []);
+
+  return React.createElement(
+    "div",
+    {
+      className: className,
+      style: {
+        opacity: visible ? 1 : 0,
+        transition: "opacity 1s ease-out",
+        backgroundImage: "url(" + background + ")"
+      }
+    },
+    React.createElement(
+      "p",
+      null,
+      description
+    )
+  );
 };
-export default Notification;
+
+export default NotificationComponent;

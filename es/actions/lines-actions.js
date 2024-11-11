@@ -1,8 +1,24 @@
-import { SELECT_LINE, SELECT_TOOL_DRAWING_LINE, BEGIN_DRAWING_LINE, UPDATE_DRAWING_LINE, END_DRAWING_LINE, BEGIN_DRAGGING_LINE, UPDATE_DRAGGING_LINE, END_DRAGGING_LINE, SELECT_TOOL_DRAWING_TEXTURE } from '../constants';
+import { SELECT_LINE, SELECT_TOOL_DRAWING_LINE, BEGIN_DRAWING_LINE, UPDATE_DRAWING_LINE, END_DRAWING_LINE, BEGIN_DRAGGING_LINE, UPDATE_DRAGGING_LINE, END_DRAGGING_LINE, SELECT_TOOL_DRAWING_TEXTURE, UNSELECT_LINE, SELECT_LINE_TO_MOVE } from '../constants';
 
 export function selectLine(layerID, lineID) {
   return {
     type: SELECT_LINE,
+    layerID: layerID,
+    lineID: lineID
+  };
+}
+
+export function selectLineToMove(layerID, lineID) {
+  return {
+    type: SELECT_LINE_TO_MOVE,
+    layerID: layerID,
+    lineID: lineID
+  };
+}
+
+export function unSelectLine(layerID, lineID) {
+  return {
+    type: UNSELECT_LINE,
     layerID: layerID,
     lineID: lineID
   };

@@ -14,7 +14,7 @@ import If from "../../utils/react-if";
 import FooterToggleButton from "./footer-toggle-button";
 import FooterContentButton from "./footer-content-button";
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from "../../utils/snap";
-import { MODE_SNAPPING } from "../../constants";
+import { MODE_IDLE, MODE_SNAPPING } from "../../constants";
 import * as SharedStyle from "../../shared-style";
 import { MdAddCircle, MdWarning } from "react-icons/md";
 import { VERSION } from "../../version";
@@ -214,7 +214,6 @@ var FooterBar = function (_Component) {
       var iconLock = require("../../../public/images/iconLock.png");
       var iconDeleted = require("../../../public/images/iconDeleted.png");
       var iconDone = require("../../../public/images/iconDone.png");
-
       return React.createElement(
         "div",
         {
@@ -308,7 +307,7 @@ var FooterBar = function (_Component) {
             "L\u01B0u"
           )
         ),
-        this.state.selected === false && this.state.isSelectedAll === false ? React.createElement(
+        this.state.selected === false && mode !== MODE_IDLE && React.createElement(
           "div",
           {
             style: {
@@ -329,7 +328,8 @@ var FooterBar = function (_Component) {
             { style: textFooter },
             "Ho\xE0n th\xE0nh"
           )
-        ) : React.createElement(
+        ),
+        this.state.selected && mode === MODE_IDLE || this.state.isSelectedAll && mode === MODE_IDLE && React.createElement(
           "div",
           { style: { display: "flex", gap: "15px" } },
           React.createElement(

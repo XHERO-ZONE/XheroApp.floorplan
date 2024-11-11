@@ -31,7 +31,8 @@ var Scene = function (_Component) {
     value: function render() {
       var _props = this.props,
           scene = _props.scene,
-          catalog = _props.catalog;
+          catalog = _props.catalog,
+          state = _props.state;
       var height = scene.height,
           layers = scene.layers;
 
@@ -55,10 +56,10 @@ var Scene = function (_Component) {
                 layerID = _ref4[0],
                 layer = _ref4[1];
 
-            return React.createElement(Layer, { key: layerID, layer: layer, scene: scene, catalog: catalog });
+            return React.createElement(Layer, { state: state, key: layerID, layer: layer, scene: scene, catalog: catalog });
           })
         ),
-        React.createElement(Layer, { key: selectedLayer.id, layer: selectedLayer, scene: scene, catalog: catalog })
+        React.createElement(Layer, { state: state, key: selectedLayer.id, layer: selectedLayer, scene: scene, catalog: catalog })
       );
     }
   }]);

@@ -43,9 +43,21 @@ var Line = function () {
   }, {
     key: 'select',
     value: function select(state, layerID, lineID) {
+      localStorage.removeItem("lineToMove");
       state = Layer.select(state, layerID).updatedState;
       var line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
+      state = Layer.selectElement(state, layerID, 'lines', lineID).updatedState;
+      state = Layer.selectElement(state, layerID, 'vertices', line.vertices.get(0)).updatedState;
+      state = Layer.selectElement(state, layerID, 'vertices', line.vertices.get(1)).updatedState;
 
+      return { updatedState: state };
+    }
+  }, {
+    key: 'selectToMove',
+    value: function selectToMove(state, layerID, lineID) {
+      localStorage.setItem("lineToMove", lineID);
+      state = Layer.select(state, layerID).updatedState;
+      var line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
       state = Layer.selectElement(state, layerID, 'lines', lineID).updatedState;
       state = Layer.selectElement(state, layerID, 'vertices', line.vertices.get(0)).updatedState;
       state = Layer.selectElement(state, layerID, 'vertices', line.vertices.get(1)).updatedState;
@@ -79,7 +91,6 @@ var Line = function () {
     key: 'unselect',
     value: function unselect(state, layerID, lineID) {
       var line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
-
       if (line) {
         state = Layer.unselect(state, layerID, 'vertices', line.vertices.get(0)).updatedState;
         state = Layer.unselect(state, layerID, 'vertices', line.vertices.get(1)).updatedState;

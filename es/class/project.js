@@ -9,7 +9,7 @@ import { history } from "../utils/export";
 import { Layer, Group, Line, Hole, Item, HorizontalGuide, VerticalGuide, Area } from "../class/export";
 
 var defaultDrawing = {
-  unit: "m",
+  unit: "cm",
   layers: {
     "layer-1": {
       id: "layer-1",
@@ -280,7 +280,6 @@ var Project = function () {
     key: "updateMouseCoord",
     value: function updateMouseCoord(state, coords) {
       state = state.set("mouse", new Map(coords));
-
       return { updatedState: state };
     }
   }, {
@@ -390,6 +389,7 @@ var Project = function () {
   }, {
     key: "addCircularGuide",
     value: function addCircularGuide(state, x, y, radius) {
+
       return { updatedState: state };
     }
   }, {
@@ -409,7 +409,6 @@ var Project = function () {
   }, {
     key: "removeCircularGuide",
     value: function removeCircularGuide(state, guideID) {
-      console.log("removeing horizontal guide ", guideID);
 
       return { updatedState: state };
     }

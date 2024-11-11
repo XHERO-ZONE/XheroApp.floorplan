@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Line, Area, Vertex, Item, Group } from './export';
 
 export default function Layer(_ref) {
-  var layer = _ref.layer,
+  var state = _ref.state,
+      layer = _ref.layer,
       scene = _ref.scene,
       catalog = _ref.catalog;
   var unit = scene.unit,
@@ -28,10 +29,10 @@ export default function Layer(_ref) {
     items.valueSeq().map(function (item) {
       return React.createElement(Item, { key: item.id, layer: layer, item: item, scene: scene, catalog: catalog });
     }),
-    vertices.valueSeq().filter(function (v) {
-      return v.selected;
-    }).map(function (vertex) {
-      return React.createElement(Vertex, { key: vertex.id, layer: layer, vertex: vertex });
+    vertices.valueSeq()
+    // .filter(v => v.selected)
+    .map(function (vertex) {
+      return React.createElement(Vertex, { state: state, key: vertex.id, layer: layer, vertex: vertex });
     }),
     groups.valueSeq().filter(function (g) {
       return g.hasIn(['elements', layerID]) && g.get('selected');

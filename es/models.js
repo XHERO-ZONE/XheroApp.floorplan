@@ -283,7 +283,7 @@ export var Scene = function (_Record10) {
 
   return Scene;
 }(Record({
-  unit: 'm',
+  unit: 'cm',
   layers: new Map(),
   grids: new Map(),
   selectedLayer: null,
