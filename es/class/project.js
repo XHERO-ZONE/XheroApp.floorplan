@@ -390,8 +390,6 @@ var Project = function () {
   }, {
     key: "addCircularGuide",
     value: function addCircularGuide(state, x, y, radius) {
-      console.log("adding horizontal guide at", x, y, radius);
-
       return { updatedState: state };
     }
   }, {

@@ -11,6 +11,9 @@ import { Seq } from "immutable";
 import Panel from "../sidebar/panel";
 import ElementEditor from "../sidebar/panel-element-editor/element-editor";
 import Sidebar from "../sidebar/sidebar";
+import { Layer, Line } from "../../class/export";
+import { linesActions } from "../../actions/export";
+import PropTypes from "prop-types";
 let bgToolBar = require("../../../public/images/newBg.png");
 let iconConfig = require("../../../public/images/icon-config.png");
 let bgButton = require("../../../public/images/bgButton.png");
@@ -146,8 +149,9 @@ const TextDisabled = {
 };
 
 export default class ToolbarConfig extends Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
+
     this.state = {
       openConfig: false,
       showName: false,
@@ -165,6 +169,7 @@ export default class ToolbarConfig extends Component {
     this.onChangeColor = this.onChangeColor.bind(this);
     this.handleOpenChangeColor = this.handleOpenChangeColor.bind(this);
     this.handleOpenConfig = this.handleOpenConfig.bind(this);
+    this.handleCloseConfig = this.handleCloseConfig.bind(this);
   }
   onChangeShowName() {
     this.setState({ showName: !this.state.showName });
@@ -182,12 +187,28 @@ export default class ToolbarConfig extends Component {
     this.setState({ openHexColor: !this.state.openHexColor });
   }
   handleOpenConfig() {
-    this.setState({ openConfig: !this.state.openConfig });
+    this.setState({ openConfig: true });
+  }
+  handleCloseConfig() {
+    let selectedLayer = this.props.state.getIn(["scene", "selectedLayer"]);
+
+    let selected = this.props.state.getIn([
+      "scene",
+      "layers",
+      selectedLayer,
+      "selected",
+    ]);
+    this.setState({ openConfig: false });
+    return this.context.linesActions.unSelectLine(
+      selectedLayer,
+      selected.toJS().lines[0]
+    );
   }
   componentDidUpdate(prevProps, prevState) {
     const { scene } = this.props.state;
     const { layers } = scene;
     let selectedLayer = layers.get(scene.selectedLayer).toJS();
+    let isMove = localStorage.getItem("lineToMove");
     // Kiểm tra thay đổi trong props
     if (
       layers !== prevProps.state.scene.layers ||
@@ -203,10 +224,23 @@ export default class ToolbarConfig extends Component {
     ) {
       this.calculateAcreage(layers, scene);
     }
+    if (
+      this.props.state !== prevProps.state &&
+      selectedLayer.selected.lines.length > 0 &&
+      !isMove
+    ) {
+      this.setState({ openConfig: true });
+      return;
+    } else if (
+      this.props.state !== prevProps.state &&
+      selectedLayer.selected.lines.length === 0
+    ) {
+      this.setState({ openConfig: false });
+    }
   }
   calculateAcreage(layers, scene) {
     let selectedLayer = layers.get(scene.selectedLayer).toJS();
-    this.setState({areaSelected: selectedLayer.selected.areas.length > 0})
+    this.setState({ areaSelected: selectedLayer.selected.areas.length > 0 });
     if (selectedLayer.selected.areas.length > 0) {
       const id = selectedLayer.selected.areas[0];
       const area = selectedLayer.areas[id];
@@ -216,11 +250,12 @@ export default class ToolbarConfig extends Component {
       });
       let polygonWithHoles = polygon;
       area.holes.forEach((holeID) => {
-        let polygonHole = selectedLayer.areas[id].holes[holeID]
-          .map((vertexID) => {
+        let polygonHole = selectedLayer.areas[id].holes[holeID].map(
+          (vertexID) => {
             let { x, y } = selectedLayer.vertices.get(vertexID);
             return [x, y];
-          });
+          }
+        );
         polygonWithHoles = polygonWithHoles.concat(polygonHole.reverse());
       });
       let areaSize = areaPolygon(polygon, false);
@@ -234,12 +269,11 @@ export default class ToolbarConfig extends Component {
         areaSize -= areaPolygon(holePolygon, false);
       });
       const newAcreage = (areaSize / 10000).toFixed(2);
-          if (this.state.acreage !== newAcreage) {
-            this.setState({ acreage: newAcreage });
-          }
-    }
-        else {
-      this.setState({areaSelected: null})
+      if (this.state.acreage !== newAcreage) {
+        this.setState({ acreage: newAcreage });
+      }
+    } else {
+      this.setState({ areaSelected: null });
     }
   }
 
@@ -288,7 +322,6 @@ export default class ToolbarConfig extends Component {
         />
       </div>
     );
-
     let layerRenderer = (layer) =>
       Seq()
         .concat(layer.areas)
@@ -384,7 +417,6 @@ export default class ToolbarConfig extends Component {
                 height: props.heightConfig,
               }}
             >
-
               <div style={{ ...ConfigStyle, height: props.heightConfig }}>
                 <div
                   style={{
@@ -397,7 +429,7 @@ export default class ToolbarConfig extends Component {
                   }}
                 >
                   <span style={TextConfig}>Cấu hình</span>
-                  <CloseOutlined onClick={this.handleOpenConfig} />
+                  <CloseOutlined onClick={this.handleCloseConfig} />
                 </div>
                 <div
                   style={{
@@ -480,7 +512,7 @@ export default class ToolbarConfig extends Component {
                             />
                           </div>
                         </div>
-                        {state.showAcreage && (
+                        {state.showAcreage && selectedArea && (
                           <div>
                             <span style={TextDefault}>Diện tích</span>
                             <div style={InputWrapper}>
@@ -521,20 +553,22 @@ export default class ToolbarConfig extends Component {
                               Hiển thị tên
                             </Checkbox>
                           </div>
-                          <div
-                            className={
-                              state.showAcreage
-                                ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox"
-                                : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
-                            }
-                          >
-                            <Checkbox
-                              checked={state.showAcreage}
-                              onChange={this.onChangeShowAcreage}
+                          {selectedArea && (
+                            <div
+                              className={
+                                state.showAcreage
+                                  ? "custom-checkbox-active .ant-checkbox-wrapper .ant-checkbox"
+                                  : "custom-checkbox .ant-checkbox-wrapper .ant-checkbox"
+                              }
                             >
-                              Hiển thị diện tích
-                            </Checkbox>
-                          </div>
+                              <Checkbox
+                                checked={state.showAcreage}
+                                onChange={this.onChangeShowAcreage}
+                              >
+                                Hiển thị diện tích
+                              </Checkbox>
+                            </div>
+                          )}
                           <div
                             className={
                               state.showRuler
@@ -570,3 +604,6 @@ export default class ToolbarConfig extends Component {
     );
   }
 }
+ToolbarConfig.contextTypes = {
+  linesActions: PropTypes.object.isRequired,
+};

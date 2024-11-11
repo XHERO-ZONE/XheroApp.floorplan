@@ -41,6 +41,7 @@ export default function WallFactory(name, info, textures) {
       let length = Geometry.pointsDistance(x1, y1, x2, y2);
       let length_5 = length / 5;
 
+
       let thickness = element.getIn(['properties', 'thickness', 'length']);
       let half_thickness = thickness / 2;
       let half_thickness_eps = half_thickness + epsilon;

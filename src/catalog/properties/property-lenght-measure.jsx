@@ -48,42 +48,14 @@ export default function PropertyLengthMeasure(
   };
 
   return (
-    <table className="PropertyLengthMeasure" style={PropertyStyle.tableStyle}>
-      <tbody>
-        <tr>
-          <td style={TextDefault}>
-            <FormLabel>{label}</FormLabel>
-          </td>
-        </tr>
-        <tr>
-          <td style={secondTdStyle}>
-            <table style={internalTableStyle}>
-              <tbody>
-                <tr>
-                  <td>
-                    <div style={InputWrapper}>
-                      <FormNumberInput
-                        value={(Number(_length) / 100).toFixed(0)}
-                        onChange={(event) => update(event.target.value, _unit)}
-                        onValid={onValid}
-                        {...configRest}
-                      />
-                    </div>
-                  </td>
-                  {/* <td style={unitContainerStyle}>
-                <FormSelect value={_unit} onChange={event => update(_length, event.target.value) }>
-                  {
-                    UNITS_LENGTH.map(el => <option key={el} value={el}>{el}</option>)
-                  }
-                </FormSelect>
-              </td> */}
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div style={InputWrapper}>
+      <FormNumberInput
+        value={(Number(_length) / 100).toFixed(0)}
+        onChange={(event) => update(event.target.value, _unit)}
+        onValid={onValid}
+        {...configRest}
+      />
+    </div>
   );
 }
 

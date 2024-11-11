@@ -251,29 +251,27 @@ class FooterBar extends Component {
           <span style={textFooter}>Lưu</span>
         </div>
 
-        {this.state.selected === false &&
-          this.state.isSelectedAll === false &&
-          mode !== MODE_IDLE && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-              onClick={() =>
-                this.context.projectActions.rollback(this.props.state)
-              }
-            >
-              <img src={iconDone} width={36} height={36} />
-              <span style={textFooter}>Hoàn thành</span>
-            </div>
-          )}
+        {this.state.selected === false && mode !== MODE_IDLE && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+            onClick={() =>
+              this.context.projectActions.rollback(this.props.state)
+            }
+          >
+            <img src={iconDone} width={36} height={36} />
+            <span style={textFooter}>Hoàn thành</span>
+          </div>
+        )}
 
-        {this.state.selected ||
-          this.state.isSelectedAll &&(
+        {(this.state.selected && mode === MODE_IDLE) ||
+          (this.state.isSelectedAll && mode === MODE_IDLE && (
             <div style={{ display: "flex", gap: "15px" }}>
               {/* <div
               style={{
@@ -316,7 +314,7 @@ class FooterBar extends Component {
                 <span style={textFooter}>Xóa</span>
               </div>
             </div>
-          )}
+          ))}
       </div>
     );
   }

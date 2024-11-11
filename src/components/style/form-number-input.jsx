@@ -7,7 +7,6 @@ import { InputContainer, TextFloor } from "../toolconfig/config";
 
 let bgButton = require("../../../public/images/bgButton.png");
 
-
 const STYLE_INPUT = {
   display: "block",
   width: "100%",
@@ -94,9 +93,13 @@ export default class FormNumberInput extends Component {
         onChange({ target: { value: savedValue } });
       }
     };
-
+    let removeSeleced = () => {
+      this.context.projectActions.remove(this.props.state);
+    };
     return (
-      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <div
+        style={{ position: "relative", width: "100%", height: "100%", left: 0 }}
+      >
         <input
           type="text"
           value={currValue}
@@ -136,18 +139,51 @@ export default class FormNumberInput extends Component {
         </div> */}
         <div
           style={{
-            backgroundImage: `url(${bgButton})`,
-            padding: "6px 20px",
-            backgroundSize: "100% 100%",
-            backgroundRepeat: "no-repeat",
-            whiteSpace: "nowrap",
-            cursor: "pointer",
-            marginTop: "40px"
+            width: "100%",
+            height: "30px",
+            display: "flex",
+            marginTop: "40px",
+            justifyContent: "space-between"
+            // flexDirection: "column",
+            // alignItems: "flex-end"
           }}
         >
-          <span onClick={(e) => saveFn(e)} style={TextFloor}>
-            Xác nhận
-          </span>
+          <div
+            style={{
+              backgroundImage: `url(${bgButton})`,
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
+              whiteSpace: "nowrap",
+              cursor: "pointer",
+              padding: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "45%",
+            }}
+          >
+            <span onClick={() => removeSeleced()} style={TextFloor}>
+              Xóa
+            </span>
+          </div>
+          <div
+            style={{
+              backgroundImage: `url(${bgButton})`,
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
+              whiteSpace: "nowrap",
+              cursor: "pointer",
+              padding: "10px",
+              width: "45%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <span onClick={(e) => saveFn(e)} style={TextFloor}>
+              Xác nhận
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -168,6 +204,7 @@ FormNumberInput.propTypes = {
 
 FormNumberInput.contextTypes = {
   translator: PropTypes.object.isRequired,
+  projectActions: PropTypes.object.isRequired,
 };
 
 FormNumberInput.defaultProps = {

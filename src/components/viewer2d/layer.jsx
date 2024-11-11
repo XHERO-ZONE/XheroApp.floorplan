@@ -8,7 +8,7 @@ import {
   Group
 } from './export';
 
-export default function Layer({ layer, scene, catalog }) {
+export default function Layer({ state, layer, scene, catalog }) {
   let { unit, groups } = scene;
   let { lines, areas, vertices, holes, id: layerID, items, opacity } = layer;
   return (
@@ -28,8 +28,8 @@ export default function Layer({ layer, scene, catalog }) {
       {
         vertices
           .valueSeq()
-          .filter(v => v.selected)
-          .map(vertex => <Vertex key={vertex.id} layer={layer} vertex={vertex} />)
+          // .filter(v => v.selected)
+          .map(vertex => <Vertex state={state} key={vertex.id} layer={layer} vertex={vertex} />)
       }
       {
         groups

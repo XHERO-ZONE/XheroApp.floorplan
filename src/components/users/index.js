@@ -5,7 +5,7 @@ import Notification from "../notification";
 import { getDrawingsId, getMe } from "../../services";
 import PropTypes from "prop-types";
 let defaultDrawing = {
-  unit: "m",
+  unit: "cm",
   layers: {
     "layer-1": {
       id: "layer-1",

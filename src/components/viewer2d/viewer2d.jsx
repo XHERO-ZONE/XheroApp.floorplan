@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import {
@@ -116,8 +116,11 @@ export default function Viewer2D(
   }
 ) {
   let { viewer2D, mode, scene } = state;
+  const svgViewerRef = useRef(null);
+  const svgElementRef = useRef(null); // Ref cho <svg>
 
   let layerID = scene.selectedLayer;
+
 
   let mapCursorPosition = ({ x, y }) => {
     return { x, y: -y + scene.height };
@@ -128,9 +131,7 @@ export default function Viewer2D(
     let evt = new Event("mousemove-planner-event");
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
-
     let { x, y } = mapCursorPosition(viewerEvent);
-
     projectActions.updateMouseCoord({ x, y });
 
     switch (mode) {
@@ -176,9 +177,11 @@ export default function Viewer2D(
     let evt = new Event("mousedown-planner-event");
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
-
+    // if(!viewerEvent._cachePoint) {
+    //   onMouseDown(viewerEvent)
+    //   return
+    // }
     let { x, y } = mapCursorPosition(viewerEvent);
-
     if (mode === constants.MODE_IDLE) {
       let elementData = extractElementData(event.target);
 
@@ -251,10 +254,11 @@ export default function Viewer2D(
     let evt = new Event("mouseup-planner-event");
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
-     let { x, y } =  mapCursorPosition(viewerEvent);
+    let { x, y } = mapCursorPosition(viewerEvent);
     switch (mode) {
       case constants.MODE_IDLE:
         let elementData = extractElementData(event.target);
+        
         if (elementData && elementData.selected) return;
 
         switch (elementData ? elementData.prototype : "none") {
@@ -559,38 +563,34 @@ export default function Viewer2D(
 
     event.stopPropagation();
   };
+  
   let defaultValue = {
-    a: 0.526787525391618,
+    a: 0.33051301049924603,
     b: 0,
     SVGWidth: 8000,
     c: 0,
     mode: "idle",
-    d: 0.526787525391618,
-    e: -379.65190488448775,
-    f: -696.6046286314541,
+    d: 0.33051301049924603,
+    e: -1154.6156813388397,
+    f: -1062.6821518461004,
     miniatureOpen: true,
     SVGHeight: 8000,
     pinchPointDistance: null,
     lastAction: "zoom",
-    viewerWidth: 360,
+    viewerWidth: "100%",
     startX: null,
     startY: null,
     version: 2,
     focus: false,
-    viewerHeight: 773,
+    viewerHeight: "100%",
     prePinchMode: null,
     endX: null,
-    endY: null,
-  };
+    endY: null
+}
   let onChangeValue = (value) => {
     if (value.a !== 1) {
-      if (value.a <= 0.235) {
-        projectActions.updateZoomScale(0.5);
-        return;
-      } else {
-        projectActions.updateZoomScale(value.a);
-        return viewer2DActions.updateCameraView(value);
-      }
+      projectActions.updateZoomScale(value.a);
+      return viewer2DActions.updateCameraView(value);
     } else {
       projectActions.updateZoomScale(defaultValue.a);
       return viewer2DActions.updateCameraView(defaultValue);
@@ -616,16 +616,32 @@ export default function Viewer2D(
     }
   };
 
-  let onTouchStart = (viewerEvent) => {
-    onMouseDown(viewerEvent);
-  };
-  
-  let onTouchMove = () => {
-    onMouseMove(viewerEvent);
-  };
-  
+
+
   let onTouchEnd = (viewerEvent) => {
     onMouseUp(viewerEvent);
+  };
+
+  const getSvgCoordinates = (clientX, clientY) => {
+    const svgElement = document.querySelector("svg");
+    if (svgElementRef.current) {
+      // Tạo một điểm SVG
+      const svgPoint = svgElementRef.current.createSVGPoint();
+      svgPoint.x = clientX;
+      svgPoint.y = clientY;
+
+      // Chuyển đổi điểm từ hệ viewport sang hệ SVG
+      const transformedPoint = svgPoint.matrixTransform(
+        svgElementRef.current.getScreenCTM().inverse()
+      );
+      return { x: transformedPoint.x, y: transformedPoint.y };
+    }
+    return null;
+  };
+
+  const handleTouch = (event) => {
+    const touch = event.touches[0]; // Lấy điểm chạm đầu tiên
+    const svgCoordinates = getSvgCoordinates(touch.clientX, touch.clientY);
   };
 
   let { e, f, SVGWidth, SVGHeight } = state.get("viewer2D").toJS();
@@ -705,6 +721,7 @@ export default function Viewer2D(
         ) : null}
       </div>
       <ReactSVGPanZoom
+        ref={svgViewerRef}
         onTouchStart={onMouseDown}
         onTouchMove={onMouseMove}
         onTouchEnd={mode === "MODE_IDLE" && onTouchEnd}
@@ -722,7 +739,7 @@ export default function Viewer2D(
         miniaturePosition="none"
         toolbarPosition="none"
       >
-        <svg width={scene.width} height={scene.height}>
+        <svg width={scene.width} height={scene.height} ref={svgElementRef}>
           <defs>
             <pattern
               id="diagonalFill"

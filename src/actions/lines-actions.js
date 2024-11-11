@@ -7,12 +7,30 @@ import {
   BEGIN_DRAGGING_LINE,
   UPDATE_DRAGGING_LINE,
   END_DRAGGING_LINE,
-  SELECT_TOOL_DRAWING_TEXTURE
+  SELECT_TOOL_DRAWING_TEXTURE,
+  UNSELECT_LINE,
+  SELECT_LINE_TO_MOVE
 } from '../constants';
 
 export function selectLine(layerID, lineID) {
   return {
     type: SELECT_LINE,
+    layerID,
+    lineID
+  }
+}
+
+export function selectLineToMove(layerID, lineID) {
+  return {
+    type: SELECT_LINE_TO_MOVE,
+    layerID,
+    lineID
+  }
+}
+
+export function unSelectLine(layerID, lineID) {
+  return {
+    type: UNSELECT_LINE,
     layerID,
     lineID
   }
@@ -72,3 +90,4 @@ export function endDraggingLine(x, y, snapMask) {
     x, y, snapMask
   }
 }
+

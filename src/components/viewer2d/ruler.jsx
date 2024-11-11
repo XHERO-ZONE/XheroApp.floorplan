@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const STYLE = {
   stroke: "#000000",
-  strokeWidth: "2px"
+  strokeWidth: "2px",
 };
 
 const STYLE_TEXT = {
@@ -23,15 +23,18 @@ const STYLE_TEXT = {
 
 export default function Ruler({length, unit, transform}) {
 
-  let distanceText = `${(Number(length) / 100).toFixed(2)} ${unit}`;
+  let distanceText = `${(Number(length) / 100).toFixed(2)} ${"m"}`;
 
   return (
+    
+
     <g transform={transform}>
       <text x={length / 2} y="-3" transform={`scale(1, -1)`} style={STYLE_TEXT}>{distanceText}</text>
       <line x1="0" y1="0" x2={length} y2="0" style={STYLE}/>
       <polygon points="0,5 5,0 0,-5" style={STYLE} />
       <polygon points={`${length},5 ${length - 5},0 ${length},-5`} style={STYLE} />
     </g>
+    
   );
 }
 

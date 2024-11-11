@@ -18,7 +18,7 @@ import {
 } from "../class/export";
 
 let defaultDrawing = {
-  unit: "m",
+  unit: "cm",
   layers: {
     "layer-1": {
       id: "layer-1",
@@ -278,7 +278,6 @@ class Project {
 
   static updateMouseCoord(state, coords) {
     state = state.set("mouse", new Map(coords));
-
     return { updatedState: state };
   }
 
@@ -383,7 +382,6 @@ class Project {
   }
 
   static addCircularGuide(state, x, y, radius) {
-    console.log("adding horizontal guide at", x, y, radius);
 
     return { updatedState: state };
   }
@@ -401,7 +399,6 @@ class Project {
   }
 
   static removeCircularGuide(state, guideID) {
-    console.log("removeing horizontal guide ", guideID);
 
     return { updatedState: state };
   }

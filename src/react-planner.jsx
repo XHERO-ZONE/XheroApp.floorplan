@@ -41,7 +41,7 @@ const wrapperStyle = {
   position: "relative",
 };
 let defaultDrawing = {
-  unit: "m",
+  unit: "cm",
   layers: {
     "layer-1": {
       id: "layer-1",

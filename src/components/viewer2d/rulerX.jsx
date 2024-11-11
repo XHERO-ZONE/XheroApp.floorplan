@@ -11,7 +11,6 @@ export default class RulerX extends Component {
   render() {
 
     let elementW = this.props.unitPixelSize * this.props.zoom;
-
     let elementStyle = {
       display: 'inline-block',
       width: elementW,
@@ -73,7 +72,6 @@ export default class RulerX extends Component {
     };
 
     let positiveDomElements = [];
-
     if (elementW <= 200) {
       for (let x = 0; x < this.props.positiveUnitsNumber; x++) {
         positiveDomElements.push(
