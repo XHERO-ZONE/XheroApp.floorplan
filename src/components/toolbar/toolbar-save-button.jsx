@@ -22,7 +22,7 @@ export default function ToolbarSaveButton({ state, data }, { translator }) {
   let iconSave = require("../../../public/images/save.png");
   let bgNotify = require("../../../public/images/bgNotify.png");
   let bgCancel = require("../../../public/images/buttonCancel.png");
-  let bgSuccess = require("../../../public/images/buttonSuccess.png");
+  let bgSuccess = require("../../../public/images/buttonSuccess.png");st 
   let iconPTDN = require("../../../public/images/iconPTDN.png");
 
   let saveProjectToFile = async (e) => {
