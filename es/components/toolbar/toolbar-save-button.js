@@ -46,7 +46,7 @@ export default function ToolbarSaveButton(_ref, _ref2) {
   var iconSave = require("../../../public/images/save.png");
   var bgNotify = require("../../../public/images/bgNotify.png");
   var bgCancel = require("../../../public/images/buttonCancel.png");
-  var bgSuccess = require("../../../public/images/buttonSuccess.png");st;
+  var bgSuccess = require("../../../public/images/buttonSuccess.png");
   var iconPTDN = require("../../../public/images/iconPTDN.png");
 
   var saveProjectToFile = function () {

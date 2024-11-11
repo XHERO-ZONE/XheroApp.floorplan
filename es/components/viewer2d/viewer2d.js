@@ -438,24 +438,47 @@ export default function Viewer2D(_ref, _ref2) {
   };
 
   var defaultValue = {
-    a: 0.33051301049924603,
+    a: 0.44230096437966726,
     b: 0,
     SVGWidth: 8000,
     c: 0,
     mode: "idle",
-    d: 0.33051301049924603,
-    e: -1154.6156813388397,
-    f: -1062.6821518461004,
+    d: 0.44230096437966726,
+    e: -647.9902695698693,
+    f: -1558.170622075138,
     miniatureOpen: true,
     SVGHeight: 8000,
     pinchPointDistance: null,
     lastAction: "zoom",
-    viewerWidth: "100%",
+    viewerWidth: 8000,
     startX: null,
     startY: null,
     version: 2,
     focus: false,
-    viewerHeight: "100%",
+    viewerHeight: 8000,
+    prePinchMode: null,
+    endX: null,
+    endY: null
+  };
+  var defaultValueMobile = {
+    a: 0.3713644185969492,
+    b: 0,
+    SVGWidth: 8000,
+    c: 0,
+    mode: "idle",
+    d: 0.3713644185969492,
+    e: -1458.7783492737935,
+    f: -1017.2321725572972,
+    miniatureOpen: true,
+    SVGHeight: 8000,
+    pinchPointDistance: null,
+    lastAction: "zoom",
+    viewerWidth: 360,
+    startX: null,
+    startY: null,
+    version: 2,
+    focus: false,
+    viewerHeight: 773,
     prePinchMode: null,
     endX: null,
     endY: null
@@ -465,8 +488,8 @@ export default function Viewer2D(_ref, _ref2) {
       projectActions.updateZoomScale(value.a);
       return viewer2DActions.updateCameraView(value);
     } else {
-      projectActions.updateZoomScale(defaultValue.a);
-      return viewer2DActions.updateCameraView(defaultValue);
+      projectActions.updateZoomScale(isMobile ? defaultValueMobile.a : defaultValue.a);
+      return viewer2DActions.updateCameraView(isMobile ? defaultValueMobile : defaultValue);
     }
   };
   var onChangeTool = function onChangeTool(tool) {
@@ -491,26 +514,6 @@ export default function Viewer2D(_ref, _ref2) {
 
   var onTouchEnd = function onTouchEnd(viewerEvent) {
     onMouseUp(viewerEvent);
-  };
-
-  var getSvgCoordinates = function getSvgCoordinates(clientX, clientY) {
-    var svgElement = document.querySelector("svg");
-    if (svgElementRef.current) {
-      // Tạo một điểm SVG
-      var svgPoint = svgElementRef.current.createSVGPoint();
-      svgPoint.x = clientX;
-      svgPoint.y = clientY;
-
-      // Chuyển đổi điểm từ hệ viewport sang hệ SVG
-      var transformedPoint = svgPoint.matrixTransform(svgElementRef.current.getScreenCTM().inverse());
-      return { x: transformedPoint.x, y: transformedPoint.y };
-    }
-    return null;
-  };
-
-  var handleTouch = function handleTouch(event) {
-    var touch = event.touches[0]; // Lấy điểm chạm đầu tiên
-    var svgCoordinates = getSvgCoordinates(touch.clientX, touch.clientY);
   };
 
   var _state$get$toJS = state.get("viewer2D").toJS(),
