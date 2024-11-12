@@ -7,11 +7,11 @@ import React from 'react';
 
 const mtl = require('./sofa.mtl');
 const obj = require('./sofa.obj');
-const img = require('./texture.jpg');
+// const img = require('./texture.jpg');
 
 const width = {length: 180, unit: 'cm'};
 const depth = {length: 60, unit: 'cm'};
-const height = {length: 70, unit: 'cm'};
+const height = {length: 140, unit: 'cm'};
 
 let cachedJSONSofa = null;
 
@@ -84,7 +84,7 @@ export default {
 
       // Normalize the origin of this item
       let boundingBox = new Box3().setFromObject(object);
-
+      console.log("BoundingBox: ", boundingBox);
       let center = [
         (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
         (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
@@ -103,10 +103,11 @@ export default {
       return Promise.resolve(onLoadItem(object));
     }
 
-    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
+    return loadObjWithMaterial(mtl, obj)
       .then(object => {
         cachedJSONSofa = object.toJSON();
         let loader = new ObjectLoader();
+        console.log("Parsed Object: ", object);
         return onLoadItem(loader.parse(cachedJSONSofa))
       });
   },
