@@ -12,8 +12,9 @@ import Panel from "../sidebar/panel";
 import ElementEditor from "../sidebar/panel-element-editor/element-editor";
 import Sidebar from "../sidebar/sidebar";
 import { Layer, Line } from "../../class/export";
-import { linesActions } from "../../actions/export";
+import { linesActions, projectActions } from "../../actions/export";
 import PropTypes from "prop-types";
+import { MODE_IDLE } from "../../constants";
 let bgToolBar = require("../../../public/images/newBg.png");
 let iconConfig = require("../../../public/images/icon-config.png");
 let bgButton = require("../../../public/images/bgButton.png");
@@ -199,16 +200,23 @@ export default class ToolbarConfig extends Component {
       "selected",
     ]);
     this.setState({ openConfig: false });
-    return this.context.linesActions.unSelectLine(
-      selectedLayer,
-      selected.toJS().lines[0]
-    );
+    return this.context.projectActions.unselectAll(this.props.state);
   }
   componentDidUpdate(prevProps, prevState) {
     const { scene } = this.props.state;
     const { layers } = scene;
+    let mode = this.props.state.toJS().mode;
     let selectedLayer = layers.get(scene.selectedLayer).toJS();
     let isMove = localStorage.getItem("lineToMove");
+    let multiselected =
+      selectedLayer.selected.lines.length >= 1 ||
+      selectedLayer.selected.items.length >= 1 ||
+      selectedLayer.selected.holes.length >= 1 ||
+      selectedLayer.selected.lines.length +
+        selectedLayer.selected.items.length +
+        selectedLayer.selected.holes.length +
+        selectedLayer.selected.areas.length >=
+        1;
     // Kiểm tra thay đổi trong props
     if (
       layers !== prevProps.state.scene.layers ||
@@ -226,15 +234,13 @@ export default class ToolbarConfig extends Component {
     }
     if (
       this.props.state !== prevProps.state &&
-      selectedLayer.selected.lines.length > 0 &&
-      !isMove
+      multiselected &&
+      !isMove &&
+      mode === MODE_IDLE
     ) {
       this.setState({ openConfig: true });
       return;
-    } else if (
-      this.props.state !== prevProps.state &&
-      selectedLayer.selected.lines.length === 0
-    ) {
+    } else if (this.props.state !== prevProps.state && !multiselected) {
       this.setState({ openConfig: false });
     }
   }
@@ -402,7 +408,7 @@ export default class ToolbarConfig extends Component {
         {this.state.openConfig ? (
           <div
             style={{
-              width: props.width,
+              right: 0,
               background: "#00000040",
               height: props.heightConfig,
               position: "absolute",
@@ -606,4 +612,5 @@ export default class ToolbarConfig extends Component {
 }
 ToolbarConfig.contextTypes = {
   linesActions: PropTypes.object.isRequired,
+  projectActions: PropTypes.object.isRequired,
 };

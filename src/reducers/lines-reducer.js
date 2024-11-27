@@ -1,4 +1,4 @@
-import { Line } from "../class/export";
+import { Group, Line } from "../class/export";
 import { history } from "../utils/export";
 import {
   SELECT_TOOL_DRAWING_LINE,
@@ -66,7 +66,6 @@ export default function (state, action) {
     case SELECT_LINE_TO_MOVE:
       return Line.selectToMove(state, action.layerID, action.lineID).updatedState;
     case UNSELECT_LINE:
-      console.log(action.layerID, action.lineID);
       return Line.unselect(state, action.layerID, action.lineID).updatedState;
 
     default:

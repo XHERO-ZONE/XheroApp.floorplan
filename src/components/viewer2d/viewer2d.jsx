@@ -612,7 +612,6 @@ export default function Viewer2D(
     endY: null,
   };
   let onChangeValue = (value) => {
-    console.log(isMobile)
     if (value.a !== 1) {
       projectActions.updateZoomScale(value.a);
       return viewer2DActions.updateCameraView(value);

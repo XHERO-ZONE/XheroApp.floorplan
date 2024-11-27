@@ -91,15 +91,19 @@ export default class FormNumberInput extends Component {
 
         this.setState({ showedValue: savedValue });
         onChange({ target: { value: savedValue } });
+        unSeleced();
       }
     };
     let removeSeleced = () => {
       this.context.projectActions.remove(this.props.state);
     };
+
+    let unSeleced = () => {
+      this.context.projectActions.unselectAll(this.props.state);
+    };
+
     return (
-      <div
-        style={{ position: "relative", width: "100%", height: "100%", left: 0 }}
-      >
+      <div style={{ width: "100%", height: "100%", left: 0 }}>
         <input
           type="text"
           value={currValue}
@@ -130,20 +134,14 @@ export default class FormNumberInput extends Component {
           }}
           placeholder={placeholder}
         />
-        {/* <div
-          onClick={e => { if (different) saveFn(e); }}
-          title={this.context.translator.t('Confirm')}
-          style={{ ...confirmStyle, visibility: different ? 'visible' : 'hidden', opacity: different ? '1' : '0' }}
-        >
-          <MdUpdate style={{ width: '100%', height: '100%', padding: '0.2em', color: '#FFF' }} />
-        </div> */}
+        <span style={{ width: "50%", fontSize: "14px" }}>Đơn vị: mét</span>
         <div
           style={{
             width: "100%",
             height: "30px",
             display: "flex",
             marginTop: "40px",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
             // flexDirection: "column",
             // alignItems: "flex-end"
           }}
