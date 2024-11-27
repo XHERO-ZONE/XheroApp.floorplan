@@ -34,7 +34,6 @@ const iconHeadStyle = {
 export default class ElementEditor extends Component {
   constructor(props, context) {
     super(props, context);
-
     this.state = {
       attributesFormData: this.initAttrData(
         this.props.element,
@@ -77,13 +76,59 @@ export default class ElementEditor extends Component {
         propertiesFormData: this.initPropData(element, layer, state),
       });
   }
-
+  selecteMutiItems(element, layer, state) {
+    let id = element.toJS().id;
+    let layerId = layer.toJS().id;
+    if (id) {
+      let groups = this.props.state.toJS().scene.groups;
+      if (Object.keys(groups).length > 0) {
+        let arrIdLines = [];
+        for (const [key, value] of Object.entries(groups)) {
+          let idLines = value.elements[layerId].lines[0];
+          arrIdLines.push(idLines);
+        }
+        if (!arrIdLines.includes(id)) {
+          this.context.groupsActions.addGroupFromSelected();
+          this.context.linesActions.selectLine(layerId, id);
+          let data = state.toJS().scene.groups;
+          Object.keys(data).forEach((items) => {
+            if (!Object.keys(groups).includes(items)) {
+              this.context.groupsActions.addToGroup(
+                items,
+                layerId,
+                element.prototype,
+                id
+              );
+            }
+          });
+        }
+      } else {
+        this.context.groupsActions.addGroupFromSelected();
+        this.context.linesActions.selectLine(layerId, id);
+        let data = state.toJS().scene.groups;
+        Object.keys(data).forEach((items) => {
+          if (!Object.keys(groups).includes(items)) {
+            this.context.groupsActions.addToGroup(
+              items,
+              layerId,
+              element.prototype,
+              id
+            );
+          }
+        });
+      }
+    }
+  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevProps.state !== this.props.state) {
+  //     console.log("new state")
+  //   }
+  // }
   initAttrData(element, layer, state) {
     element =
       typeof element.misc === "object"
         ? element.set("misc", new Map(element.misc))
         : element;
-
     switch (element.prototype) {
       case "items": {
         return new Map(element);
@@ -91,13 +136,13 @@ export default class ElementEditor extends Component {
       case "lines": {
         let v_a = layer.vertices.get(element.vertices.get(0));
         let v_b = layer.vertices.get(element.vertices.get(1));
-
         let distance = GeometryUtils.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y);
         let _unit =
           element.misc.get("_unitLength") || this.context.catalog.unit;
         let _length = convert(distance)
           .from(this.context.catalog.unit)
           .to(_unit);
+        this.selecteMutiItems(element, layer, state);
 
         return new Map({
           vertexOne: v_a,
@@ -110,6 +155,7 @@ export default class ElementEditor extends Component {
         let { x: x0, y: y0 } = layer.vertices.get(line.vertices.get(0));
         let { x: x1, y: y1 } = layer.vertices.get(line.vertices.get(1));
         let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
+
         let startAt =
           lineLength * element.offset -
           element.properties.get("width").get("length") / 2;
@@ -127,8 +173,14 @@ export default class ElementEditor extends Component {
         let _lengthB = convert(endAt)
           .from(this.context.catalog.unit)
           .to(_unitB);
-
+        let distance = element.toJS().properties.width.length;
+        let _unit =
+          element.misc.get("_unitLength") || this.context.catalog.unit;
+        let _length = convert(distance)
+          .from(this.context.catalog.unit)
+          .to(_unit);
         return new Map({
+          length: new Map({ length: distance, _length, _unit }),
           offset: element.offset,
           offsetA: new Map({
             length: MathUtils.toFixedFloat(startAt, PRECISION),
@@ -169,12 +221,13 @@ export default class ElementEditor extends Component {
 
   updateAttribute(attributeName, value) {
     let { attributesFormData } = this.state;
+    console.log("name", attributeName);
 
     switch (this.props.element.prototype) {
-      // case "items": {
-      //   attributesFormData = attributesFormData.set(attributeName, value);
-      //   break;
-      // }
+      case "items": {
+        attributesFormData = attributesFormData.set(attributeName, value);
+        break;
+      }
       case "lines": {
         switch (attributeName) {
           case "lineLength": {
@@ -230,153 +283,152 @@ export default class ElementEditor extends Component {
         }
         break;
       }
-      // case "holes": {
-      //   switch (attributeName) {
-      //     case "offsetA": {
-      //       let line = this.props.layer.lines.get(this.props.element.line);
+      case "holes": {
+        switch (attributeName) {
+          case "offsetA": {
+            let line = this.props.layer.lines.get(this.props.element.line);
 
-      //       let orderedVertices = GeometryUtils.orderVertices([
-      //         this.props.layer.vertices.get(line.vertices.get(0)),
-      //         this.props.layer.vertices.get(line.vertices.get(1)),
-      //       ]);
+            let orderedVertices = GeometryUtils.orderVertices([
+              this.props.layer.vertices.get(line.vertices.get(0)),
+              this.props.layer.vertices.get(line.vertices.get(1)),
+            ]);
 
-      //       let [{ x: x0, y: y0 }, { x: x1, y: y1 }] = orderedVertices;
+            let [{ x: x0, y: y0 }, { x: x1, y: y1 }] = orderedVertices;
 
-      //       let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
-      //       let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
-      //       let widthLength = this.props.element.properties
-      //         .get("width")
-      //         .get("length");
-      //       let halfWidthLength = widthLength / 2;
+            let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
+            let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
+            let widthLength = this.props.element.properties
+              .get("width")
+              .get("length");
+            let halfWidthLength = widthLength / 2;
 
-      //       let lengthValue = value.get("length");
-      //       lengthValue = Math.max(lengthValue, 0);
-      //       lengthValue = Math.min(lengthValue, lineLength - widthLength);
+            let lengthValue = value.get("length");
+            lengthValue = Math.max(lengthValue, 0);
+            lengthValue = Math.min(lengthValue, lineLength - widthLength);
 
-      //       let xp = (lengthValue + halfWidthLength) * Math.cos(alpha) + x0;
-      //       let yp = (lengthValue + halfWidthLength) * Math.sin(alpha) + y0;
+            let xp = (lengthValue + halfWidthLength) * Math.cos(alpha) + x0;
+            let yp = (lengthValue + halfWidthLength) * Math.sin(alpha) + y0;
 
-      //       let offset = GeometryUtils.pointPositionOnLineSegment(
-      //         x0,
-      //         y0,
-      //         x1,
-      //         y1,
-      //         xp,
-      //         yp
-      //       );
+            let offset = GeometryUtils.pointPositionOnLineSegment(
+              x0,
+              y0,
+              x1,
+              y1,
+              xp,
+              yp
+            );
 
-      //       let endAt = MathUtils.toFixedFloat(
-      //         lineLength - lineLength * offset - halfWidthLength,
-      //         PRECISION
-      //       );
-      //       let offsetUnit = attributesFormData.getIn(["offsetB", "_unit"]);
+            let endAt = MathUtils.toFixedFloat(
+              lineLength - lineLength * offset - halfWidthLength,
+              PRECISION
+            );
+            let offsetUnit = attributesFormData.getIn(["offsetB", "_unit"]);
 
-      //       let offsetB = new Map({
-      //         length: endAt,
-      //         _length: convert(endAt)
-      //           .from(this.context.catalog.unit)
-      //           .to(offsetUnit),
-      //         _unit: offsetUnit,
-      //       });
+            let offsetB = new Map({
+              length: endAt,
+              _length: convert(endAt)
+                .from(this.context.catalog.unit)
+                .to(offsetUnit),
+              _unit: offsetUnit,
+            });
 
-      //       attributesFormData = attributesFormData
-      //         .set("offsetB", offsetB)
-      //         .set("offset", offset);
+            attributesFormData = attributesFormData
+              .set("offsetB", offsetB)
+              .set("offset", offset);
 
-      //       let offsetAttribute = new Map({
-      //         length: MathUtils.toFixedFloat(lengthValue, PRECISION),
-      //         _unit: value.get("_unit"),
-      //         _length: MathUtils.toFixedFloat(
-      //           convert(lengthValue)
-      //             .from(this.context.catalog.unit)
-      //             .to(value.get("_unit")),
-      //           PRECISION
-      //         ),
-      //       });
+            let offsetAttribute = new Map({
+              length: MathUtils.toFixedFloat(lengthValue, PRECISION),
+              _unit: value.get("_unit"),
+              _length: MathUtils.toFixedFloat(
+                convert(lengthValue)
+                  .from(this.context.catalog.unit)
+                  .to(value.get("_unit")),
+                PRECISION
+              ),
+            });
 
-      //       attributesFormData = attributesFormData.set(
-      //         attributeName,
-      //         offsetAttribute
-      //       );
+            attributesFormData = attributesFormData.set(
+              attributeName,
+              offsetAttribute
+            );
 
-      //       break;
-      //     }
-      //     case "offsetB": {
-      //       let line = this.props.layer.lines.get(this.props.element.line);
+            break;
+          }
+          case "offsetB": {
+            let line = this.props.layer.lines.get(this.props.element.line);
 
-      //       let orderedVertices = GeometryUtils.orderVertices([
-      //         this.props.layer.vertices.get(line.vertices.get(0)),
-      //         this.props.layer.vertices.get(line.vertices.get(1)),
-      //       ]);
+            let orderedVertices = GeometryUtils.orderVertices([
+              this.props.layer.vertices.get(line.vertices.get(0)),
+              this.props.layer.vertices.get(line.vertices.get(1)),
+            ]);
 
-      //       let [{ x: x0, y: y0 }, { x: x1, y: y1 }] = orderedVertices;
+            let [{ x: x0, y: y0 }, { x: x1, y: y1 }] = orderedVertices;
 
-      //       let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
-      //       let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
-      //       let widthLength = this.props.element.properties
-      //         .get("width")
-      //         .get("length");
-      //       let halfWidthLength = widthLength / 2;
+            let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
+            let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
+            let widthLength = this.props.element.properties
+              .get("width")
+              .get("length");
+            let halfWidthLength = widthLength / 2;
 
-      //       let lengthValue = value.get("length");
-      //       lengthValue = Math.max(lengthValue, 0);
-      //       lengthValue = Math.min(lengthValue, lineLength - widthLength);
+            let lengthValue = value.get("length");
+            lengthValue = Math.max(lengthValue, 0);
+            lengthValue = Math.min(lengthValue, lineLength - widthLength);
 
-      //       let xp = x1 - (lengthValue + halfWidthLength) * Math.cos(alpha);
-      //       let yp = y1 - (lengthValue + halfWidthLength) * Math.sin(alpha);
+            let xp = x1 - (lengthValue + halfWidthLength) * Math.cos(alpha);
+            let yp = y1 - (lengthValue + halfWidthLength) * Math.sin(alpha);
 
-      //       let offset = GeometryUtils.pointPositionOnLineSegment(
-      //         x0,
-      //         y0,
-      //         x1,
-      //         y1,
-      //         xp,
-      //         yp
-      //       );
+            let offset = GeometryUtils.pointPositionOnLineSegment(
+              x0,
+              y0,
+              x1,
+              y1,
+              xp,
+              yp
+            );
 
-      //       let startAt = MathUtils.toFixedFloat(
-      //         lineLength * offset - halfWidthLength,
-      //         PRECISION
-      //       );
-      //       let offsetUnit = attributesFormData.getIn(["offsetA", "_unit"]);
+            let startAt = MathUtils.toFixedFloat(
+              lineLength * offset - halfWidthLength,
+              PRECISION
+            );
+            let offsetUnit = attributesFormData.getIn(["offsetA", "_unit"]);
 
-      //       let offsetA = new Map({
-      //         length: startAt,
-      //         _length: convert(startAt)
-      //           .from(this.context.catalog.unit)
-      //           .to(offsetUnit),
-      //         _unit: offsetUnit,
-      //       });
+            let offsetA = new Map({
+              length: startAt,
+              _length: convert(startAt)
+                .from(this.context.catalog.unit)
+                .to(offsetUnit),
+              _unit: offsetUnit,
+            });
 
-      //       attributesFormData = attributesFormData
-      //         .set("offsetA", offsetA)
-      //         .set("offset", offset);
+            attributesFormData = attributesFormData
+              .set("offsetA", offsetA)
+              .set("offset", offset);
 
-      //       let offsetAttribute = new Map({
-      //         length: MathUtils.toFixedFloat(lengthValue, PRECISION),
-      //         _unit: value.get("_unit"),
-      //         _length: MathUtils.toFixedFloat(
-      //           convert(lengthValue)
-      //             .from(this.context.catalog.unit)
-      //             .to(value.get("_unit")),
-      //           PRECISION
-      //         ),
-      //       });
+            let offsetAttribute = new Map({
+              length: MathUtils.toFixedFloat(lengthValue, PRECISION),
+              _unit: value.get("_unit"),
+              _length: MathUtils.toFixedFloat(
+                convert(lengthValue)
+                  .from(this.context.catalog.unit)
+                  .to(value.get("_unit")),
+                PRECISION
+              ),
+            });
+            attributesFormData = attributesFormData.set(
+              attributeName,
+              offsetAttribute
+            );
 
-      //       attributesFormData = attributesFormData.set(
-      //         attributeName,
-      //         offsetAttribute
-      //       );
-
-      //       break;
-      //     }
-      //     default: {
-      //       attributesFormData = attributesFormData.set(attributeName, value);
-      //       break;
-      //     }
-      //   }
-      //   break;
-      // }
+            break;
+          }
+          default: {
+            attributesFormData = attributesFormData.set(attributeName, value);
+            break;
+          }
+        }
+        break;
+      }
       default:
         break;
     }
@@ -418,18 +470,18 @@ export default class ElementEditor extends Component {
 
     if (attributesFormData) {
       switch (this.props.element.prototype) {
-        // case "items": {
-        //   this.context.projectActions.setItemsAttributes(attributesFormData);
-        //   break;
-        // }
+        case "items": {
+          this.context.projectActions.setItemsAttributes(attributesFormData);
+          break;
+        }
         case "lines": {
           this.context.projectActions.setLinesAttributes(attributesFormData);
           break;
         }
-        // case "holes": {
-        //   this.context.projectActions.setHolesAttributes(attributesFormData);
-        //   break;
-        // }
+        case "holes": {
+          this.context.projectActions.setHolesAttributes(attributesFormData);
+          break;
+        }
       }
     }
   }
@@ -492,6 +544,30 @@ export default class ElementEditor extends Component {
         );
       }
     };
+
+    let renderEditerWidth = () => {
+      if (firstPropertyEntry) {
+        const [propertyName, data] = firstPropertyEntry;
+        let currentValue = data.get("currentValue"),
+          configs = data.get("configs");
+        let { Editor } = catalog.getPropertyType(
+          (configs.type = "length-measure")
+        );
+
+        return (
+          <Editor
+            key={propertyName}
+            propertyName={propertyName}
+            value={currentValue}
+            configs={configs}
+            onUpdate={(value) => this.updateProperty(propertyName, value)}
+            state={appState}
+            sourceElement={element}
+            internalState={this.state}
+          />
+        );
+      }
+    };
     return (
       <div>
         <AttributesEditor
@@ -503,43 +579,33 @@ export default class ElementEditor extends Component {
 
         {/* <div style={attrPorpSeparatorStyle}>
           <div style={headActionStyle}>
-            <div
-              title={translator.t("Copy")}
-              style={iconHeadStyle}
-              onClick={(e) => this.copyProperties(element.properties)}
-            >
-              <MdContentCopy />
-            </div>
-            {appState.get("clipboardProperties") &&
-            appState.get("clipboardProperties").size ? (
-              <div
-                title={translator.t("Paste")}
-                style={iconHeadStyle}
-                onClick={(e) => this.pasteProperties()}
-              >
-                <MdContentPaste />
-              </div>
-            ) : null}
+            <div title={translator.t('Copy')} style={iconHeadStyle} onClick={ e => this.copyProperties(element.properties) }><MdContentCopy /></div>
+            {
+              appState.get('clipboardProperties') && appState.get('clipboardProperties').size ?
+                <div title={translator.t('Paste')} style={iconHeadStyle} onClick={ e => this.pasteProperties() }><MdContentPaste /></div> : null
+            }
           </div>
         </div> */}
+        {/* {renderEditerWidth()} */}
 
-        {/* {propertiesFormData.entrySeq()
-          .map(([propertyName, data]) => {
-            let currentValue = data.get('currentValue'), configs = data.get('configs');
-            let {Editor} = catalog.getPropertyType(configs.type = "color");
+        {/* {propertiesFormData.entrySeq().map(([propertyName, data]) => {
+          let currentValue = data.get("currentValue"),
+            configs = data.get("configs");
+          let { Editor } = catalog.getPropertyType(configs.type);
 
-            return <Editor
+          return (
+            <Editor
               key={propertyName}
               propertyName={propertyName}
               value={currentValue}
               configs={configs}
-              onUpdate={value => this.updateProperty(propertyName, value)}
+              onUpdate={(value) => this.updateProperty(propertyName, value)}
               state={appState}
               sourceElement={element}
               internalState={this.state}
             />
-          })
-        } */}
+          );
+        })} */}
         {this.props.element.prototype === "areas" && (
           <div>
             {renderEditer()}
@@ -558,7 +624,10 @@ ElementEditor.propTypes = {
 };
 
 ElementEditor.contextTypes = {
+  groupsActions: PropTypes.object.isRequired,
   projectActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
   catalog: PropTypes.object.isRequired,
   translator: PropTypes.object.isRequired,
+  linesActions: PropTypes.object.isRequired,
 };

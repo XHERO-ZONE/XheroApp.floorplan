@@ -28,7 +28,6 @@ export default function LineAttributesEditor(
   let lineLength = attributeFormData.has("lineLength")
     ? attributeFormData.get("lineLength")
     : null;
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       <table style={tableStyle}>
@@ -112,7 +111,6 @@ export default function LineAttributesEditor(
           }}
           state={state}
         />
-        <span style={{ width: "50%", fontSize: "14px" }}>Đơn vị: mét</span>
       </div>
     </div>
   );
